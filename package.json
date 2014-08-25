@@ -1,5 +1,5 @@
 {
-  "name": "breakout",
+  "name": "multiplayer-breakout",
   "private": true,
   "devDependencies": {
     "express": "3.0.0",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nsue/breakout.git"
+    "url": "git://github.com/nsue/multiplayer-breakout.git"
   },
   "keywords": [
     "phaser",
@@ -31,6 +31,6 @@
   "author": "Norman Sue, Amy Soetopo, Kenn Wang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nsue/breakout/issues"
+    "url": "https://github.com/nsue/multiplayer-breakout/issues"
   }
 }
