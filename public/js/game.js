@@ -1,5 +1,4 @@
-
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -7,6 +6,10 @@ function preload() {
     game.load.image('starfield', '/assets/starfield.jpg');
 
 }
+
+var socket = io.connect('http://localhost:9001');
+var remotePlayers = [];
+var bricks;
 
 var ball;
 var paddle;
@@ -23,7 +26,50 @@ var introText;
 
 var s;
 
+function setSocketHandlers() {
+
+  socket.on('connect', function onSocketConnected() {
+    console.log('Connected to socket server');
+    socket.emit('new player', {
+      paddleX: <%= gameWidth / 2 %>,
+      ballX: <%= gameWidth / 2 %>,
+      ballY: 491
+    });
+  });
+
+  socket.on('disconnect', function onSocketDisconnect() {
+    console.log('Disconnected from socket server');
+  });
+
+  socket.on('new player', function onNewPlayer(data) {
+    var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
+    newPlayer.id = data.id;
+    remotePlayers.push(newPlayer);
+    console.log('New Player ' + newPlayer.id + ' added to remotePlayers array');
+  });
+
+
+  // Player removed message received
+  socket.on('remove player', function onRemovePlayer(data) {
+    var removePlayer = playerById(data.id);
+
+    // Player not found
+    if (!removePlayer) {
+      console.log('Player ' + data.id + ' not found in remotePlayers array');
+      return;
+    };
+
+    remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
+    console.log('Player ' + data.id + ' removed from remotePlayers array');
+  });
+
+  // TODO: Player move message received
+  // socket.on('move player', onMovePlayer);
+}
+
 function create() {
+
+    setSocketHandlers();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -201,4 +247,14 @@ function ballHitPaddle (_ball, _paddle) {
         _ball.body.velocity.x = 2 + Math.random() * 8;
     }
 
+}
+
+function playerById(id) {
+  var i;
+  for (i = 0; i < remotePlayers.length; i++) {
+    if (remotePlayers[i].id == id) {
+      return remotePlayers[i];
+    }
+  }
+  return false;
 }
