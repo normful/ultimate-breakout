@@ -13,7 +13,7 @@ var bricks;
 
 var ball;
 var paddle;
-var bricks;
+var bricksGroup;
 
 var ballOnPaddle = true;
 
@@ -26,50 +26,50 @@ var introText;
 
 var s;
 
-function setSocketHandlers() {
-
-  socket.on('connect', function onSocketConnected() {
-    console.log('Connected to socket server');
-    socket.emit('new player', {
-      paddleX: <%= gameWidth / 2 %>,
-      ballX: <%= gameWidth / 2 %>,
-      ballY: 491
-    });
+socket.on('connect', function onSocketConnected() {
+  console.log('Connected to socket server');
+  socket.emit('new player', {
+    paddleX: 400,
+    ballX: 400,
+    ballY: 491
   });
+});
 
-  socket.on('disconnect', function onSocketDisconnect() {
-    console.log('Disconnected from socket server');
-  });
+socket.on('disconnect', function onSocketDisconnect() {
+  console.log('Disconnected from socket server');
+});
 
-  socket.on('new player', function onNewPlayer(data) {
-    var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
-    newPlayer.id = data.id;
-    remotePlayers.push(newPlayer);
-    console.log('New Player ' + newPlayer.id + ' added to remotePlayers array');
-  });
+socket.on('new player', function onNewPlayer(data) {
+  var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
+  newPlayer.id = data.id;
+  remotePlayers.push(newPlayer);
+  console.log('New Player ' + newPlayer.id + ' added to remotePlayers array');
+});
 
 
-  // Player removed message received
-  socket.on('remove player', function onRemovePlayer(data) {
-    var removePlayer = playerById(data.id);
+// Player removed message received
+socket.on('remove player', function onRemovePlayer(data) {
+  var removePlayer = playerById(data.id);
 
-    // Player not found
-    if (!removePlayer) {
-      console.log('Player ' + data.id + ' not found in remotePlayers array');
-      return;
-    };
+  // Player not found
+  if (!removePlayer) {
+    console.log('Player ' + data.id + ' not found in remotePlayers array');
+    return;
+  };
 
-    remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
-    console.log('Player ' + data.id + ' removed from remotePlayers array');
-  });
+  remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
+  console.log('Player ' + data.id + ' removed from remotePlayers array');
+});
 
-  // TODO: Player move message received
-  // socket.on('move player', onMovePlayer);
-}
+socket.on('initial bricks', function onInitialBricks(data) {
+  console.log('"initial bricks" message received from server');
+  bricks = data.initialBricks;
+});
+
+// TODO: Player move message received
+// socket.on('move player', onMovePlayer);
 
 function create() {
-
-    setSocketHandlers();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -78,19 +78,22 @@ function create() {
 
     s = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
-    bricks = game.add.group();
-    bricks.enableBody = true;
-    bricks.physicsBodyType = Phaser.Physics.ARCADE;
+    bricksGroup = game.add.group();
+    bricksGroup.enableBody = true;
+    bricksGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
     var brick;
 
-    for (var y = 0; y < 4; y++)
+    for (var row = 0; row < 4; row++)
     {
-        for (var x = 0; x < 15; x++)
+        for (var col = 0; col < 15; col++)
         {
-            brick = bricks.create(120 + (x * 36), 100 + (y * 52), 'breakout', 'brick_' + (y+1) + '_1.png');
+            brick = bricksGroup.create(120 + (col * 36), 100 + (row * 52), 'breakout', 'brick_' + (row + 1) + '_1.png');
             brick.body.bounce.set(1);
             brick.body.immovable = true;
+            if (bricks[row][col] === 0) {
+              brick.kill();
+            }
         }
     }
 
@@ -148,7 +151,7 @@ function update () {
     else
     {
         game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
-        game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
+        game.physics.arcade.collide(ball, bricksGroup, ballHitBrick, null, this);
     }
 
 }
@@ -203,8 +206,8 @@ function ballHitBrick (_ball, _brick) {
 
     scoreText.text = 'score: ' + score;
 
-    //  Are they any bricks left?
-    if (bricks.countLiving() == 0)
+    //  Are they any bricksGroup left?
+    if (bricksGroup.countLiving() == 0)
     {
         //  New level starts
         score += 1000;
@@ -218,8 +221,8 @@ function ballHitBrick (_ball, _brick) {
         ball.y = paddle.y - 16;
         ball.animations.stop();
 
-        //  And bring the bricks back from the dead :)
-        bricks.callAll('revive');
+        //  And bring the bricksGroup back from the dead :)
+        bricksGroup.callAll('revive');
     }
 
 }

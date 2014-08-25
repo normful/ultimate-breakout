@@ -3,12 +3,12 @@ var Bricks = function(initialBricks) {
 
   var bricks = initialBricks;
 
-  var getBricks = function(){
+  var getBricks = function() {
     return bricks;
   };
 
   var killBrick = function(x, y) {
-    // TODO
+    bricks[x][y] = 0;
   };
 
   return {
