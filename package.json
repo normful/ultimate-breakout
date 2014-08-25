@@ -1,0 +1,36 @@
+{
+  "name": "breakout",
+  "private": true,
+  "devDependencies": {
+    "express": "3.0.0",
+    "socket.io": "1.0.6"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "description": "Lighthouse Labs Final Project",
+  "version": "0.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "3.0.0",
+    "socket.io": "1.0.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nsue/breakout.git"
+  },
+  "keywords": [
+    "phaser",
+    "breakout",
+    "node",
+    "multiplayer"
+  ],
+  "author": "Norman Sue, Amy Soetopo, Kenn Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nsue/breakout/issues"
+  }
+}
