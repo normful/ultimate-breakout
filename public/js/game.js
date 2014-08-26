@@ -73,7 +73,7 @@ socket.on('initial bricks', function onInitialBricks(data) {
 
   if (typeof(bricksGroup) === 'undefined' ||
       typeof(bricksGroup.children) === 'undefined') {
-    setTimeout(killInitialBricks, 1000);
+    setTimeout(killInitialBricks, 3000);
   } else {
     killInitialBricks();
   }
@@ -90,7 +90,7 @@ socket.on('brick kill to other clients', function onBrickKillToOtherClients(data
   if (typeof(bricks) === 'undefined' ||
       typeof(bricksGroup) === 'undefined' ||
       typeof(bricksGroup.children) === 'undefined') {
-    setTimeout(killBricks, 1000);
+    setTimeout(killBricks, 3000);
   } else {
     killBricks();
   }
@@ -202,7 +202,7 @@ function gameOver () {
 
 function ballHitBrick (_ball, _brick) {
 
-  console.log(_brick.row, _brick.col);
+  console.log('ballHitBrick: ',  _brick.row, _brick.col);
 
   socket.emit('brick kill from client', {
     row: _brick.row,
