@@ -1,33 +1,24 @@
 var express = require('express');
 var app = express();
+var port = process.env.PORT || 9000;
 
-// Uncomment to see Express debugging
-// app.use(express.logger());
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
-/*
- * HTTP code
- */
-
-app.set('port', (process.env.PORT || 9000));
-
-app.listen(app.get('port'), function() {
-  'use strict';
-  console.log('HTTP: listening on port ' + app.get('port'));
-});
-
-app.use('/', express.static(__dirname + '/public'));
-
-/*
- * Socket.IO code
- */
-
-var io = require('socket.io').listen(9001);
 var util = require('util');
+
 var Player = require("./Player").Player;
 var Bricks = require("./Bricks").Bricks;
 
 var players = [];
 var bricks;
+
+// Uncomment to see Express debugging
+// app.use(express.logger());
+
+/*
+ * Socket.IO code
+ */
 
 io.on('connection', onSocketConnection);
 
@@ -98,6 +89,7 @@ function onNewPlayer(data) {
   util.log(this.id + ' added to players array');
 }
 
+// Helper method
 function playerById(id) {
   var i;
   for (i = 0; i < players.length; i++) {
@@ -107,3 +99,14 @@ function playerById(id) {
   }
   return false;
 }
+
+/*
+ * HTTP code
+ */
+
+server.listen(port, function() {
+  'use strict';
+  console.log('HTTP: listening on port ' + port);
+});
+
+app.use('/', express.static(__dirname + '/public'));
