@@ -39,23 +39,10 @@ function onSocketConnection(client) {
   util.log(client.id + ' connected');
   client.on('disconnect', onClientDisconnect);
   client.on('new player', onNewPlayer);
-  client.on('brick killed', brickKilled);
+  client.on('brick kill from client', onBrickKillFromClient);
 
   // TODO
   // client.on('move player', onMovePlayer);
-}
-
-function brickKilled(data) {
-  console.log(data.row, data.col);
-  bricks.killBrick(data.row, data.col);
-
-  console.log(bricks.getBricks());
-
-  util.log("it was killed");
-
-  this.broadcast.emit('update bricks', {
-    childrenIndex: data.childrenIndex
-  });
 }
 
 function onClientDisconnect() {
@@ -74,7 +61,7 @@ function onClientDisconnect() {
 
   // Broadcast removed player to connected socket clients
   this.broadcast.emit('remove player', {id: this.id});
-  util.log(this.id + ' removed from players array');
+  util.log(this.id + ' removed from players array: ' + printPlayersArray());
 }
 
 function onNewPlayer(data) {
@@ -109,7 +96,24 @@ function onNewPlayer(data) {
 
   // Add new player to the players array
   players.push(newPlayer);
-  util.log(this.id + ' added to players array');
+  util.log(this.id + ' added to players array: ' + printPlayersArray());
+}
+
+function onBrickKillFromClient(data) {
+  util.log(
+    this.id + ' sent "brick kill from client" message: ' +
+    'row = ' + data.row + ' ' +
+    'col = ' + data.col + ' ' +
+    'childrenIndex = ' + data.childrenIndex
+  );
+
+  bricks.killBrick(data.row, data.col);
+
+  this.broadcast.emit('brick kill to other clients', {
+    row: data.row,
+    col: data.col,
+    childrenIndex: data.childrenIndex
+  });
 }
 
 function playerById(id) {
@@ -120,4 +124,14 @@ function playerById(id) {
     }
   }
   return false;
+}
+
+function printPlayersArray() {
+  var i;
+  var length = players.length;
+  var result = "[ ";
+  for (i = 0; i < length; i++) {
+    result += players[i].id + " ";
+  }
+  return result + "]";
 }
