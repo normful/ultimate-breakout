@@ -63,6 +63,12 @@ socket.on('initial bricks', function onInitialBricks(data) {
   bricks = data.initialBricks;
 });
 
+socket.on('update bricks', function onUpdateBricks(data){
+
+  bricks[data.row][data.col].kill();
+
+});
+
 // TODO: Player move message received
 // socket.on('move player', onMovePlayer);
 

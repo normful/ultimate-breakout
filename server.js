@@ -48,8 +48,15 @@ function onSocketConnection(client) {
 function brickKilled(data) {
   console.log(data.row, data.col);
   bricks.killBrick(data.row, data.col);
+
   console.log(bricks.getBricks());
+
   util.log("it was killed");
+
+  this.broadcast.emit('update bricks', {
+    row: data.row,
+    col: data.col
+  });
 }
 
 function onClientDisconnect() {
