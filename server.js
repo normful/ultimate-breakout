@@ -30,6 +30,7 @@ function onSocketConnection(client) {
   util.log(client.id + ' connected');
   client.on('disconnect', onClientDisconnect);
   client.on('new player', onNewPlayer);
+  client.on('brick kill from client', onBrickKillFromClient);
 
   // TODO
   // client.on('move player', onMovePlayer);
@@ -51,7 +52,7 @@ function onClientDisconnect() {
 
   // Broadcast removed player to connected socket clients
   this.broadcast.emit('remove player', {id: this.id});
-  util.log(this.id + ' removed from players array');
+  util.log(this.id + ' removed from players array: ' + printPlayersArray());
 }
 
 function onNewPlayer(data) {
@@ -83,10 +84,28 @@ function onNewPlayer(data) {
   this.emit('initial bricks', {
     initialBricks: bricks.getBricks()
   });
+  util.log(this.id + ' has been sent an "initial bricks" message');
 
   // Add new player to the players array
   players.push(newPlayer);
-  util.log(this.id + ' added to players array');
+  util.log(this.id + ' added to players array: ' + printPlayersArray());
+}
+
+function onBrickKillFromClient(data) {
+  util.log(
+    this.id + ' sent "brick kill from client" message: ' +
+    'row = ' + data.row + ' ' +
+    'col = ' + data.col + ' ' +
+    'childrenIndex = ' + data.childrenIndex
+  );
+
+  bricks.killBrick(data.row, data.col);
+
+  this.broadcast.emit('brick kill to other clients', {
+    row: data.row,
+    col: data.col,
+    childrenIndex: data.childrenIndex
+  });
 }
 
 // Helper method
@@ -98,6 +117,16 @@ function playerById(id) {
     }
   }
   return false;
+}
+
+function printPlayersArray() {
+  var i;
+  var length = players.length;
+  var result = "[ ";
+  for (i = 0; i < length; i++) {
+    result += players[i].id + " ";
+  }
+  return result + "]";
 }
 
 /*

@@ -41,11 +41,9 @@ socket.on('new player', function onNewPlayer(data) {
   var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
   newPlayer.id = data.id;
   remotePlayers.push(newPlayer);
-  console.log('New Player ' + newPlayer.id + ' added to remotePlayers array');
+  console.log('New Player ' + newPlayer.id + ' added to remotePlayers array: ' + printRemotePlayersArray());
 });
 
-
-// Player removed message received
 socket.on('remove player', function onRemovePlayer(data) {
   var removePlayer = playerById(data.id);
 
@@ -53,19 +51,51 @@ socket.on('remove player', function onRemovePlayer(data) {
   if (!removePlayer) {
     console.log('Player ' + data.id + ' not found in remotePlayers array');
     return;
-  };
+  }
 
   remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
-  console.log('Player ' + data.id + ' removed from remotePlayers array');
+  console.log('Player ' + data.id + ' removed from remotePlayers array: ' + printRemotePlayersArray());
 });
 
 socket.on('initial bricks', function onInitialBricks(data) {
-  console.log('"initial bricks" message received from server');
+
   bricks = data.initialBricks;
+
+  var killInitialBricks = function killInitialBricks() {
+    for (var row = 0; row < 4; row++) {
+      for (var col = 0; col < 15; col++) {
+        if (bricks[row][col] === 0) {
+          bricksGroup.children[row * 15 + col].kill();
+        }
+      }
+    }
+  };
+
+  if (typeof(bricksGroup) === 'undefined' ||
+      typeof(bricksGroup.children) === 'undefined') {
+    setTimeout(killInitialBricks, 3000);
+  } else {
+    killInitialBricks();
+  }
+
 });
 
-// TODO: Player move message received
-// socket.on('move player', onMovePlayer);
+socket.on('brick kill to other clients', function onBrickKillToOtherClients(data) {
+
+  var killBricks = function killBricks() {
+    bricks[data.row][data.col] = 0;
+    bricksGroup.children[data.childrenIndex].kill();
+  };
+
+  if (typeof(bricks) === 'undefined' ||
+      typeof(bricksGroup) === 'undefined' ||
+      typeof(bricksGroup.children) === 'undefined') {
+    setTimeout(killBricks, 3000);
+  } else {
+    killBricks();
+  }
+
+});
 
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -80,15 +110,16 @@ function create() {
   bricksGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
   var brick;
+  var brickCount = 0;
 
   for (var row = 0; row < 4; row++) {
     for (var col = 0; col < 15; col++) {
       brick = bricksGroup.create(120 + (col * 36), 100 + (row * 52), 'breakout', 'brick_' + (row + 1) + '_1.png');
       brick.body.bounce.set(1);
       brick.body.immovable = true;
-      if (bricks[row][col] === 0) {
-        brick.kill();
-      }
+      brick.row = row;
+      brick.col = col;
+      brick.childrenIndex = brickCount++;
     }
   }
 
@@ -170,13 +201,22 @@ function gameOver () {
 }
 
 function ballHitBrick (_ball, _brick) {
+
+  console.log('ballHitBrick: ',  _brick.row, _brick.col);
+
+  socket.emit('brick kill from client', {
+    row: _brick.row,
+    col: _brick.col,
+    childrenIndex: _brick.childrenIndex
+  });
+
   _brick.kill();
 
   score += 10;
   scoreText.text = 'score: ' + score;
 
   //  Are they any bricksGroup left?
-  if (bricksGroup.countLiving() == 0) {
+  if (bricksGroup.countLiving() === 0) {
     //  New level starts
     score += 1000;
     scoreText.text = 'score: ' + score;
@@ -214,10 +254,21 @@ function ballHitPaddle (_ball, _paddle) {
 
 function playerById(id) {
   var i;
-  for (i = 0; i < remotePlayers.length; i++) {
-    if (remotePlayers[i].id == id) {
+  var length = remotePlayers.length;
+  for (i = 0; i < length; i++) {
+    if (remotePlayers[i].id === id) {
       return remotePlayers[i];
     }
   }
   return false;
+}
+
+function printRemotePlayersArray() {
+  var i;
+  var length = remotePlayers.length;
+  var result = "[ ";
+  for (i = 0; i < length; i++) {
+    result += remotePlayers[i].id + " ";
+  }
+  return result + "]";
 }
