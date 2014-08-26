@@ -93,6 +93,7 @@ function onNewPlayer(data) {
   this.emit('initial bricks', {
     initialBricks: bricks.getBricks()
   });
+  util.log(this.id + ' has been sent an "initial bricks" message');
 
   // Add new player to the players array
   players.push(newPlayer);
