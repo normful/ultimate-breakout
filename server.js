@@ -54,8 +54,7 @@ function brickKilled(data) {
   util.log("it was killed");
 
   this.broadcast.emit('update bricks', {
-    row: data.row,
-    col: data.col
+    childrenIndex: data.childrenIndex
   });
 }
 

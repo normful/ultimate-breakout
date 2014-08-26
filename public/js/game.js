@@ -64,9 +64,7 @@ socket.on('initial bricks', function onInitialBricks(data) {
 });
 
 socket.on('update bricks', function onUpdateBricks(data){
-
-  bricks[data.row][data.col].kill();
-
+  bricksGroup.children[data.childrenIndex].kill();
 });
 
 // TODO: Player move message received
@@ -86,11 +84,17 @@ function create() {
 
   var brick;
 
+  var brickCount = 0;
+
   for (var row = 0; row < 4; row++) {
     for (var col = 0; col < 15; col++) {
       brick = bricksGroup.create(120 + (col * 36), 100 + (row * 52), 'breakout', 'brick_' + (row + 1) + '_1.png');
       brick.body.bounce.set(1);
       brick.body.immovable = true;
+      brick.row = row;
+      brick.col = col;
+      brick.childrenIndex = brickCount;
+      brickCount++;
       if (bricks[row][col] === 0) {
         brick.kill();
       }
@@ -175,15 +179,10 @@ function gameOver () {
 }
 
 function ballHitBrick (_ball, _brick) {
-  var ballX = _brick.world.x;
-  var ballY = _brick.world.y;
 
-  var ballCol = (ballX - 120) / 36;
-  var ballRow = (ballY - 100) / 52;
+  console.log(_brick.row, _brick.col);
 
-  console.log(ballRow, ballCol);
-
-  socket.emit('brick killed', { row: ballRow, col: ballCol });
+  socket.emit('brick killed', { row: _brick.row, col: _brick.col, childrenIndex: _brick.childrenIndex });
 
   _brick.kill();
 
