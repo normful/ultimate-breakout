@@ -202,7 +202,7 @@ function gameOver () {
 
 function ballHitBrick (_ball, _brick) {
 
-  console.log('ballHitBrick: ',  _brick.row, _brick.col);
+  console.log('ballHitBrick:',  _brick.row, _brick.col);
 
   socket.emit('brick kill from client', {
     row: _brick.row,
