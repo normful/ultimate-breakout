@@ -39,9 +39,17 @@ function onSocketConnection(client) {
   util.log(client.id + ' connected');
   client.on('disconnect', onClientDisconnect);
   client.on('new player', onNewPlayer);
+  client.on('brick killed', brickKilled);
 
   // TODO
   // client.on('move player', onMovePlayer);
+}
+
+function brickKilled(data) {
+  console.log(data.row, data.col);
+  bricks.killBrick(data.row, data.col);
+  console.log(bricks.getBricks());
+  util.log("it was killed");
 }
 
 function onClientDisconnect() {

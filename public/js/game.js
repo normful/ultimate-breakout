@@ -60,7 +60,6 @@ socket.on('remove player', function onRemovePlayer(data) {
 });
 
 socket.on('initial bricks', function onInitialBricks(data) {
-  console.log('"initial bricks" message received from server');
   bricks = data.initialBricks;
 });
 
@@ -170,6 +169,16 @@ function gameOver () {
 }
 
 function ballHitBrick (_ball, _brick) {
+  var ballX = _brick.world.x;
+  var ballY = _brick.world.y;
+
+  var ballCol = (ballX - 120) / 36;
+  var ballRow = (ballY - 100) / 52;
+
+  console.log(ballRow, ballCol);
+
+  socket.emit('brick killed', { row: ballRow, col: ballCol });
+
   _brick.kill();
 
   score += 10;
