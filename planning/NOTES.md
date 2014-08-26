@@ -95,7 +95,7 @@ Unsorted list of features from brainstorming:
 ## Competitive individual players
 
 - A player can join at any time.
-- A player hits the same bricks as the other players. 
+- A player hits the same bricks as the other players.
 - If a player hits a brick in their game, it disappears from the bricks in the other players' games.
 - Each player is given 3 lives.
 
@@ -107,8 +107,8 @@ Unsorted list of features from brainstorming:
 
 - Team 1 starts with a random arrangement of 50% of the bricks on the canvas being shown.
 - Team 2 starts with the inverse of Team 1's brick arrangement.
-- When a player on Team 1 kills a brick, it disappears from Team 1's canvas and appears on Team 2's canvas. 
-- Conversely, when a player on Team 2 kills a brick, it disappears from Team 2's canvas and appears on Team 1's canvas. 
+- When a player on Team 1 kills a brick, it disappears from Team 1's canvas and appears on Team 2's canvas.
+- Conversely, when a player on Team 2 kills a brick, it disappears from Team 2's canvas and appears on Team 1's canvas.
 - Each player is given unlimited lives.
 
 - Game objective: Beat the other team at clearing bricks.
