@@ -175,6 +175,8 @@ function ballHitBrick (_ball, _brick) {
   score += 10;
   scoreText.text = 'score: ' + score;
 
+  socket.emit('updated score');
+
   //  Are they any bricksGroup left?
   if (bricksGroup.countLiving() == 0) {
     //  New level starts

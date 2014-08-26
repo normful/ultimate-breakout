@@ -30,9 +30,14 @@ function onSocketConnection(client) {
   util.log(client.id + ' connected');
   client.on('disconnect', onClientDisconnect);
   client.on('new player', onNewPlayer);
+  client.on('updated score', onUpdatedScore);
 
   // TODO
   // client.on('move player', onMovePlayer);
+}
+
+function onUpdatedScore() {
+  util.log("client sent update score message to server");
 }
 
 function onClientDisconnect() {

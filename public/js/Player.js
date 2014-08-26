@@ -5,6 +5,7 @@ var Player = function(startPaddleX, startBallX, startBallY) {
   var paddleX = startPaddleX;
   var ballX = startBallX;
   var ballY = startBallY;
+  var score;
 
   // Getters and setters
   var getPaddleX = function() {
@@ -31,6 +32,15 @@ var Player = function(startPaddleX, startBallX, startBallY) {
     ballY = newBallY;
   };
 
+  var getScore = function() {
+    return score;
+  }
+
+  var setScore = function(newScore) {
+    score = newScore;
+  }
+
+
   // Define which variables and methods can be accessed
   return {
     getPaddleX: getPaddleX,
@@ -39,6 +49,8 @@ var Player = function(startPaddleX, startBallX, startBallY) {
     setBallX: setBallX,
     getBallY: getBallY,
     setBallY: setBallY,
+    getScore: getScore,
+    setScore: setScore,
     id: id
   };
 };
