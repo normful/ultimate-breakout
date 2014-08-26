@@ -5,7 +5,7 @@ function preload() {
   game.load.image('starfield', '/assets/starfield.jpg');
 }
 
-var socket = io.connect('http://localhost:9001');
+var socket = io.connect(window.location.hostname);
 var remotePlayers = [];
 var bricks;
 
