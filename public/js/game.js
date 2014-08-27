@@ -4,7 +4,7 @@ var GAME_HEIGHT = 600;
 
 var background;
 
-var bricksGroup;
+var bricks;
 var BRICK_ROWS = 4;
 var BRICK_COLS = 15;
 var BRICK_START_X = 120;
@@ -67,16 +67,16 @@ function create() {
 
 function createBricks() {
   console.log('createBricks invoked');
-  bricksGroup = game.add.group();
-  bricksGroup.enableBody = true;
-  bricksGroup.physicsBodyType = Phaser.Physics.ARCADE;
+  bricks = game.add.group();
+  bricks.enableBody = true;
+  bricks.physicsBodyType = Phaser.Physics.ARCADE;
 
   var brick;
   var brickCount = 0;
 
   for (var row = 0; row < BRICK_ROWS; row++) {
     for (var col = 0; col < BRICK_COLS; col++) {
-      brick = bricksGroup.create(
+      brick = bricks.create(
         BRICK_START_X + (col * BRICK_X_SPACING),
         BRICK_START_Y + (row * BRICK_Y_SPACING),
         'breakout',
@@ -177,13 +177,13 @@ function onInitialBricks(data) {
     for (var row = 0; row < BRICK_ROWS; row++) {
       for (var col = 0; col < BRICK_COLS; col++) {
         if (data.initialBricks[row][col] === 0) {
-          bricksGroup.children[row * BRICK_COLS + col].kill();
+          bricks.children[row * BRICK_COLS + col].kill();
         }
       }
     }
   };
-  if (typeof(bricksGroup) === 'undefined' ||
-      typeof(bricksGroup.children) === 'undefined') {
+  if (typeof(bricks) === 'undefined' ||
+      typeof(bricks.children) === 'undefined') {
     setTimeout(killInitialBricks, 3000);
   } else {
     killInitialBricks();
@@ -194,10 +194,10 @@ function onBrickKillToOtherClients(data) {
   console.log('onBrickKillToOtherClients invoked');
   var killBricks = function killBricks() {
     console.log('killBricks invoked');
-    bricksGroup.children[data.childrenIndex].kill();
+    bricks.children[data.childrenIndex].kill();
   };
-  if (typeof(bricksGroup) === 'undefined' ||
-      typeof(bricksGroup.children) === 'undefined') {
+  if (typeof(bricks) === 'undefined' ||
+      typeof(bricks.children) === 'undefined') {
     setTimeout(killBricks, 3000);
   } else {
     killBricks();
@@ -217,7 +217,7 @@ function update() {
     ball.body.x = paddle.x;
   } else {
     game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
-    game.physics.arcade.collide(ball, bricksGroup, ballHitBrick, null, this);
+    game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
   }
 }
 
@@ -263,8 +263,8 @@ function ballHitBrick(_ball, _brick) {
   score += 10;
   scoreText.text = 'score: ' + score;
 
-  //  Are they any bricksGroup left?
-  if (bricksGroup.countLiving() === 0) {
+  //  Are they any bricks left?
+  if (bricks.countLiving() === 0) {
     //  New level starts
     score += 1000;
     scoreText.text = 'score: ' + score;
@@ -277,8 +277,8 @@ function ballHitBrick(_ball, _brick) {
     ball.y = PADDLE_Y - BALL_HEIGHT;
     ball.animations.stop();
 
-    //  And bring the bricksGroup back from the dead :)
-    bricksGroup.callAll('revive');
+    //  And bring the bricks back from the dead :)
+    bricks.callAll('revive');
   }
 }
 
