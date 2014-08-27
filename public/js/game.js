@@ -207,16 +207,16 @@
   }
 
   function update() {
-    paddle.x = game.input.x;
+    paddle.body.x = game.input.x;
 
-    if (paddle.x < HALF_PADDLE_WIDTH) {
-      paddle.x = HALF_PADDLE_WIDTH;
-    } else if (paddle.x > game.width - HALF_PADDLE_WIDTH) {
-      paddle.x = game.width - HALF_PADDLE_WIDTH;
+    if (paddle.body.x < HALF_PADDLE_WIDTH) {
+      paddle.body.x = HALF_PADDLE_WIDTH;
+    } else if (paddle.body.x > game.width - HALF_PADDLE_WIDTH) {
+      paddle.body.x = game.width - HALF_PADDLE_WIDTH;
     }
 
     if (ballOnPaddle) {
-      ball.body.x = paddle.x;
+      ball.body.x = paddle.body.x;
     } else {
       game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
       game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
@@ -275,8 +275,8 @@
       //  Let's move the ball back to the paddle
       ballOnPaddle = true;
       ball.body.velocity.set(0);
-      ball.x = paddle.x + BALL_WIDTH;
-      ball.y = PADDLE_Y - BALL_HEIGHT;
+      ball.body.x = paddle.body.x + BALL_WIDTH;
+      ball.body.y = PADDLE_Y - BALL_HEIGHT;
       ball.animations.stop();
 
       //  And bring the bricks back from the dead :)
@@ -287,13 +287,13 @@
   function ballHitPaddle(_ball, _paddle) {
     var diff = 0;
 
-    if (_ball.x < _paddle.x) {
+    if (_ball.body.x < _paddle.body.x) {
       //  Ball is on the left-hand side of the paddle
-      diff = _paddle.x - _ball.x;
+      diff = _paddle.body.x - _ball.body.x;
       _ball.body.velocity.x = (BALL_X_VELOCITY_MULTIPLIER * diff * -1);
-    } else if (_ball.x > _paddle.x) {
+    } else if (_ball.body.x > _paddle.body.x) {
       //  Ball is on the right-hand side of the paddle
-      diff = _ball.x -_paddle.x;
+      diff = _ball.body.x -_paddle.body.x;
       _ball.body.velocity.x = (BALL_X_VELOCITY_MULTIPLIER * diff);
     } else {
       //  Ball is perfectly in the middle
