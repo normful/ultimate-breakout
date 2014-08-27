@@ -152,7 +152,7 @@
   function onNewPlayer(data) {
     console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score };
-    console.log(data.id + 'added to remotePlayers: ' + JSON.stringify(remotePlayers));
+    console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onRemovePlayer(data) {
