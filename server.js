@@ -6,12 +6,11 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 var util = require('util');
+var utilInspectOpts = { showHidden: false, depth: 1, colors: true };
 
-var Player = require("./Player").Player;
-var Bricks = require("./Bricks").Bricks;
-
-var players = [];
+var players = {};
 var bricks;
+var allBricks;
 
 // Uncomment to see Express debugging
 // app.use(express.logger());
@@ -23,119 +22,95 @@ var bricks;
 io.on('connection', onSocketConnection);
 
 function onSocketConnection(client) {
-  if (players.length === 0) {
-    bricks = new Bricks();
-  }
-
   util.log(client.id + ' connected');
-  client.on('disconnect', onClientDisconnect);
   client.on('new player', onNewPlayer);
+  client.on('disconnect', onClientDisconnect);
   client.on('brick kill from client', onBrickKillFromClient);
-
-  // TODO
-  // client.on('move player', onMovePlayer);
-}
-
-function onClientDisconnect() {
-  util.log(this.id + ' disconnected');
-
-  var removePlayer = playerById(this.id);
-
-  // Player not found
-  if (!removePlayer) {
-    util.log(this.id + ' not found in players array');
-    return;
-  }
-
-  // Remove player from players array
-  players.splice(players.indexOf(removePlayer), 1);
-
-  // Broadcast removed player to connected socket clients
-  this.broadcast.emit('remove player', {id: this.id});
-  util.log(this.id + ' removed from players array: ' + printPlayersArray());
 }
 
 function onNewPlayer(data) {
   util.log(this.id + ' sent "new player" message');
 
-  var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
-  newPlayer.id = this.id;
+  // First 'new player' message sets initial brick layout
+  // This might be a reconnecting client with a partially played game
+  if (isEmpty(players)) {
+
+    bricks = data.existingBricks;
+    util.log('first new player setting brick layout to: ' + bricks)
+
+    // string of "1", repeated data.brickCount times
+    allBricks = new Array(data.existingBricks.length + 1).join("1");
+  }
+
+  // Send existing players to the new player
+  for (var playerID in players) {
+    if (players.hasOwnProperty(playerID)) {
+      util.log(this.id + ' has been sent the existing player ' + playerID);
+      this.emit('new player', {
+        id: playerID,
+        score: players[playerID].score
+      });
+    }
+  }
+
+  // Send existing brick layout to the new player
+  this.emit('initial bricks', { initialBricks: bricks });
+  util.log(this.id + ' has been sent the existing brick layout: ' + bricks);
+
+  // Add new player to players array
+  players[this.id] = { score: 0 };
+  util.log(this.id + ' added to players');
+  util.log('players = ' + util.inspect(players, utilInspectOpts));
 
   // Broadcast new player to all socket clients except this new one
   this.broadcast.emit('new player', {
-    id: newPlayer.id,
-    paddleX: newPlayer.getPaddleX(),
-    ballX: newPlayer.getBallX(),
-    ballY: newPlayer.getBallY()
+    id: this.id,
+    score: 0
   });
+  util.log(this.id + ' broadcast to all existing players');
+}
 
-  // Send existing players to the new player
-  var i, existingPlayer;
-  for (i = 0; i < players.length; i++) {
-    existingPlayer = players[i];
-    this.emit('new player', {
-      id: existingPlayer.id,
-      paddleX: existingPlayer.getPaddleX(),
-      ballX: existingPlayer.getBallX(),
-      ballY: existingPlayer.getBallY()
-    });
+function onClientDisconnect() {
+  util.log(this.id + ' disconnected');
+
+  if (delete players[this.id]) {
+    util.log(this.id + ' removed from players');
+    util.log('players = ' + util.inspect(players, utilInspectOpts));
+  } else {
+    util.log(this.id + ' not found in players');
   }
 
-  this.emit('initial bricks', {
-    initialBricks: bricks.getBricks()
-  });
-  util.log(this.id + ' has been sent an "initial bricks" message');
+  // Broadcast removed player to connected socket clients
+  this.broadcast.emit('remove player', { id: this.id });
+  util.log(this.id + ' removal broadcast to existing players');
 
-  // Add new player to the players array
-  players.push(newPlayer);
-  util.log(this.id + ' added to players array: ' + printPlayersArray());
+  if (isEmpty(players)) {
+    resetBricks();
+  }
 }
 
 function onBrickKillFromClient(data) {
-  util.log(
-    this.id + ' sent "brick kill from client" message: ' +
-    'row = ' + data.row + ' ' +
-    'col = ' + data.col + ' ' +
-    'childrenIndex = ' + data.childrenIndex
-  );
-
-  bricks.killBrick(data.row, data.col);
-
-  this.broadcast.emit('brick kill to other clients', {
-    row: data.row,
-    col: data.col,
-    childrenIndex: data.childrenIndex
-  });
+  // util.log(this.id + ' sent "brick kill from client" message. brickIndex = ' + data.brickIndex);
+  bricks = bricks.slice(0, data.brickIndex) + "0" + bricks.slice(data.brickIndex + 1);
+  // util.log('Server bricks updated: ' + bricks);
+  this.broadcast.emit('brick kill to other clients', { brickIndex: data.brickIndex });
 }
 
-// Helper method
-function playerById(id) {
-  var i;
-  for (i = 0; i < players.length; i++) {
-    if (players[i].id === id) {
-      return players[i];
-    }
-  }
-  return false;
+function resetBricks() {
+  util.log('All users disconnected. resetting bricks to: ' + allBricks);
+  bricks = allBricks;
 }
 
-function printPlayersArray() {
-  var i;
-  var length = players.length;
-  var result = "[ ";
-  for (i = 0; i < length; i++) {
-    result += players[i].id + " ";
-  }
-  return result + "]";
+function isEmpty(obj) {
+  return (Object.getOwnPropertyNames(obj).length === 0);
 }
-
 /*
  * HTTP code
  */
 
 server.listen(port, function() {
   'use strict';
-  console.log('HTTP: listening on port ' + port);
+  util.log('HTTP: listening on port ' + port);
 });
 
 app.use('/', express.static(__dirname + '/public'));
