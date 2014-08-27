@@ -17,7 +17,6 @@
   var paddle;
   var PADDLE_Y = 500;
   var PADDLE_WIDTH = 48;
-  var HALF_PADDLE_WIDTH = PADDLE_WIDTH / 2;
 
   var ball;
   var ballOnPaddle = true;
@@ -207,16 +206,16 @@
   }
 
   function update() {
-    paddle.body.x = game.input.x;
+    paddle.body.x = game.input.x - 0.5 * PADDLE_WIDTH;
 
-    if (paddle.body.x < HALF_PADDLE_WIDTH) {
-      paddle.body.x = HALF_PADDLE_WIDTH;
-    } else if (paddle.body.x > game.width - HALF_PADDLE_WIDTH) {
-      paddle.body.x = game.width - HALF_PADDLE_WIDTH;
+    if (paddle.body.x < 0) {
+      paddle.body.x = 0;
+    } else if (paddle.body.x > game.width - PADDLE_WIDTH) {
+      paddle.body.x = game.width - PADDLE_WIDTH;
     }
 
     if (ballOnPaddle) {
-      ball.body.x = paddle.body.x;
+      ball.body.x = paddle.body.x + 0.5 * PADDLE_WIDTH - 0.5 * BALL_WIDTH;
     } else {
       game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
       game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
@@ -240,10 +239,14 @@
     if (lives === 0) {
       gameOver();
     } else {
-      ballOnPaddle = true;
-      ball.reset(paddle.body.x + BALL_WIDTH, PADDLE_Y - BALL_HEIGHT);
-      ball.animations.stop();
+      putBallOnPaddle();
     }
+  }
+
+  function putBallOnPaddle() {
+    ballOnPaddle = true;
+    ball.reset(paddle.body.x + 0.5 * PADDLE_WIDTH - 0.5 * BALL_WIDTH, PADDLE_Y - BALL_HEIGHT);
+    ball.animations.stop();
   }
 
   function gameOver() {
@@ -273,11 +276,7 @@
       introText.text = '- Next Level -';
 
       //  Let's move the ball back to the paddle
-      ballOnPaddle = true;
-      ball.body.velocity.set(0);
-      ball.body.x = paddle.body.x + BALL_WIDTH;
-      ball.body.y = PADDLE_Y - BALL_HEIGHT;
-      ball.animations.stop();
+      putBallOnPaddle();
 
       //  And bring the bricks back from the dead :)
       bricks.callAll('revive');
