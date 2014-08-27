@@ -220,6 +220,10 @@
       game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
       game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
     }
+
+    if (bricks.countLiving() === 0) {
+      startNewRound();
+    }
   }
 
   function releaseBall() {
@@ -235,7 +239,6 @@
   function ballLost() {
     lives--;
     livesText.text = 'lives: ' + lives;
-
     if (lives === 0) {
       gameOver();
     } else {
@@ -247,6 +250,15 @@
     ballOnPaddle = true;
     ball.reset(paddle.body.x + 0.5 * PADDLE_WIDTH - 0.5 * BALL_WIDTH, PADDLE_Y - BALL_HEIGHT);
     ball.animations.stop();
+  }
+
+  function startNewRound() {
+    console.log('startNewRound invoked');
+    putBallOnPaddle();
+    bricks.callAll('revive');
+    score += 1000;
+    scoreText.text = 'score: ' + score;
+    infoText.text = 'Next Round';
   }
 
   function gameOver() {
@@ -267,20 +279,6 @@
 
     score += 10;
     scoreText.text = 'score: ' + score;
-
-    //  Are they any bricks left?
-    if (bricks.countLiving() === 0) {
-      //  New level starts
-      score += 1000;
-      scoreText.text = 'score: ' + score;
-      infoText.text = 'Next Round';
-
-      //  Let's move the ball back to the paddle
-      putBallOnPaddle();
-
-      //  And bring the bricks back from the dead :)
-      bricks.callAll('revive');
-    }
   }
 
   function ballHitPaddle(_ball, _paddle) {
