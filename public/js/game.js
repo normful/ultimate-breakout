@@ -11,8 +11,8 @@
   var BRICK_COLS = 15;
   var BRICK_START_X = 120;
   var BRICK_START_Y = 100;
-  var BRICK_X_SPACING = 36;
-  var BRICK_Y_SPACING = 52;
+  var BRICK_SPACING_X = 36;
+  var BRICK_SPACING_Y = 52;
 
   var paddle;
   var PADDLE_Y = 500;
@@ -22,9 +22,9 @@
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
   var BALL_HEIGHT = 16;
-  var BALL_X_RELEASE_VELOCITY = -75;
-  var BALL_Y_RELEASE_VELOCITY = -300;
-  var BALL_X_VELOCITY_MULTIPLIER = 10;
+  var BALL_RELEASE_VELOCITY_X = -75;
+  var BALL_RELEASE_VELOCITY_Y = -300;
+  var BALL_VELOCITY_MULTIPLIER_X = 10;
 
   var score = 0;
   var lives = 3;
@@ -78,8 +78,8 @@
     for (var row = 0; row < BRICK_ROWS; row++) {
       for (var col = 0; col < BRICK_COLS; col++) {
         brick = bricks.create(
-          BRICK_START_X + (col * BRICK_X_SPACING),
-          BRICK_START_Y + (row * BRICK_Y_SPACING),
+          BRICK_START_X + (col * BRICK_SPACING_X),
+          BRICK_START_Y + (row * BRICK_SPACING_Y),
           'breakout',
           'brick_' + (row + 1) + '_1.png'
         );
@@ -226,8 +226,8 @@
   function releaseBall() {
     if (ballOnPaddle) {
       ballOnPaddle = false;
-      ball.body.velocity.x = BALL_X_RELEASE_VELOCITY;
-      ball.body.velocity.y = BALL_Y_RELEASE_VELOCITY;
+      ball.body.velocity.x = BALL_RELEASE_VELOCITY_X;
+      ball.body.velocity.y = BALL_RELEASE_VELOCITY_Y;
       ball.animations.play('spin');
       infoText.visible = false;
     }
@@ -284,15 +284,15 @@
     if (_ball.body.x < _paddle.body.x) {
       //  Ball is on the left-hand side of the paddle
       diff = _paddle.body.x - _ball.body.x;
-      _ball.body.velocity.x = (BALL_X_VELOCITY_MULTIPLIER * diff * -1);
+      _ball.body.velocity.x = (BALL_VELOCITY_MULTIPLIER_X * diff * -1);
     } else if (_ball.body.x > _paddle.body.x) {
       //  Ball is on the right-hand side of the paddle
       diff = _ball.body.x -_paddle.body.x;
-      _ball.body.velocity.x = (BALL_X_VELOCITY_MULTIPLIER * diff);
+      _ball.body.velocity.x = (BALL_VELOCITY_MULTIPLIER_X * diff);
     } else {
       //  Ball is perfectly in the middle
       //  Add a little random X to stop it bouncing straight up!
-      _ball.body.velocity.x = BALL_X_VELOCITY_MULTIPLIER * 0.2 + Math.random() * BALL_X_VELOCITY_MULTIPLIER * 0.8;
+      _ball.body.velocity.x = BALL_VELOCITY_MULTIPLIER_X * 0.2 + Math.random() * BALL_VELOCITY_MULTIPLIER_X * 0.8;
     }
   }
 
