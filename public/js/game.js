@@ -34,7 +34,7 @@
   var TEXT_Y = 550;
 
   var socket;
-  var remotePlayers = [];
+  var remotePlayers = {};
 
   function preload() {
     console.log('preload invoked');
@@ -143,11 +143,7 @@
 
   function onSocketConnect() {
     console.log('onSocketConnect invoked');
-    socket.emit('new player', {
-      paddleX: GAME_WIDTH / 2,
-      ballX: GAME_WIDTH / 2,
-      ballY: PADDLE_Y - BALL_HEIGHT / 2
-    });
+    socket.emit('new player');
   }
 
   function onSocketDisconnect() {
@@ -155,20 +151,23 @@
   }
 
   function onNewPlayer(data) {
-    var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
-    newPlayer.id = data.id;
-    remotePlayers.push(newPlayer);
-    console.log(newPlayer.id + ' added to remotePlayers array: ' + printRemotePlayersArray());
+    remotePlayers[data.id] = {
+      score: data.score,
+      paddleX: game.world.centerX,
+      ballX: game.world.centerX,
+      ballY: PADDLE_Y - BALL_HEIGHT,
+      ballVelocityX: 0,
+      ballVelocityY: 0
+    };
+    console.log(data.id + 'added to remotePlayers: ' + remotePlayers);
   }
 
   function onRemovePlayer(data) {
-    var playerToRemove = findPlayerById(data.id);
-    if (!playerToRemove) {
-      console.log(data.id + ' not found in remotePlayers array');
-      return;
+    if (delete remotePlayers[data.id]) {
+      console.log(data.id + ' removed from remotePlayers: ' + remotePlayers);
+    } else {
+      console.log(data.id + ' not found in remotePlayers');
     }
-    remotePlayers.splice(remotePlayers.indexOf(playerToRemove), 1);
-    console.log(data.id + ' removed from remotePlayers array: ' + printRemotePlayersArray());
   }
 
   function onInitialBricks(data) {
@@ -297,27 +296,6 @@
       //  Add a little random X to stop it bouncing straight up!
       _ball.body.velocity.x = BALL_X_VELOCITY_MULTIPLIER * 0.2 + Math.random() * BALL_X_VELOCITY_MULTIPLIER * 0.8;
     }
-  }
-
-  function findPlayerById(id) {
-    var i;
-    var length = remotePlayers.length;
-    for (i = 0; i < length; i++) {
-      if (remotePlayers[i].id === id) {
-        return remotePlayers[i];
-      }
-    }
-    return false;
-  }
-
-  function printRemotePlayersArray() {
-    var i;
-    var length = remotePlayers.length;
-    var result = "[ ";
-    for (i = 0; i < length; i++) {
-      result += remotePlayers[i].id + " ";
-    }
-    return result + "]";
   }
 
 }());
