@@ -26,6 +26,15 @@ function onSocketConnection(client) {
   client.on('new player', onNewPlayer);
   client.on('disconnect', onClientDisconnect);
   client.on('brick kill from client', onBrickKillFromClient);
+  client.on('paddle release ball', onPaddleReleaseBall);
+}
+
+function onPaddleReleaseBall(data) {
+  this.broadcast.emit('paddle release ball', data);
+  util.log(this.id + ' has released the ball');
+  util.log("exit x vel = " + data.exitVelocityX);
+  util.log("exit y vel = " + data.exitVelocityY);
+  util.log("pos x = " + data.posX);
 }
 
 function onNewPlayer(data) {
