@@ -151,39 +151,36 @@
   }
 
   function onNewPlayer(data) {
-    remotePlayers[data.id] = {
-      score: data.score,
-      paddleX: game.world.centerX,
-      ballX: game.world.centerX,
-      ballY: PADDLE_Y - BALL_HEIGHT,
-      ballVelocityX: 0,
-      ballVelocityY: 0
-    };
-    console.log(data.id + 'added to remotePlayers: ' + remotePlayers);
+    console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
+    remotePlayers[data.id] = { score: data.score };
+    console.log(data.id + 'added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onRemovePlayer(data) {
     if (delete remotePlayers[data.id]) {
-      console.log(data.id + ' removed from remotePlayers: ' + remotePlayers);
+      console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
     } else {
       console.log(data.id + ' not found in remotePlayers');
     }
   }
 
   function onInitialBricks(data) {
-    console.log('onInitialBricks invoked');
+    console.log('onInitialBricks invoked. data = ' + JSON.stringify(data));
     var killInitialBricks = function killInitialBricks() {
       console.log('killInitialBricks invoked');
+      var i;
       for (var row = 0; row < BRICK_ROWS; row++) {
         for (var col = 0; col < BRICK_COLS; col++) {
-          if (data.initialBricks[row][col] === 0) {
-            bricks.children[row * BRICK_COLS + col].kill();
+          i = row * BRICK_COLS + col;
+          if (data.initialBricks.charAt(i) === "0") {
+            bricks.children[i].kill();
           }
         }
       }
     };
     if (typeof(bricks) === 'undefined' ||
         typeof(bricks.children) === 'undefined') {
+      console.log('setTimeout for killInitialBricks invoked');
       setTimeout(killInitialBricks, 3000);
     } else {
       killInitialBricks();
@@ -198,6 +195,7 @@
     };
     if (typeof(bricks) === 'undefined' ||
         typeof(bricks.children) === 'undefined') {
+      console.log('setTimeout for killBricks invoked');
       setTimeout(killBricks, 3000);
     } else {
       killBricks();
