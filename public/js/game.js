@@ -39,6 +39,7 @@ function create() {
   var brick;
   var brickCount = 0;
 
+  console.log('Populating bricksGroup with brick Sprites');
   for (var row = 0; row < 4; row++) {
     for (var col = 0; col < 15; col++) {
       brick = bricksGroup.create(120 + (col * 36), 100 + (row * 52), 'breakout', 'brick_' + (row + 1) + '_1.png');
@@ -79,81 +80,80 @@ function create() {
 
   game.input.onDown.add(releaseBall, this);
 
-  attachSocketHandlers();
+  socket = io.connect(window.location.hostname);
+  socket.on('connect', onSocketConnect);
+  socket.on('disconnect', onSocketDisconnect);
+  socket.on('new player', onNewPlayer);
+  socket.on('remove player', onRemovePlayer);
+  socket.on('initial bricks', onInitialBricks);
+  socket.on('brick kill to other clients', onBrickKillToOtherClients);
 }
 
-function attachSocketHandlers() {
-
-  socket = io.connect(window.location.hostname);
-
-  socket.on('connect', function onSocketConnected() {
-    console.log('Connected to socket server');
-    socket.emit('new player', {
-      paddleX: 400,
-      ballX: 400,
-      ballY: 491
-    });
+function onSocketConnect() {
+  console.log('Connected to socket server');
+  socket.emit('new player', {
+    paddleX: 400,
+    ballX: 400,
+    ballY: 491
   });
+}
 
-  socket.on('disconnect', function onSocketDisconnect() {
-    console.log('Disconnected from socket server');
-  });
+function onSocketDisconnect() {
+  console.log('Disconnected from socket server');
+}
 
-  socket.on('new player', function onNewPlayer(data) {
-    var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
-    newPlayer.id = data.id;
-    remotePlayers.push(newPlayer);
-    console.log('New Player ' + newPlayer.id + ' added to remotePlayers array: ' + printRemotePlayersArray());
-  });
+function onNewPlayer(data) {
+  var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
+  newPlayer.id = data.id;
+  remotePlayers.push(newPlayer);
+  console.log('New Player ' + newPlayer.id + ' added to remotePlayers array: ' + printRemotePlayersArray());
+}
 
-  socket.on('remove player', function onRemovePlayer(data) {
-    var removePlayer = playerById(data.id);
+function onRemovePlayer(data) {
+  var playerToRemove = findPlayerById(data.id);
+  if (!playerToRemove) {
+    console.log('Player ' + data.id + ' not found in remotePlayers array');
+    return;
+  }
+  remotePlayers.splice(remotePlayers.indexOf(playerToRemove), 1);
+  console.log('Player ' + data.id + ' removed from remotePlayers array: ' + printRemotePlayersArray());
+}
 
-    // Player not found
-    if (!removePlayer) {
-      console.log('Player ' + data.id + ' not found in remotePlayers array');
-      return;
-    }
-
-    remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
-    console.log('Player ' + data.id + ' removed from remotePlayers array: ' + printRemotePlayersArray());
-  });
-
-  socket.on('initial bricks', function onInitialBricks(data) {
-    bricks = data.initialBricks;
-    var killInitialBricks = function killInitialBricks() {
-      for (var row = 0; row < 4; row++) {
-        for (var col = 0; col < 15; col++) {
-          if (bricks[row][col] === 0) {
-            bricksGroup.children[row * 15 + col].kill();
-          }
+function onInitialBricks(data) {
+  bricks = data.initialBricks;
+  var killInitialBricks = function killInitialBricks() {
+    console.log('Killing initial bricks');
+    for (var row = 0; row < 4; row++) {
+      for (var col = 0; col < 15; col++) {
+        if (bricks[row][col] === 0) {
+          bricksGroup.children[row * 15 + col].kill();
         }
       }
-    };
-    if (typeof(bricksGroup) === 'undefined' ||
-        typeof(bricksGroup.children) === 'undefined') {
-      setTimeout(killInitialBricks, 3000);
-    } else {
-      killInitialBricks();
     }
-  });
-
-  socket.on('brick kill to other clients', function onBrickKillToOtherClients(data) {
-    var killBricks = function killBricks() {
-      bricks[data.row][data.col] = 0;
-      bricksGroup.children[data.childrenIndex].kill();
-    };
-    if (typeof(bricks) === 'undefined' ||
-        typeof(bricksGroup) === 'undefined' ||
-        typeof(bricksGroup.children) === 'undefined') {
-      setTimeout(killBricks, 3000);
-    } else {
-      killBricks();
-    }
-  });
+  };
+  if (typeof(bricksGroup) === 'undefined' ||
+      typeof(bricksGroup.children) === 'undefined') {
+    setTimeout(killInitialBricks, 3000);
+  } else {
+    killInitialBricks();
+  }
 }
 
-function update () {
+function onBrickKillToOtherClients(data) {
+  var killBricks = function killBricks() {
+    bricks[data.row][data.col] = 0;
+    bricksGroup.children[data.childrenIndex].kill();
+  };
+  if (typeof(bricks) === 'undefined' ||
+      typeof(bricksGroup) === 'undefined' ||
+      typeof(bricksGroup.children) === 'undefined') {
+    setTimeout(killBricks, 3000);
+  } else {
+    killBricks();
+  }
+}
+
+function update() {
   paddle.x = game.input.x;
 
   if (paddle.x < 24) {
@@ -170,7 +170,7 @@ function update () {
   }
 }
 
-function releaseBall () {
+function releaseBall() {
   if (ballOnPaddle) {
     ballOnPaddle = false;
     ball.body.velocity.y = -300;
@@ -180,7 +180,7 @@ function releaseBall () {
   }
 }
 
-function ballLost () {
+function ballLost() {
   lives--;
   livesText.text = 'lives: ' + lives;
 
@@ -193,14 +193,14 @@ function ballLost () {
   }
 }
 
-function gameOver () {
+function gameOver() {
   ball.body.velocity.setTo(0, 0);
 
   introText.text = 'Game Over!';
   introText.visible = true;
 }
 
-function ballHitBrick (_ball, _brick) {
+function ballHitBrick(_ball, _brick) {
 
   console.log('ballHitBrick:',  _brick.row, _brick.col);
 
@@ -234,7 +234,7 @@ function ballHitBrick (_ball, _brick) {
   }
 }
 
-function ballHitPaddle (_ball, _paddle) {
+function ballHitPaddle(_ball, _paddle) {
   var diff = 0;
 
   if (_ball.x < _paddle.x) {
@@ -252,7 +252,7 @@ function ballHitPaddle (_ball, _paddle) {
   }
 }
 
-function playerById(id) {
+function findPlayerById(id) {
   var i;
   var length = remotePlayers.length;
   for (i = 0; i < length; i++) {
