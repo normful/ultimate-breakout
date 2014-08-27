@@ -230,11 +230,13 @@
 
   function startNewRound() {
     console.log('startNewRound invoked');
-    putBallOnPaddle();
     bricks.callAll('revive');
-    score += 1000;
-    scoreText.text = 'score: ' + score;
-    infoText.text = 'Next Round';
+    if (lives !==0 ) {
+      putBallOnPaddle();
+      score += 1000;
+      scoreText.text = 'score: ' + score;
+      infoText.text = 'Next Round';
+    }
   }
 
   function gameOver() {
