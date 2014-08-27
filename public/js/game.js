@@ -1,274 +1,288 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
+;(function () {
 
-function preload() {
-  game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
-  game.load.image('starfield', '/assets/starfield.jpg');
-}
+  var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
+  var GAME_WIDTH = 800;
+  var GAME_HEIGHT = 600;
 
-var socket = io.connect(window.location.hostname);
-var remotePlayers = [];
-var bricks;
+  var background;
 
-var ball;
-var paddle;
-var bricksGroup;
+  var bricks;
+  var BRICK_ROWS = 4;
+  var BRICK_COLS = 15;
+  var BRICK_START_X = 120;
+  var BRICK_START_Y = 100;
+  var BRICK_SPACING_X = 36;
+  var BRICK_SPACING_Y = 52;
 
-var ballOnPaddle = true;
+  var paddle;
+  var PADDLE_Y = 500;
+  var PADDLE_WIDTH = 48;
 
-var lives = 3;
-var score = 0;
+  var ball;
+  var ballOnPaddle = true;
+  var BALL_WIDTH = 16;
+  var BALL_HEIGHT = 16;
+  var BALL_RELEASE_VELOCITY_X = -75;
+  var BALL_RELEASE_VELOCITY_Y = -300;
+  var BALL_VELOCITY_MULTIPLIER_X = 10;
 
-var scoreText;
-var livesText;
-var introText;
+  var score = 0;
+  var lives = 3;
+  var scoreText;
+  var livesText;
+  var infoText;
+  var TEXT_Y = 550;
 
-var s;
+  var socket;
+  var remotePlayers = {};
 
-socket.on('connect', function onSocketConnected() {
-  console.log('Connected to socket server');
-  socket.emit('new player', {
-    paddleX: 400,
-    ballX: 400,
-    ballY: 491
-  });
-});
-
-socket.on('disconnect', function onSocketDisconnect() {
-  console.log('Disconnected from socket server');
-});
-
-socket.on('new player', function onNewPlayer(data) {
-  var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
-  newPlayer.id = data.id;
-  remotePlayers.push(newPlayer);
-  console.log('New Player ' + newPlayer.id + ' added to remotePlayers array: ' + printRemotePlayersArray());
-});
-
-socket.on('remove player', function onRemovePlayer(data) {
-  var removePlayer = playerById(data.id);
-
-  // Player not found
-  if (!removePlayer) {
-    console.log('Player ' + data.id + ' not found in remotePlayers array');
-    return;
+  function preload() {
+    console.log('preload invoked');
+    game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
+    game.load.image('starfield', '/assets/starfield.jpg');
   }
 
-  remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
-  console.log('Player ' + data.id + ' removed from remotePlayers array: ' + printRemotePlayersArray());
-});
+  function create() {
+    console.log('create invoked');
 
-socket.on('initial bricks', function onInitialBricks(data) {
+    // Prevent game from pausing when browser tab loses focus
+    game.stage.disableVisibilityChange = true;
 
-  bricks = data.initialBricks;
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  var killInitialBricks = function killInitialBricks() {
-    for (var row = 0; row < 4; row++) {
-      for (var col = 0; col < 15; col++) {
-        if (bricks[row][col] === 0) {
-          bricksGroup.children[row * 15 + col].kill();
+    background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
+
+    // Check bounds collisions on all walls except bottom
+    game.physics.arcade.checkCollision.down = false;
+
+    createBricks();
+    createLocalPaddle();
+    createLocalBall();
+    createText();
+
+    game.input.onDown.add(releaseBall, this);
+
+    socket = io.connect(window.location.hostname);
+    attachSocketHandlers();
+  }
+
+  function createBricks() {
+    console.log('createBricks invoked');
+    bricks = game.add.group();
+    bricks.enableBody = true;
+    bricks.physicsBodyType = Phaser.Physics.ARCADE;
+
+    var brick;
+    var brickCount = 0;
+
+    for (var row = 0; row < BRICK_ROWS; row++) {
+      for (var col = 0; col < BRICK_COLS; col++) {
+        brick = bricks.create(
+          BRICK_START_X + (col * BRICK_SPACING_X),
+          BRICK_START_Y + (row * BRICK_SPACING_Y),
+          'breakout',
+          'brick_' + (row + 1) + '_1.png'
+        );
+        brick.body.bounce.set(1);
+        brick.body.immovable = true;
+        brick.brickIndex = brickCount++;
+      }
+    }
+  }
+
+  function createLocalPaddle() {
+    console.log('createLocalPaddle invoked');
+    paddle = game.add.sprite(game.world.centerX, PADDLE_Y, 'breakout', 'paddle_big.png');
+    paddle.anchor.setTo(0.5, 0.5);
+
+    game.physics.enable(paddle, Phaser.Physics.ARCADE);
+
+    paddle.body.collideWorldBounds = true;
+    paddle.body.bounce.set(1);
+    paddle.body.immovable = true;
+  }
+
+  function createLocalBall() {
+    console.log('createLocalBall invoked');
+    ball = game.add.sprite(game.world.centerX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
+    ball.anchor.set(0.5);
+    ball.checkWorldBounds = true;
+
+    game.physics.enable(ball, Phaser.Physics.ARCADE);
+
+    ball.body.collideWorldBounds = true;
+    ball.body.bounce.set(1);
+
+    ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+
+    ball.events.onOutOfBounds.add(ballLost, this);
+  }
+
+  function createText() {
+    console.log('createText invoked');
+    scoreText = game.add.text(32, TEXT_Y, 'score: 0',
+      { font: '20px Arial', fill: '#ffffff', align: 'left' });
+    livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: 3',
+      { font: '20px Arial', fill: '#ffffff', align: 'left' });
+    infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to start',
+      { font: '40px Arial', fill: '#ffffff', align: 'center' });
+    infoText.anchor.setTo(0.5, 0.5);
+  }
+
+  function attachSocketHandlers() {
+    console.log('attachSocketHandlers invoked');
+    socket.on('connect', onSocketConnect);
+    socket.on('disconnect', onSocketDisconnect);
+    socket.on('new player', onNewPlayer);
+    socket.on('remove player', onRemovePlayer);
+    socket.on('initial bricks', onInitialBricks);
+    socket.on('brick kill to other clients', onBrickKillToOtherClients);
+  }
+
+  function onSocketConnect() {
+    console.log('onSocketConnect invoked');
+    console.log('emitting "new player" message with existingBricks = ' + bricksString(bricks));
+    socket.emit('new player', { existingBricks: bricksString(bricks) });
+  }
+
+  function onSocketDisconnect() {
+    console.log('onSocketDisconnect invoked');
+  }
+
+  function onNewPlayer(data) {
+    console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
+    remotePlayers[data.id] = { score: data.score };
+    console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+  }
+
+  function onRemovePlayer(data) {
+    if (delete remotePlayers[data.id]) {
+      console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
+    } else {
+      console.log(data.id + ' not found in remotePlayers');
+    }
+  }
+
+  function onInitialBricks(data) {
+    console.log('onInitialBricks invoked. data = ' + JSON.stringify(data));
+    var i;
+    for (var row = 0; row < BRICK_ROWS; row++) {
+      for (var col = 0; col < BRICK_COLS; col++) {
+        i = row * BRICK_COLS + col;
+        if (data.initialBricks.charAt(i) === "0") {
+          bricks.children[i].kill();
         }
       }
     }
-  };
-
-  if (typeof(bricksGroup) === 'undefined' ||
-      typeof(bricksGroup.children) === 'undefined') {
-    setTimeout(killInitialBricks, 3000);
-  } else {
-    killInitialBricks();
   }
 
-});
-
-socket.on('brick kill to other clients', function onBrickKillToOtherClients(data) {
-
-  var killBricks = function killBricks() {
-    bricks[data.row][data.col] = 0;
-    bricksGroup.children[data.childrenIndex].kill();
-  };
-
-  if (typeof(bricks) === 'undefined' ||
-      typeof(bricksGroup) === 'undefined' ||
-      typeof(bricksGroup.children) === 'undefined') {
-    setTimeout(killBricks, 3000);
-  } else {
-    killBricks();
+  function onBrickKillToOtherClients(data) {
+    console.log('onBrickKillToOtherClients invoked');
+    bricks.children[data.brickIndex].kill();
   }
 
-});
+  function update() {
+    paddle.body.x = game.input.x - 0.5 * PADDLE_WIDTH;
 
-function create() {
-  game.physics.startSystem(Phaser.Physics.ARCADE);
+    if (paddle.body.x < 0) {
+      paddle.body.x = 0;
+    } else if (paddle.body.x > game.width - PADDLE_WIDTH) {
+      paddle.body.x = game.width - PADDLE_WIDTH;
+    }
 
-  //  We check bounds collisions against all walls other than the bottom one
-  game.physics.arcade.checkCollision.down = false;
+    if (ballOnPaddle) {
+      ball.body.x = paddle.body.x + 0.5 * PADDLE_WIDTH - 0.5 * BALL_WIDTH;
+    } else {
+      game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
+      game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
+    }
 
-  s = game.add.tileSprite(0, 0, 800, 600, 'starfield');
-
-  bricksGroup = game.add.group();
-  bricksGroup.enableBody = true;
-  bricksGroup.physicsBodyType = Phaser.Physics.ARCADE;
-
-  var brick;
-  var brickCount = 0;
-
-  for (var row = 0; row < 4; row++) {
-    for (var col = 0; col < 15; col++) {
-      brick = bricksGroup.create(120 + (col * 36), 100 + (row * 52), 'breakout', 'brick_' + (row + 1) + '_1.png');
-      brick.body.bounce.set(1);
-      brick.body.immovable = true;
-      brick.row = row;
-      brick.col = col;
-      brick.childrenIndex = brickCount++;
+    if (bricks.countLiving() === 0) {
+      startNewRound();
     }
   }
 
-  paddle = game.add.sprite(game.world.centerX, 500, 'breakout', 'paddle_big.png');
-  paddle.anchor.setTo(0.5, 0.5);
-
-  game.physics.enable(paddle, Phaser.Physics.ARCADE);
-
-  paddle.body.collideWorldBounds = true;
-  paddle.body.bounce.set(1);
-  paddle.body.immovable = true;
-
-  ball = game.add.sprite(game.world.centerX, paddle.y - 16, 'breakout', 'ball_1.png');
-  ball.anchor.set(0.5);
-  ball.checkWorldBounds = true;
-
-  game.physics.enable(ball, Phaser.Physics.ARCADE);
-
-  ball.body.collideWorldBounds = true;
-  ball.body.bounce.set(1);
-
-  ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
-
-  ball.events.onOutOfBounds.add(ballLost, this);
-
-  scoreText = game.add.text(32, 550, 'score: 0', { font: "20px Arial", fill: "#ffffff", align: "left" });
-  livesText = game.add.text(680, 550, 'lives: 3', { font: "20px Arial", fill: "#ffffff", align: "left" });
-  introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
-  introText.anchor.setTo(0.5, 0.5);
-
-  game.input.onDown.add(releaseBall, this);
-}
-
-function update () {
-  paddle.x = game.input.x;
-
-  if (paddle.x < 24) {
-    paddle.x = 24;
-  } else if (paddle.x > game.width - 24) {
-    paddle.x = game.width - 24;
+  function releaseBall() {
+    if (ballOnPaddle) {
+      ballOnPaddle = false;
+      ball.body.velocity.x = BALL_RELEASE_VELOCITY_X;
+      ball.body.velocity.y = BALL_RELEASE_VELOCITY_Y;
+      ball.animations.play('spin');
+      infoText.visible = false;
+    }
   }
 
-  if (ballOnPaddle) {
-    ball.body.x = paddle.x;
-  } else {
-    game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
-    game.physics.arcade.collide(ball, bricksGroup, ballHitBrick, null, this);
+  function ballLost() {
+    lives--;
+    livesText.text = 'lives: ' + lives;
+    if (lives === 0) {
+      gameOver();
+    } else {
+      putBallOnPaddle();
+    }
   }
-}
 
-function releaseBall () {
-  if (ballOnPaddle) {
-    ballOnPaddle = false;
-    ball.body.velocity.y = -300;
-    ball.body.velocity.x = -75;
-    ball.animations.play('spin');
-    introText.visible = false;
-  }
-}
-
-function ballLost () {
-  lives--;
-  livesText.text = 'lives: ' + lives;
-
-  if (lives === 0) {
-    gameOver();
-  } else {
+  function putBallOnPaddle() {
     ballOnPaddle = true;
-    ball.reset(paddle.body.x + 16, paddle.y - 16);
+    ball.reset(paddle.body.x + 0.5 * PADDLE_WIDTH - 0.5 * BALL_WIDTH, PADDLE_Y - BALL_HEIGHT);
     ball.animations.stop();
   }
-}
 
-function gameOver () {
-  ball.body.velocity.setTo(0, 0);
-
-  introText.text = 'Game Over!';
-  introText.visible = true;
-}
-
-function ballHitBrick (_ball, _brick) {
-
-  console.log('ballHitBrick: ',  _brick.row, _brick.col);
-
-  socket.emit('brick kill from client', {
-    row: _brick.row,
-    col: _brick.col,
-    childrenIndex: _brick.childrenIndex
-  });
-
-  _brick.kill();
-
-  score += 10;
-  scoreText.text = 'score: ' + score;
-
-  //  Are they any bricksGroup left?
-  if (bricksGroup.countLiving() === 0) {
-    //  New level starts
+  function startNewRound() {
+    console.log('startNewRound invoked');
+    putBallOnPaddle();
+    bricks.callAll('revive');
     score += 1000;
     scoreText.text = 'score: ' + score;
-    introText.text = '- Next Level -';
-
-    //  Let's move the ball back to the paddle
-    ballOnPaddle = true;
-    ball.body.velocity.set(0);
-    ball.x = paddle.x + 16;
-    ball.y = paddle.y - 16;
-    ball.animations.stop();
-
-    //  And bring the bricksGroup back from the dead :)
-    bricksGroup.callAll('revive');
+    infoText.text = 'Next Round';
   }
-}
 
-function ballHitPaddle (_ball, _paddle) {
-  var diff = 0;
+  function gameOver() {
+    ball.body.velocity.setTo(0, 0);
 
-  if (_ball.x < _paddle.x) {
-    //  Ball is on the left-hand side of the paddle
-    diff = _paddle.x - _ball.x;
-    _ball.body.velocity.x = (-10 * diff);
-  } else if (_ball.x > _paddle.x) {
-    //  Ball is on the right-hand side of the paddle
-    diff = _ball.x -_paddle.x;
-    _ball.body.velocity.x = (10 * diff);
-  } else {
-    //  Ball is perfectly in the middle
-    //  Add a little random X to stop it bouncing straight up!
-    _ball.body.velocity.x = 2 + Math.random() * 8;
+    infoText.text = 'Game Over!';
+    infoText.visible = true;
   }
-}
 
-function playerById(id) {
-  var i;
-  var length = remotePlayers.length;
-  for (i = 0; i < length; i++) {
-    if (remotePlayers[i].id === id) {
-      return remotePlayers[i];
+  function ballHitBrick(_ball, _brick) {
+    socket.emit('brick kill from client', { brickIndex: _brick.brickIndex });
+
+    _brick.kill();
+
+    score += 10;
+    scoreText.text = 'score: ' + score;
+  }
+
+  function ballHitPaddle(_ball, _paddle) {
+    var diff = 0;
+
+    if (_ball.body.x < _paddle.body.x) {
+      //  Ball is on the left-hand side of the paddle
+      diff = _paddle.body.x - _ball.body.x;
+      _ball.body.velocity.x = (BALL_VELOCITY_MULTIPLIER_X * diff * -1);
+    } else if (_ball.body.x > _paddle.body.x) {
+      //  Ball is on the right-hand side of the paddle
+      diff = _ball.body.x -_paddle.body.x;
+      _ball.body.velocity.x = (BALL_VELOCITY_MULTIPLIER_X * diff);
+    } else {
+      //  Ball is perfectly in the middle
+      //  Add a little random X to stop it bouncing straight up!
+      _ball.body.velocity.x = BALL_VELOCITY_MULTIPLIER_X * 0.2 + Math.random() * BALL_VELOCITY_MULTIPLIER_X * 0.8;
     }
   }
-  return false;
-}
 
-function printRemotePlayersArray() {
-  var i;
-  var length = remotePlayers.length;
-  var result = "[ ";
-  for (i = 0; i < length; i++) {
-    result += remotePlayers[i].id + " ";
+  function bricksString(bricksGroup) {
+    var i;
+    var length = bricksGroup.children.length;
+    var result = "";
+    for (i = 0; i < length; i++) {
+      if (bricksGroup.children[i].alive) {
+        result += "1";
+      } else {
+        result += "0";
+      }
+    }
+    return result;
   }
-  return result + "]";
-}
+
+}());
