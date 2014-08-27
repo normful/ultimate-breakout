@@ -1,4 +1,19 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
+var GAME_WIDTH = 800;
+var GAME_HEIGHT = 600;
+
+var BRICK_ROWS = 4;
+var BRICK_COLS = 15;
+var BRICK_START_X = 120;
+var BRICK_START_Y = 100;
+var BRICK_X_SPACING = 36;
+var BRICK_Y_SPACING = 52;
+
+var PADDLE_Y = 500;
+
+var BALL_WIDTH = 16;
+var BALL_HEIGHT = 16;
+
+var BOTTOM_TEXT_Y = 550;
 
 var background;
 
@@ -19,6 +34,8 @@ var livesText;
 var score = 0;
 var lives = 3;
 
+var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
+
 function preload() {
   game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
   game.load.image('starfield', '/assets/starfield.jpg');
@@ -27,11 +44,23 @@ function preload() {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  //  We check bounds collisions against all walls other than the bottom one
+  background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
+
+  // Check bounds collisions on all walls except bottom
   game.physics.arcade.checkCollision.down = false;
 
-  background = game.add.tileSprite(0, 0, 800, 600, 'starfield');
+  createBricks();
+  createLocalPaddle();
+  createLocalBall();
+  createText();
 
+  game.input.onDown.add(releaseBall, this);
+
+  socket = io.connect(window.location.hostname);
+  attachSocketHandlers();
+}
+
+function createBricks() {
   bricksGroup = game.add.group();
   bricksGroup.enableBody = true;
   bricksGroup.physicsBodyType = Phaser.Physics.ARCADE;
@@ -40,9 +69,14 @@ function create() {
   var brickCount = 0;
 
   console.log('Populating bricksGroup with brick Sprites');
-  for (var row = 0; row < 4; row++) {
-    for (var col = 0; col < 15; col++) {
-      brick = bricksGroup.create(120 + (col * 36), 100 + (row * 52), 'breakout', 'brick_' + (row + 1) + '_1.png');
+  for (var row = 0; row < BRICK_ROWS; row++) {
+    for (var col = 0; col < BRICK_COLS; col++) {
+      brick = bricksGroup.create(
+        BRICK_START_X + (col * BRICK_X_SPACING),
+        BRICK_START_Y + (row * BRICK_Y_SPACING),
+        'breakout',
+        'brick_' + (row + 1) + '_1.png'
+      );
       brick.body.bounce.set(1);
       brick.body.immovable = true;
       brick.row = row;
@@ -50,8 +84,10 @@ function create() {
       brick.childrenIndex = brickCount++;
     }
   }
+}
 
-  paddle = game.add.sprite(game.world.centerX, 500, 'breakout', 'paddle_big.png');
+function createLocalPaddle() {
+  paddle = game.add.sprite(game.world.centerX, PADDLE_Y, 'breakout', 'paddle_big.png');
   paddle.anchor.setTo(0.5, 0.5);
 
   game.physics.enable(paddle, Phaser.Physics.ARCADE);
@@ -59,8 +95,10 @@ function create() {
   paddle.body.collideWorldBounds = true;
   paddle.body.bounce.set(1);
   paddle.body.immovable = true;
+}
 
-  ball = game.add.sprite(game.world.centerX, paddle.y - 16, 'breakout', 'ball_1.png');
+function createLocalBall() {
+  ball = game.add.sprite(game.world.centerX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
   ball.anchor.set(0.5);
   ball.checkWorldBounds = true;
 
@@ -72,15 +110,19 @@ function create() {
   ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
 
   ball.events.onOutOfBounds.add(ballLost, this);
+}
 
-  scoreText = game.add.text(32, 550, 'score: 0', { font: "20px Arial", fill: "#ffffff", align: "left" });
-  livesText = game.add.text(680, 550, 'lives: 3', { font: "20px Arial", fill: "#ffffff", align: "left" });
-  introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
+function createText() {
+  scoreText = game.add.text(32, BOTTOM_TEXT_Y, 'score: 0',
+    { font: '20px Arial', fill: '#ffffff', align: 'left' });
+  livesText = game.add.text(GAME_WIDTH - 120, BOTTOM_TEXT_Y, 'lives: 3',
+    { font: '20px Arial', fill: '#ffffff', align: 'left' });
+  introText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to start',
+    { font: '40px Arial', fill: '#ffffff', align: 'center' });
   introText.anchor.setTo(0.5, 0.5);
+}
 
-  game.input.onDown.add(releaseBall, this);
-
-  socket = io.connect(window.location.hostname);
+function attachSocketHandlers() {
   socket.on('connect', onSocketConnect);
   socket.on('disconnect', onSocketDisconnect);
   socket.on('new player', onNewPlayer);
@@ -92,8 +134,8 @@ function create() {
 function onSocketConnect() {
   console.log('Connected to socket server');
   socket.emit('new player', {
-    paddleX: 400,
-    ballX: 400,
+    paddleX: GAME_WIDTH / 2,
+    ballX: GAME_WIDTH / 2,
     ballY: 491
   });
 }
@@ -188,7 +230,7 @@ function ballLost() {
     gameOver();
   } else {
     ballOnPaddle = true;
-    ball.reset(paddle.body.x + 16, paddle.y - 16);
+    ball.reset(paddle.body.x + BALL_WIDTH, paddle.y - BALL_HEIGHT);
     ball.animations.stop();
   }
 }
@@ -225,8 +267,8 @@ function ballHitBrick(_ball, _brick) {
     //  Let's move the ball back to the paddle
     ballOnPaddle = true;
     ball.body.velocity.set(0);
-    ball.x = paddle.x + 16;
-    ball.y = paddle.y - 16;
+    ball.x = paddle.x + BALL_WIDTH;
+    ball.y = paddle.y - BALL_HEIGHT;
     ball.animations.stop();
 
     //  And bring the bricksGroup back from the dead :)
