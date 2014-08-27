@@ -41,11 +41,13 @@ var lives = 3;
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
 
 function preload() {
+  console.log('preload invoked');
   game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
   game.load.image('starfield', '/assets/starfield.jpg');
 }
 
 function create() {
+  console.log('create invoked');
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
@@ -65,6 +67,7 @@ function create() {
 }
 
 function createBricks() {
+  console.log('createBricks invoked');
   bricksGroup = game.add.group();
   bricksGroup.enableBody = true;
   bricksGroup.physicsBodyType = Phaser.Physics.ARCADE;
@@ -72,7 +75,6 @@ function createBricks() {
   var brick;
   var brickCount = 0;
 
-  console.log('Populating bricksGroup with brick Sprites');
   for (var row = 0; row < BRICK_ROWS; row++) {
     for (var col = 0; col < BRICK_COLS; col++) {
       brick = bricksGroup.create(
@@ -91,6 +93,7 @@ function createBricks() {
 }
 
 function createLocalPaddle() {
+  console.log('createLocalPaddle invoked');
   paddle = game.add.sprite(game.world.centerX, PADDLE_Y, 'breakout', 'paddle_big.png');
   paddle.anchor.setTo(0.5, 0.5);
 
@@ -102,6 +105,7 @@ function createLocalPaddle() {
 }
 
 function createLocalBall() {
+  console.log('createLocalBall invoked');
   ball = game.add.sprite(game.world.centerX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
   ball.anchor.set(0.5);
   ball.checkWorldBounds = true;
@@ -117,6 +121,7 @@ function createLocalBall() {
 }
 
 function createText() {
+  console.log('createText invoked');
   scoreText = game.add.text(32, BOTTOM_TEXT_Y, 'score: 0',
     { font: '20px Arial', fill: '#ffffff', align: 'left' });
   livesText = game.add.text(GAME_WIDTH - 120, BOTTOM_TEXT_Y, 'lives: 3',
@@ -127,6 +132,7 @@ function createText() {
 }
 
 function attachSocketHandlers() {
+  console.log('attachSocketHandlers invoked');
   socket.on('connect', onSocketConnect);
   socket.on('disconnect', onSocketDisconnect);
   socket.on('new player', onNewPlayer);
@@ -136,7 +142,7 @@ function attachSocketHandlers() {
 }
 
 function onSocketConnect() {
-  console.log('Connected to socket server');
+  console.log('onSocketConnect invoked');
   socket.emit('new player', {
     paddleX: GAME_WIDTH / 2,
     ballX: GAME_WIDTH / 2,
@@ -145,29 +151,30 @@ function onSocketConnect() {
 }
 
 function onSocketDisconnect() {
-  console.log('Disconnected from socket server');
+  console.log('onSocketDisconnect invoked');
 }
 
 function onNewPlayer(data) {
   var newPlayer = new Player(data.paddleX, data.ballX, data.ballY);
   newPlayer.id = data.id;
   remotePlayers.push(newPlayer);
-  console.log('New Player ' + newPlayer.id + ' added to remotePlayers array: ' + printRemotePlayersArray());
+  console.log(newPlayer.id + ' added to remotePlayers array: ' + printRemotePlayersArray());
 }
 
 function onRemovePlayer(data) {
   var playerToRemove = findPlayerById(data.id);
   if (!playerToRemove) {
-    console.log('Player ' + data.id + ' not found in remotePlayers array');
+    console.log(data.id + ' not found in remotePlayers array');
     return;
   }
   remotePlayers.splice(remotePlayers.indexOf(playerToRemove), 1);
-  console.log('Player ' + data.id + ' removed from remotePlayers array: ' + printRemotePlayersArray());
+  console.log(data.id + ' removed from remotePlayers array: ' + printRemotePlayersArray());
 }
 
 function onInitialBricks(data) {
+  console.log('onInitialBricks invoked');
   var killInitialBricks = function killInitialBricks() {
-    console.log('Killing initial bricks');
+    console.log('killInitialBricks invoked');
     for (var row = 0; row < BRICK_ROWS; row++) {
       for (var col = 0; col < BRICK_COLS; col++) {
         if (data.initialBricks[row][col] === 0) {
@@ -185,7 +192,9 @@ function onInitialBricks(data) {
 }
 
 function onBrickKillToOtherClients(data) {
+  console.log('onBrickKillToOtherClients invoked');
   var killBricks = function killBricks() {
+    console.log('killBricks invoked');
     bricksGroup.children[data.childrenIndex].kill();
   };
   if (typeof(bricksGroup) === 'undefined' ||
@@ -244,9 +253,6 @@ function gameOver() {
 }
 
 function ballHitBrick(_ball, _brick) {
-
-  console.log('ballHitBrick:',  _brick.row, _brick.col);
-
   socket.emit('brick kill from client', {
     row: _brick.row,
     col: _brick.col,
