@@ -7,10 +7,10 @@
   var background;
 
   var bricks;
-  var BRICK_ROWS = 4;
-  var BRICK_COLS = 15;
+  var BRICK_ROWS = 1;
+  var BRICK_COLS = 2;
   var BRICK_START_X = 120;
-  var BRICK_START_Y = 100;
+  var BRICK_START_Y = 450;
   var BRICK_SPACING_X = 36;
   var BRICK_SPACING_Y = 52;
 
@@ -230,11 +230,13 @@
 
   function startNewRound() {
     console.log('startNewRound invoked');
-    putBallOnPaddle();
     bricks.callAll('revive');
-    score += 1000;
-    scoreText.text = 'score: ' + score;
-    infoText.text = 'Next Round';
+    if (lives !==0 ) {
+      putBallOnPaddle();
+      score += 1000;
+      scoreText.text = 'score: ' + score;
+      infoText.text = 'Next Round';
+    }
   }
 
   function gameOver() {
