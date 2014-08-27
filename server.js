@@ -9,10 +9,8 @@ var util = require('util');
 var utilInspectOpts = { showHidden: false, depth: 1, colors: true };
 
 var players = {};
-var bricks = '111111111111111' +
-             '111111111111111' +
-             '111111111111111' +
-             '111111111111111';
+var bricks;
+var allBricks;
 
 // Uncomment to see Express debugging
 // app.use(express.logger());
@@ -30,8 +28,19 @@ function onSocketConnection(client) {
   client.on('brick kill from client', onBrickKillFromClient);
 }
 
-function onNewPlayer() {
+function onNewPlayer(data) {
   util.log(this.id + ' sent "new player" message');
+
+  // First 'new player' message sets initial brick layout
+  // This might be a reconnecting client with a partially played game
+  if (isEmpty(players)) {
+
+    bricks = data.existingBricks;
+    util.log('first new player setting brick layout to: ' + bricks)
+
+    // string of "1", repeated data.brickCount times
+    allBricks = new Array(data.existingBricks.length + 1).join("1");
+  }
 
   // Send existing players to the new player
   for (var playerID in players) {
@@ -45,9 +54,7 @@ function onNewPlayer() {
   }
 
   // Send existing brick layout to the new player
-  this.emit('initial bricks', {
-    initialBricks: bricks
-  });
+  this.emit('initial bricks', { initialBricks: bricks });
   util.log(this.id + ' has been sent the existing brick layout: ' + bricks);
 
   // Add new player to players array
@@ -77,7 +84,7 @@ function onClientDisconnect() {
   this.broadcast.emit('remove player', { id: this.id });
   util.log(this.id + ' removal broadcast to existing players');
 
-  if (Object.getOwnPropertyNames(players).length === 0) {
+  if (isEmpty(players)) {
     resetBricks();
   }
 }
@@ -90,13 +97,13 @@ function onBrickKillFromClient(data) {
 }
 
 function resetBricks() {
-  util.log('All users disconnected. resetBricks invoked');
-  bricks = '111111111111111' +
-           '111111111111111' +
-           '111111111111111' +
-           '111111111111111';
+  util.log('All users disconnected. resetting bricks to: ' + allBricks);
+  bricks = allBricks;
 }
 
+function isEmpty(obj) {
+  return (Object.getOwnPropertyNames(obj).length === 0);
+}
 /*
  * HTTP code
  */

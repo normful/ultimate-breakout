@@ -141,7 +141,8 @@
 
   function onSocketConnect() {
     console.log('onSocketConnect invoked');
-    socket.emit('new player');
+    console.log('emitting "new player" message with existingBricks = ' + bricksString(bricks));
+    socket.emit('new player', { existingBricks: bricksString(bricks) });
   }
 
   function onSocketDisconnect() {
@@ -288,6 +289,20 @@
       //  Add a little random X to stop it bouncing straight up!
       _ball.body.velocity.x = BALL_VELOCITY_MULTIPLIER_X * 0.2 + Math.random() * BALL_VELOCITY_MULTIPLIER_X * 0.8;
     }
+  }
+
+  function bricksString(bricksGroup) {
+    var i;
+    var length = bricksGroup.children.length;
+    var result = "";
+    for (i = 0; i < length; i++) {
+      if (bricksGroup.children[i].alive) {
+        result += "1";
+      } else {
+        result += "0";
+      }
+    }
+    return result;
   }
 
 }());
