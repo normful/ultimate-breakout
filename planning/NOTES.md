@@ -97,6 +97,11 @@ Unsorted list of features from brainstorming:
 - Win condition: Be the player with the highest score on the leaderboard.
 - Loss condition: When the player runs out of lives.
 
+## Starting a game
+
+- A game starts when the first player connects to the server.
+- If the first player already has an ongoing game on their client (which would happen if the client was disconnected from the server midgame, or the server restarted midgame), the server uses that first player's game state as the current one.
+
 ## Joining a game
 
 - A player can join at any time.
@@ -132,7 +137,8 @@ Unsorted list of features from brainstorming:
 ## Rounds
 
 - A round ends when all bricks are cleared from the board.
-- TODO: Figure out what happens at the end of a round. Do points get awarded? How many? Does everyone get the points? Or just the person who hit the last brick?
+- The client who hits the last brick is awarded with 100 points.
+- All bricks are revived after the round ends.
 
 ## Game end
 
