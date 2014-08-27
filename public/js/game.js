@@ -31,7 +31,7 @@
   var scoreText;
   var livesText;
   var introText;
-  var BOTTOM_TEXT_Y = 550;
+  var TEXT_Y = 550;
 
   var socket;
   var remotePlayers = [];
@@ -122,9 +122,9 @@
 
   function createText() {
     console.log('createText invoked');
-    scoreText = game.add.text(32, BOTTOM_TEXT_Y, 'score: 0',
+    scoreText = game.add.text(32, TEXT_Y, 'score: 0',
       { font: '20px Arial', fill: '#ffffff', align: 'left' });
-    livesText = game.add.text(GAME_WIDTH - 120, BOTTOM_TEXT_Y, 'lives: 3',
+    livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: 3',
       { font: '20px Arial', fill: '#ffffff', align: 'left' });
     introText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to start',
       { font: '40px Arial', fill: '#ffffff', align: 'center' });
