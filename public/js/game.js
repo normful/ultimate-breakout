@@ -7,10 +7,10 @@
   var background;
 
   var bricks;
-  var BRICK_ROWS = 1;
-  var BRICK_COLS = 2;
+  var BRICK_ROWS = 4;
+  var BRICK_COLS = 15;
   var BRICK_START_X = 120;
-  var BRICK_START_Y = 450;
+  var BRICK_START_Y = 100;
   var BRICK_SPACING_X = 36;
   var BRICK_SPACING_Y = 52;
 
