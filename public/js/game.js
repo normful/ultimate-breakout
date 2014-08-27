@@ -9,9 +9,14 @@ var BRICK_X_SPACING = 36;
 var BRICK_Y_SPACING = 52;
 
 var PADDLE_Y = 500;
+var PADDLE_WIDTH = 48;
+var HALF_PADDLE_WIDTH = PADDLE_WIDTH / 2;
 
 var BALL_WIDTH = 16;
 var BALL_HEIGHT = 16;
+var BALL_X_RELEASE_VELOCITY = -75;
+var BALL_Y_RELEASE_VELOCITY = -300;
+var BALL_X_VELOCITY_MULTIPLIER = 10;
 
 var BOTTOM_TEXT_Y = 550;
 
@@ -136,7 +141,7 @@ function onSocketConnect() {
   socket.emit('new player', {
     paddleX: GAME_WIDTH / 2,
     ballX: GAME_WIDTH / 2,
-    ballY: 491
+    ballY: PADDLE_Y - BALL_HEIGHT / 2
   });
 }
 
@@ -165,10 +170,10 @@ function onInitialBricks(data) {
   bricks = data.initialBricks;
   var killInitialBricks = function killInitialBricks() {
     console.log('Killing initial bricks');
-    for (var row = 0; row < 4; row++) {
-      for (var col = 0; col < 15; col++) {
+    for (var row = 0; row < BRICK_ROWS; row++) {
+      for (var col = 0; col < BRICK_COLS; col++) {
         if (bricks[row][col] === 0) {
-          bricksGroup.children[row * 15 + col].kill();
+          bricksGroup.children[row * BRICK_COLS + col].kill();
         }
       }
     }
@@ -198,10 +203,10 @@ function onBrickKillToOtherClients(data) {
 function update() {
   paddle.x = game.input.x;
 
-  if (paddle.x < 24) {
-    paddle.x = 24;
-  } else if (paddle.x > game.width - 24) {
-    paddle.x = game.width - 24;
+  if (paddle.x < HALF_PADDLE_WIDTH) {
+    paddle.x = HALF_PADDLE_WIDTH;
+  } else if (paddle.x > game.width - HALF_PADDLE_WIDTH) {
+    paddle.x = game.width - HALF_PADDLE_WIDTH;
   }
 
   if (ballOnPaddle) {
@@ -215,8 +220,8 @@ function update() {
 function releaseBall() {
   if (ballOnPaddle) {
     ballOnPaddle = false;
-    ball.body.velocity.y = -300;
-    ball.body.velocity.x = -75;
+    ball.body.velocity.x = BALL_X_RELEASE_VELOCITY;
+    ball.body.velocity.y = BALL_Y_RELEASE_VELOCITY;
     ball.animations.play('spin');
     introText.visible = false;
   }
@@ -230,7 +235,7 @@ function ballLost() {
     gameOver();
   } else {
     ballOnPaddle = true;
-    ball.reset(paddle.body.x + BALL_WIDTH, paddle.y - BALL_HEIGHT);
+    ball.reset(paddle.body.x + BALL_WIDTH, PADDLE_Y - BALL_HEIGHT);
     ball.animations.stop();
   }
 }
@@ -268,7 +273,7 @@ function ballHitBrick(_ball, _brick) {
     ballOnPaddle = true;
     ball.body.velocity.set(0);
     ball.x = paddle.x + BALL_WIDTH;
-    ball.y = paddle.y - BALL_HEIGHT;
+    ball.y = PADDLE_Y - BALL_HEIGHT;
     ball.animations.stop();
 
     //  And bring the bricksGroup back from the dead :)
@@ -282,15 +287,15 @@ function ballHitPaddle(_ball, _paddle) {
   if (_ball.x < _paddle.x) {
     //  Ball is on the left-hand side of the paddle
     diff = _paddle.x - _ball.x;
-    _ball.body.velocity.x = (-10 * diff);
+    _ball.body.velocity.x = (BALL_X_VELOCITY_MULTIPLIER * diff * -1);
   } else if (_ball.x > _paddle.x) {
     //  Ball is on the right-hand side of the paddle
     diff = _ball.x -_paddle.x;
-    _ball.body.velocity.x = (10 * diff);
+    _ball.body.velocity.x = (BALL_X_VELOCITY_MULTIPLIER * diff);
   } else {
     //  Ball is perfectly in the middle
     //  Add a little random X to stop it bouncing straight up!
-    _ball.body.velocity.x = 2 + Math.random() * 8;
+    _ball.body.velocity.x = BALL_X_VELOCITY_MULTIPLIER * 0.2 + Math.random() * BALL_X_VELOCITY_MULTIPLIER * 0.8;
   }
 }
 
