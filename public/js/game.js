@@ -30,7 +30,7 @@
   var lives = 3;
   var scoreText;
   var livesText;
-  var introText;
+  var infoText;
   var TEXT_Y = 550;
 
   var socket;
@@ -126,9 +126,9 @@
       { font: '20px Arial', fill: '#ffffff', align: 'left' });
     livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: 3',
       { font: '20px Arial', fill: '#ffffff', align: 'left' });
-    introText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to start',
+    infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to start',
       { font: '40px Arial', fill: '#ffffff', align: 'center' });
-    introText.anchor.setTo(0.5, 0.5);
+    infoText.anchor.setTo(0.5, 0.5);
   }
 
   function attachSocketHandlers() {
@@ -228,7 +228,7 @@
       ball.body.velocity.x = BALL_X_RELEASE_VELOCITY;
       ball.body.velocity.y = BALL_Y_RELEASE_VELOCITY;
       ball.animations.play('spin');
-      introText.visible = false;
+      infoText.visible = false;
     }
   }
 
@@ -252,8 +252,8 @@
   function gameOver() {
     ball.body.velocity.setTo(0, 0);
 
-    introText.text = 'Game Over!';
-    introText.visible = true;
+    infoText.text = 'Game Over!';
+    infoText.visible = true;
   }
 
   function ballHitBrick(_ball, _brick) {
@@ -273,7 +273,7 @@
       //  New level starts
       score += 1000;
       scoreText.text = 'score: ' + score;
-      introText.text = '- Next Level -';
+      infoText.text = 'Next Round';
 
       //  Let's move the ball back to the paddle
       putBallOnPaddle();
