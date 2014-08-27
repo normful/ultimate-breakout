@@ -48,6 +48,10 @@ function preload() {
 
 function create() {
   console.log('create invoked');
+
+  // Prevent game from pausing when browser tab loses focus
+  game.stage.disableVisibilityChange = true;
+
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
