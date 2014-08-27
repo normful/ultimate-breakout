@@ -59,6 +59,7 @@
     createLocalPaddle();
     createLocalBall();
     createText();
+    createRemotePaddles();
 
     game.input.onDown.add(releaseBall, this);
 
@@ -102,6 +103,29 @@
     paddle.body.immovable = true;
   }
 
+  // create group for remote paddles
+  function createRemotePaddles() {
+    console.log('createRemotePaddles invoked');
+    remotePaddles = game.add.group();
+    remotePaddles.enableBody = true;
+    remotePaddles.physicsBodyType = Phaser.Physics.ARCADE;    
+  }
+
+  // add sprite for remote paddle and associate it with the player
+  function createRemotePaddle(){
+    console.log('createRemotePaddle invoked');
+    remotePaddle = remotePaddles.create(
+          game.world.centerX,
+          PADDLE_Y,
+          'breakout',
+          'paddle_big.png'
+        );
+
+    remotePaddle.anchor.setTo(0.5,0.5);
+    remotePaddle.body.collideWorldBounds = true;
+    remotePaddle.body.immovable = true;
+  }
+
   function createLocalBall() {
     console.log('createLocalBall invoked');
     ball = game.add.sprite(game.world.centerX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
@@ -137,6 +161,7 @@
     socket.on('remove player', onRemovePlayer);
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
+    socket.on('updated paddle positions', onUpdatedPaddlePositions);
   }
 
   function onSocketConnect() {
@@ -153,6 +178,7 @@
     console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score };
     console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+    createRemotePaddle();
   }
 
   function onRemovePlayer(data) {
@@ -284,5 +310,15 @@
     }
     return result;
   }
+
+  function onUpdatedPaddlePositions() {
+    // TODO
+  }
+
+  // jquery watch for mousemovements and send a message
+  $(document).on("mousemove", function(event){
+    socket.emit("update paddle position", {x: event.pageX });
+    console.log("moved");
+  });
 
 }());

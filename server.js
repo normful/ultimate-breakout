@@ -26,6 +26,7 @@ function onSocketConnection(client) {
   client.on('new player', onNewPlayer);
   client.on('disconnect', onClientDisconnect);
   client.on('brick kill from client', onBrickKillFromClient);
+  client.on('update paddle position', onUpdatePaddlePosition);
 }
 
 function onNewPlayer(data) {
@@ -103,6 +104,11 @@ function resetBricks() {
 
 function isEmpty(obj) {
   return (Object.getOwnPropertyNames(obj).length === 0);
+}
+
+function onUpdatePaddlePosition(data) {
+  util.log('paddle position received: x: ' + data.x );
+  this.broadcast.emit('updated paddle positions', { x: data.x, y: data.y });
 }
 /*
  * HTTP code
