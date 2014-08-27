@@ -165,40 +165,20 @@
 
   function onInitialBricks(data) {
     console.log('onInitialBricks invoked. data = ' + JSON.stringify(data));
-    var killInitialBricks = function killInitialBricks() {
-      console.log('killInitialBricks invoked');
-      var i;
-      for (var row = 0; row < BRICK_ROWS; row++) {
-        for (var col = 0; col < BRICK_COLS; col++) {
-          i = row * BRICK_COLS + col;
-          if (data.initialBricks.charAt(i) === "0") {
-            bricks.children[i].kill();
-          }
+    var i;
+    for (var row = 0; row < BRICK_ROWS; row++) {
+      for (var col = 0; col < BRICK_COLS; col++) {
+        i = row * BRICK_COLS + col;
+        if (data.initialBricks.charAt(i) === "0") {
+          bricks.children[i].kill();
         }
       }
-    };
-    if (typeof(bricks) === 'undefined' ||
-        typeof(bricks.children) === 'undefined') {
-      console.log('setTimeout for killInitialBricks invoked');
-      setTimeout(killInitialBricks, 3000);
-    } else {
-      killInitialBricks();
     }
   }
 
   function onBrickKillToOtherClients(data) {
     console.log('onBrickKillToOtherClients invoked');
-    var killBricks = function killBricks() {
-      console.log('killBricks invoked');
-      bricks.children[data.brickIndex].kill();
-    };
-    if (typeof(bricks) === 'undefined' ||
-        typeof(bricks.children) === 'undefined') {
-      console.log('setTimeout for killBricks invoked');
-      setTimeout(killBricks, 3000);
-    } else {
-      killBricks();
-    }
+    bricks.children[data.brickIndex].kill();
   }
 
   function update() {
