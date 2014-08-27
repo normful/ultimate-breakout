@@ -118,6 +118,27 @@
     ball.events.onOutOfBounds.add(ballLost, this);
   }
 
+  function releaseRemoteBall(data) {
+    console.log('releaseRemoteBall invoked');
+    var remoteBall = game.add.sprite(data.posX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
+    remoteBall.anchor.set(0.5);
+    remoteBall.checkWorldBounds = true;
+
+    game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
+
+    remoteBall.body.collideWorldBounds = true;
+    remoteBall.body.bounce.set(1);
+    remoteBall.body.x = data.posX;
+    remoteBall.body.velocity.x = data.exitVelocityX;
+    remoteBall.body.velocity.y = data.exitVelocityY;
+
+    ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+
+    remoteBall.animations.play('spin');
+
+    // ball.events.onOutOfBounds.add(ballLost, this);
+  }
+
   function createText() {
     console.log('createText invoked');
     scoreText = game.add.text(32, TEXT_Y, 'score: 0',
@@ -137,6 +158,16 @@
     socket.on('remove player', onRemovePlayer);
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
+    socket.on('paddle release ball', onPaddleReleaseBall);
+  }
+
+  function onPaddleReleaseBall(data) {
+    console.log("received message that other client has released ball");
+    console.log("exit x vel = " + data.exitVelocityX);
+    console.log("exit y vel = " + data.exitVelocityY);
+    console.log("pos x = " + data.posX);
+
+    releaseRemoteBall(data);
   }
 
   function onSocketConnect() {
@@ -209,6 +240,13 @@
       ball.body.velocity.y = BALL_RELEASE_VELOCITY_Y;
       ball.animations.play('spin');
       infoText.visible = false;
+
+      // Tell other clients of the release of ball
+      socket.emit('paddle release ball', {
+        exitVelocityX: ball.body.velocity.x,
+        exitVelocityY: ball.body.velocity.y,
+        posX: ball.body.x,
+      });
     }
   }
 
@@ -247,6 +285,7 @@
   }
 
   function ballHitBrick(_ball, _brick) {
+    console.log(_brick);
     socket.emit('brick kill from client', { brickIndex: _brick.brickIndex });
 
     _brick.kill();
