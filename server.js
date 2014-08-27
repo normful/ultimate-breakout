@@ -6,6 +6,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 var util = require('util');
+var utilInspectOpts = { showHidden: false, depth: 1, colors: true };
 
 var players = {};
 var bricks = '111111111111111' +
@@ -51,9 +52,8 @@ function onNewPlayer() {
 
   // Add new player to players array
   players[this.id] = { score: 0 };
-  util.log(this.id + ' added to players object: ' +
-    util.inspect(players, {showHidden: false, depth: 1, colors: true})
-  );
+  util.log(this.id + ' added to players');
+  util.log('players = ' + util.inspect(players, utilInspectOpts));
 
   // Broadcast new player to all socket clients except this new one
   this.broadcast.emit('new player', {
@@ -67,9 +67,8 @@ function onClientDisconnect() {
   util.log(this.id + ' disconnected');
 
   if (delete players[this.id]) {
-    util.log(this.id + ' removed from to players object: ' +
-      util.inspect(players, {showHidden: false, depth: 0, colors: true})
-    );
+    util.log(this.id + ' removed from players');
+    util.log('players = ' + util.inspect(players, utilInspectOpts));
   } else {
     util.log(this.id + ' not found in players');
   }
