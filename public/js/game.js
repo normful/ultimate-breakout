@@ -28,7 +28,6 @@ var bricksGroup;
 
 var socket;
 var remotePlayers = [];
-var bricks;
 
 var ballOnPaddle = true;
 
@@ -167,12 +166,11 @@ function onRemovePlayer(data) {
 }
 
 function onInitialBricks(data) {
-  bricks = data.initialBricks;
   var killInitialBricks = function killInitialBricks() {
     console.log('Killing initial bricks');
     for (var row = 0; row < BRICK_ROWS; row++) {
       for (var col = 0; col < BRICK_COLS; col++) {
-        if (bricks[row][col] === 0) {
+        if (data.initialBricks[row][col] === 0) {
           bricksGroup.children[row * BRICK_COLS + col].kill();
         }
       }
@@ -188,11 +186,9 @@ function onInitialBricks(data) {
 
 function onBrickKillToOtherClients(data) {
   var killBricks = function killBricks() {
-    bricks[data.row][data.col] = 0;
     bricksGroup.children[data.childrenIndex].kill();
   };
-  if (typeof(bricks) === 'undefined' ||
-      typeof(bricksGroup) === 'undefined' ||
+  if (typeof(bricksGroup) === 'undefined' ||
       typeof(bricksGroup.children) === 'undefined') {
     setTimeout(killBricks, 3000);
   } else {
