@@ -84,21 +84,10 @@ function onClientDisconnect() {
 }
 
 function onBrickKillFromClient(data) {
-  util.log(
-    this.id + ' sent "brick kill from client" message: ' +
-    'row = ' + data.row + ' ' +
-    'col = ' + data.col + ' ' +
-    'childrenIndex = ' + data.childrenIndex
-  );
-
-  bricks = bricks.slice(0, data.childrenIndex) + "0" + bricks.slice(data.childrenIndex + 1);
-  util.log('bricks updated: ' + bricks);
-
-  this.broadcast.emit('brick kill to other clients', {
-    row: data.row,
-    col: data.col,
-    childrenIndex: data.childrenIndex
-  });
+  // util.log(this.id + ' sent "brick kill from client" message. brickIndex = ' + data.brickIndex);
+  bricks = bricks.slice(0, data.brickIndex) + "0" + bricks.slice(data.brickIndex + 1);
+  // util.log('Server bricks updated: ' + bricks);
+  this.broadcast.emit('brick kill to other clients', { brickIndex: data.brickIndex });
 }
 
 function resetBricks() {

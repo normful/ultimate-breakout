@@ -85,9 +85,7 @@
         );
         brick.body.bounce.set(1);
         brick.body.immovable = true;
-        brick.row = row;
-        brick.col = col;
-        brick.childrenIndex = brickCount++;
+        brick.brickIndex = brickCount++;
       }
     }
   }
@@ -191,7 +189,7 @@
     console.log('onBrickKillToOtherClients invoked');
     var killBricks = function killBricks() {
       console.log('killBricks invoked');
-      bricks.children[data.childrenIndex].kill();
+      bricks.children[data.brickIndex].kill();
     };
     if (typeof(bricks) === 'undefined' ||
         typeof(bricks.children) === 'undefined') {
@@ -266,11 +264,7 @@
   }
 
   function ballHitBrick(_ball, _brick) {
-    socket.emit('brick kill from client', {
-      row: _brick.row,
-      col: _brick.col,
-      childrenIndex: _brick.childrenIndex
-    });
+    socket.emit('brick kill from client', { brickIndex: _brick.brickIndex });
 
     _brick.kill();
 
