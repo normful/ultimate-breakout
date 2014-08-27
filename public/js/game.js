@@ -1,6 +1,10 @@
 var GAME_WIDTH = 800;
 var GAME_HEIGHT = 600;
+var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
 
+var background;
+
+var bricksGroup;
 var BRICK_ROWS = 4;
 var BRICK_COLS = 15;
 var BRICK_START_X = 120;
@@ -8,37 +12,28 @@ var BRICK_START_Y = 100;
 var BRICK_X_SPACING = 36;
 var BRICK_Y_SPACING = 52;
 
+var paddle;
 var PADDLE_Y = 500;
 var PADDLE_WIDTH = 48;
 var HALF_PADDLE_WIDTH = PADDLE_WIDTH / 2;
 
+var ball;
+var ballOnPaddle = true;
 var BALL_WIDTH = 16;
 var BALL_HEIGHT = 16;
 var BALL_X_RELEASE_VELOCITY = -75;
 var BALL_Y_RELEASE_VELOCITY = -300;
 var BALL_X_VELOCITY_MULTIPLIER = 10;
 
+var score = 0;
+var lives = 3;
+var scoreText;
+var livesText;
+var introText;
 var BOTTOM_TEXT_Y = 550;
-
-var background;
-
-var ball;
-var paddle;
-var bricksGroup;
 
 var socket;
 var remotePlayers = [];
-
-var ballOnPaddle = true;
-
-var introText;
-var scoreText;
-var livesText;
-
-var score = 0;
-var lives = 3;
-
-var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
 
 function preload() {
   console.log('preload invoked');
