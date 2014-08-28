@@ -27,14 +27,15 @@ function onSocketConnection(client) {
   client.on('disconnect', onClientDisconnect);
   client.on('brick kill from client', onBrickKillFromClient);
   client.on('paddle release ball', onPaddleReleaseBall);
+  client.on('ball hit paddle', onBallHitPaddle);
+}
+
+function onBallHitPaddle(data) {
+  this.broadcast.emit('ball hit paddle', data);
 }
 
 function onPaddleReleaseBall(data) {
   this.broadcast.emit('paddle release ball', data);
-  util.log(this.id + ' has released the ball');
-  util.log("exit x vel = " + data.exitVelocityX);
-  util.log("exit y vel = " + data.exitVelocityY);
-  util.log("pos x = " + data.posX);
 }
 
 function onNewPlayer(data) {
@@ -102,7 +103,11 @@ function onBrickKillFromClient(data) {
   // util.log(this.id + ' sent "brick kill from client" message. brickIndex = ' + data.brickIndex);
   bricks = bricks.slice(0, data.brickIndex) + "0" + bricks.slice(data.brickIndex + 1);
   // util.log('Server bricks updated: ' + bricks);
-  this.broadcast.emit('brick kill to other clients', { brickIndex: data.brickIndex });
+  this.broadcast.emit('brick kill to other clients', {
+    brickIndex: data.brickIndex,
+    exitVelocityX: data.exitVelocityX,
+    exitVelocityY: data.exitVelocityY
+  });
 }
 
 function resetBricks() {
