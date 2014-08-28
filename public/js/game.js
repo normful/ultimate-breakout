@@ -121,21 +121,20 @@
 
   function releaseRemoteBall(data) {
     console.log('releaseRemoteBall invoked');
+
+    //Creating a remoteball
     remoteBall = game.add.sprite(data.posX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
     remoteBall.anchor.set(0.5);
     remoteBall.checkWorldBounds = true;
-
     game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
-
     remoteBall.body.collideWorldBounds = true;
     remoteBall.body.bounce.set(1);
+    remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+    remoteBall.animations.play('spin');
+
     remoteBall.body.x = data.posX;
     remoteBall.body.velocity.x = data.exitVelocityX;
     remoteBall.body.velocity.y = data.exitVelocityY;
-
-    ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
-
-    remoteBall.animations.play('spin');
 
     // ball.events.onOutOfBounds.add(ballLost, this);
   }
@@ -161,6 +160,30 @@
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
     socket.on('paddle release ball', onPaddleReleaseBall);
     socket.on('ball hit paddle', onBallHitPaddle);
+    socket.on('existing ball', onExistingBall);
+    socket.on('kill remote ball', onKillRemoteBall);
+  }
+
+  function onKillRemoteBall(data) {
+    console.log('onKillRemoteBall invoked');
+    remoteBall.kill();
+  }
+
+  function onExistingBall(data) {
+    console.log('onExistingBall invoked');
+
+    //Creating a remoteball
+    remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
+    remoteBall.anchor.set(0.5);
+    remoteBall.checkWorldBounds = true;
+    game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
+    remoteBall.body.collideWorldBounds = true;
+    remoteBall.body.bounce.set(1);
+    remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+    remoteBall.animations.play('spin');
+
+    remoteBall.body.velocity.x = data.velocityX;
+    remoteBall.body.velocity.y = data.velocityY;
   }
 
   function onBallHitPaddle(data) {
@@ -192,6 +215,15 @@
   }
 
   function onNewPlayer(data) {
+
+    // Notify new player of client's ball position and velocity
+    socket.emit('existing ball', {
+      velocityX: ball.body.velocity.x,
+      velocityY: ball.body.velocity.y,
+      posX: ball.body.position.x,
+      posY: ball.body.position.y
+    });
+
     console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score };
     console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
@@ -269,6 +301,8 @@
   }
 
   function ballLost() {
+    socket.emit('kill remote ball');
+
     lives--;
     livesText.text = 'lives: ' + lives;
     if (lives === 0) {
@@ -285,6 +319,8 @@
   }
 
   function startNewRound() {
+    socket.emit('kill remote ball');
+
     console.log('startNewRound invoked');
     bricks.callAll('revive');
     if (lives !==0 ) {
