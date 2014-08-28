@@ -187,8 +187,8 @@
 
   function onNewPlayer(data) {
     console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
-    remotePlayers[data.id] = { score: data.score, paddleX: 400 };
-    //console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+    remotePlayers[data.id] = { score: data.score, paddleX: game.world.centerX };
+    console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
     createRemotePaddle(data);
     console.log("CURRENT CLIENT: " + data.id);
   }
@@ -332,11 +332,8 @@
   }
 
   function onUpdatedPaddlePositions(data) {
-    var player = data.id;
     console.log('onUpdatedPaddlePositions invoked');
-    console.log('remotePaddle: ' + remotePaddle);
-    console.log('in remotePlayers object: ' + remotePlayers[player]["paddle"]);
-    
+    var player = data.id;
     remotePlayers[player].paddleX = data.x;
   }
 
@@ -344,15 +341,8 @@
     console.log('called updatePaddlePositions');
 
     $.each(remotePlayers, function(key, val){
-      console.log("key: " + key + "val: " + val.paddle.body.x);
       val.paddle.body.x = val.paddleX;
     });
-
-    // $.each(remotePlayers, function(clientId, clientObject){
-    //   console.log('updatePaddlePositions: CLIENT PADDLE X: ' + clientObject.paddleX);
-    //   console.log('updatePaddlePositions: CLIENT PADDLE: ' + clientObject.paddle);
-    //   //clientObject.paddle.body.x = clientObject.paddleX;
-    // });
   };
 
     // jquery watch for mousemovements and send a message
