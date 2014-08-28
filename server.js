@@ -28,6 +28,16 @@ function onSocketConnection(client) {
   client.on('brick kill from client', onBrickKillFromClient);
   client.on('paddle release ball', onPaddleReleaseBall);
   client.on('ball hit paddle', onBallHitPaddle);
+  client.on('existing ball', onExistingBall);
+  client.on('kill remote ball', onKillRemoteBall);
+}
+
+function onKillRemoteBall(data) {
+  this.broadcast.emit('kill remote ball', data);
+}
+
+function onExistingBall(data) {
+  this.broadcast.emit('existing ball', data);
 }
 
 function onBallHitPaddle(data) {
