@@ -54,6 +54,8 @@ function onNewPlayer(data) {
     }
   }
 
+  this.emit('current player id', { id: this.id });
+
   // Send existing brick layout to the new player
   this.emit('initial bricks', { initialBricks: bricks });
   util.log(this.id + ' has been sent the existing brick layout: ' + bricks);
@@ -107,8 +109,8 @@ function isEmpty(obj) {
 }
 
 function onUpdatePaddlePosition(data) {
-  util.log('paddle position received: x: ' + data.x );
-  this.broadcast.emit('updated paddle positions', { x: data.x, y: data.y });
+  util.log('paddle position received: x: ' + data.x + ' for client: ' + data.id );
+  this.broadcast.emit('updated paddle positions', { id: data.id, x: data.x });
 }
 /*
  * HTTP code

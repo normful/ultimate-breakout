@@ -18,6 +18,10 @@
   var PADDLE_Y = 500;
   var PADDLE_WIDTH = 48;
 
+  var remotePaddles;
+  var remotePaddle;
+  var testPaddle;
+
   var ball;
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
@@ -35,6 +39,7 @@
 
   var socket;
   var remotePlayers = {};
+  var currentClient;
 
   function preload() {
     console.log('preload invoked');
@@ -112,18 +117,23 @@
   }
 
   // add sprite for remote paddle and associate it with the player
-  function createRemotePaddle(){
+  function createRemotePaddle(data){
     console.log('createRemotePaddle invoked');
-    remotePaddle = remotePaddles.create(
+
+    var player = data.id;
+
+    remotePlayers[player].paddle = remotePaddles.create(
           game.world.centerX,
           PADDLE_Y,
           'breakout',
           'paddle_big.png'
         );
 
-    remotePaddle.anchor.setTo(0.5,0.5);
-    remotePaddle.body.collideWorldBounds = true;
-    remotePaddle.body.immovable = true;
+    remotePlayers[player].paddle.anchor.setTo(0.5, 0.5);
+    game.physics.enable(remotePlayers[player].paddle, Phaser.Physics.ARCADE);
+    remotePlayers[player].paddle.body.collideWorldBounds = true;
+    remotePlayers[player].paddle.body.bounce.set(1);
+    remotePlayers[player].paddle.body.immovable = true;
   }
 
   function createLocalBall() {
@@ -162,6 +172,7 @@
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
     socket.on('updated paddle positions', onUpdatedPaddlePositions);
+    socket.on('current player id', getCurrentPlayerId);
   }
 
   function onSocketConnect() {
@@ -176,9 +187,10 @@
 
   function onNewPlayer(data) {
     console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
-    remotePlayers[data.id] = { score: data.score };
-    console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
-    createRemotePaddle();
+    remotePlayers[data.id] = { score: data.score, paddleX: 400 };
+    //console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+    createRemotePaddle(data);
+    console.log("CURRENT CLIENT: " + data.id);
   }
 
   function onRemovePlayer(data) {
@@ -226,6 +238,10 @@
     if (bricks.countLiving() === 0) {
       startNewRound();
     }
+
+    if (!$.isEmptyObject(remotePlayers)) {
+      updatePaddlePositions();
+    };
   }
 
   function releaseBall() {
@@ -311,13 +327,37 @@
     return result;
   }
 
-  function onUpdatedPaddlePositions() {
-    // TODO
+  function getCurrentPlayerId(data) {
+    currentClient = data.id;
   }
 
-  // jquery watch for mousemovements and send a message
-  $(document).on("mousemove", function(event){
-    socket.emit("update paddle position", {x: event.pageX });
+  function onUpdatedPaddlePositions(data) {
+    var player = data.id;
+    console.log('onUpdatedPaddlePositions invoked');
+    console.log('remotePaddle: ' + remotePaddle);
+    console.log('in remotePlayers object: ' + remotePlayers[player]["paddle"]);
+    
+    remotePlayers[player].paddleX = data.x;
+  }
+
+  function updatePaddlePositions() {
+    console.log('called updatePaddlePositions');
+
+    $.each(remotePlayers, function(key, val){
+      console.log("key: " + key + "val: " + val.paddle.body.x);
+      val.paddle.body.x = val.paddleX;
+    });
+
+    // $.each(remotePlayers, function(clientId, clientObject){
+    //   console.log('updatePaddlePositions: CLIENT PADDLE X: ' + clientObject.paddleX);
+    //   console.log('updatePaddlePositions: CLIENT PADDLE: ' + clientObject.paddle);
+    //   //clientObject.paddle.body.x = clientObject.paddleX;
+    // });
+  };
+
+    // jquery watch for mousemovements and send a message
+  $('#breakout').on("mousemove", function(event){
+    socket.emit("update paddle position", { id: currentClient, x: event.pageX });
     console.log("moved");
   });
 
