@@ -205,7 +205,7 @@
   function releaseBall() {
     if (ballOnPaddle) {
       ballOnPaddle = false;
-      ball.body.velocity.x = BALL_RELEASE_VELOCITY_X;
+      ball.body.velocity.x = BALL_RELEASE_VELOCITY_X * ( Math.random() * 4 - 1 );
       ball.body.velocity.y = BALL_RELEASE_VELOCITY_Y;
       ball.animations.play('spin');
       infoText.visible = false;
