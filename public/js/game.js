@@ -19,6 +19,7 @@
   var PADDLE_WIDTH = 48;
 
   var ball;
+  var remoteBall;
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
   var BALL_HEIGHT = 16;
@@ -120,7 +121,7 @@
 
   function releaseRemoteBall(data) {
     console.log('releaseRemoteBall invoked');
-    var remoteBall = game.add.sprite(data.posX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
+    remoteBall = game.add.sprite(data.posX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
     remoteBall.anchor.set(0.5);
     remoteBall.checkWorldBounds = true;
 
@@ -159,6 +160,16 @@
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
     socket.on('paddle release ball', onPaddleReleaseBall);
+    socket.on('ball hit paddle', onBallHitPaddle);
+  }
+
+  function onBallHitPaddle(data) {
+    console.log(data.exitVelocityX);
+    console.log(data.exitVelocityY);
+
+    // Change the velocity of the remote ball
+    remoteBall.body.velocity.x = data.exitVelocityX;
+    remoteBall.body.velocity.y = data.exitVelocityY;
   }
 
   function onPaddleReleaseBall(data) {
@@ -209,6 +220,13 @@
 
   function onBrickKillToOtherClients(data) {
     console.log('onBrickKillToOtherClients invoked');
+    console.log(data.exitVelocityX);
+    console.log(data.exitVelocityY);
+
+    // Change the velocity of the remote ball
+    remoteBall.body.velocity.x = data.exitVelocityX;
+    remoteBall.body.velocity.y = data.exitVelocityY;
+
     bricks.children[data.brickIndex].kill();
   }
 
@@ -285,8 +303,11 @@
   }
 
   function ballHitBrick(_ball, _brick) {
-    console.log(_brick);
-    socket.emit('brick kill from client', { brickIndex: _brick.brickIndex });
+    socket.emit('brick kill from client', {
+      brickIndex: _brick.brickIndex,
+      exitVelocityX: ball.body.velocity.x,
+      exitVelocityY: ball.body.velocity.y
+    });
 
     _brick.kill();
 
@@ -310,6 +331,14 @@
       //  Add a little random X to stop it bouncing straight up!
       _ball.body.velocity.x = BALL_VELOCITY_MULTIPLIER_X * 0.2 + Math.random() * BALL_VELOCITY_MULTIPLIER_X * 0.8;
     }
+
+    console.log(_ball.body.velocity.x);
+    console.log(_ball.body.velocity.y);
+
+    socket.emit('ball hit paddle', {
+      exitVelocityX: _ball.body.velocity.x,
+      exitVelocityY: _ball.body.velocity.y
+    });
   }
 
   function bricksString(bricksGroup) {
