@@ -118,7 +118,6 @@
 
   // add sprite for remote paddle and associate it with the player
   function createRemotePaddle(data){
-    // remotePaddles.callAll('kill');
     console.log('createRemotePaddle invoked');
 
     var player = data.id;
@@ -136,8 +135,6 @@
     remotePlayers[player].paddle.body.bounce.set(1);
     remotePlayers[player].paddle.body.immovable = true;
     remotePlayers[player].paddle.name = player;
-
-    //remotePaddles.callAll('revive');
   }
 
   function createLocalBall() {
@@ -192,18 +189,21 @@
   function onNewPlayer(data) {
     console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score, paddleX: game.world.centerX };
-    //console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
     createRemotePaddle(data);
   }
 
   function onRemovePlayer(data) {
     remotePlayers[data.id].paddle.parent.removeChild(remotePlayers[data.id].paddle);
-    if (delete remotePlayers[data.id]) {
-      console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
 
-    } else {
-      console.log(data.id + ' not found in remotePlayers');
+    var newRemotePlayers = {};
+
+    for (var i in remotePlayers) {
+      if (i != data.id) {
+        newRemotePlayers[i] = remotePlayers[i];
+      }
     }
+
+    remotePlayers = newRemotePlayers;
   }
 
   function onInitialBricks(data) {
@@ -348,7 +348,7 @@
     });
   };
 
-    // jquery watch for mousemovements and send a message
+  // jquery watch for mousemovements and send a message
   $('#breakout').on("mousemove", function(event){
     socket.emit("update paddle position", { id: currentClient, x: event.pageX });
   });
