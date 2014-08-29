@@ -1,4 +1,4 @@
-;(function () {
+// ;(function () {
 
   var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
   var GAME_WIDTH = 800;
@@ -60,11 +60,11 @@
     // Check bounds collisions on all walls except bottom
     game.physics.arcade.checkCollision.down = false;
 
+    createRemotePaddles();
     createBricks();
     createLocalPaddle();
     createLocalBall();
     createText();
-    createRemotePaddles();
 
     game.input.onDown.add(releaseBall, this);
 
@@ -118,6 +118,7 @@
 
   // add sprite for remote paddle and associate it with the player
   function createRemotePaddle(data){
+    // remotePaddles.callAll('kill');
     console.log('createRemotePaddle invoked');
 
     var player = data.id;
@@ -134,6 +135,8 @@
     remotePlayers[player].paddle.body.collideWorldBounds = true;
     remotePlayers[player].paddle.body.bounce.set(1);
     remotePlayers[player].paddle.body.immovable = true;
+
+    //remotePaddles.callAll('revive');
   }
 
   function createLocalBall() {
@@ -188,12 +191,12 @@
   function onNewPlayer(data) {
     console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score, paddleX: game.world.centerX };
-    console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+    //console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
     createRemotePaddle(data);
-    console.log("CURRENT CLIENT: " + data.id);
   }
 
   function onRemovePlayer(data) {
+    remotePlayers[data.id].paddle.kill();
     if (delete remotePlayers[data.id]) {
       console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
     } else {
@@ -338,8 +341,6 @@
   }
 
   function updatePaddlePositions() {
-    console.log('called updatePaddlePositions');
-
     $.each(remotePlayers, function(key, val){
       val.paddle.body.x = val.paddleX;
     });
@@ -348,7 +349,6 @@
     // jquery watch for mousemovements and send a message
   $('#breakout').on("mousemove", function(event){
     socket.emit("update paddle position", { id: currentClient, x: event.pageX });
-    console.log("moved");
   });
 
-}());
+// }());
