@@ -48,6 +48,7 @@ function onNewPlayer(data) {
       util.log(this.id + ' has been sent the existing player ' + playerID);
       this.emit('new player', {
         id: playerID,
+        name: players[playerID].name,
         score: players[playerID].score
       });
     }
@@ -57,14 +58,19 @@ function onNewPlayer(data) {
   this.emit('initial bricks', { initialBricks: bricks });
   util.log(this.id + ' has been sent the existing brick layout: ' + bricks);
 
+  // Assign player name
+  // TODO: Make this a random funny name instead of the client id
+  this.emit('local player name', { name: this.id });
+
   // Add new player to players array
-  players[this.id] = { score: 0 };
+  players[this.id] = { name: this.id, score: 0 };
   util.log(this.id + ' added to players');
   util.log('players = ' + util.inspect(players, utilInspectOpts));
 
   // Broadcast new player to all socket clients except this new one
   this.broadcast.emit('new player', {
     id: this.id,
+    name: this.id,
     score: 0
   });
   util.log(this.id + ' broadcast to all existing players');

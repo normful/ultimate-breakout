@@ -34,7 +34,10 @@
   var TEXT_Y = 550;
 
   var socket;
+  var localPlayerName;
   var remotePlayers = {};
+
+  var $leaderboard = $("#leaderboard");
 
   function preload() {
     console.log('preload invoked');
@@ -133,6 +136,7 @@
     console.log('attachSocketHandlers invoked');
     socket.on('connect', onSocketConnect);
     socket.on('disconnect', onSocketDisconnect);
+    socket.on('local player name', onLocalPlayerName);
     socket.on('new player', onNewPlayer);
     socket.on('remove player', onRemovePlayer);
     socket.on('initial bricks', onInitialBricks);
@@ -151,9 +155,16 @@
     console.log('onSocketDisconnect invoked');
   }
 
+  function onLocalPlayerName(data) {
+    localPlayerName = data.name;
+  }
+
   function onNewPlayer(data) {
-    console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
-    remotePlayers[data.id] = { score: data.score };
+    console.log('onNewPlayer invoked.');
+    remotePlayers[data.id] = {
+      name: data.name,
+      score: data.score
+    };
     console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
