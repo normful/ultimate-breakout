@@ -32,20 +32,35 @@ function onSocketConnection(client) {
   client.on('kill remote ball', onKillRemoteBall);
 }
 
-function onKillRemoteBall(data) {
-  this.broadcast.emit('kill remote ball', data);
+function onKillRemoteBall() {
+  this.broadcast.emit('kill remote ball', { remotePlayerID: this.id });
 }
 
 function onExistingBall(data) {
-  this.broadcast.emit('existing ball', data);
+  this.broadcast.emit('existing ball', {
+    velocityX: data.velocityX,
+    velocityY: data.velocityY,
+    posX: data.posX,
+    posY: data.posY,
+    remotePlayerID: this.id
+  });
 }
 
 function onBallHitPaddle(data) {
-  this.broadcast.emit('ball hit paddle', data);
+  this.broadcast.emit('ball hit paddle', {
+    exitVelocityX: data.exitVelocityX,
+    exitVelocityY: data.exitVelocityY,
+    remotePlayerID: this.id
+  });
 }
 
 function onPaddleReleaseBall(data) {
-  this.broadcast.emit('paddle release ball', data);
+  this.broadcast.emit('paddle release ball', {
+    exitVelocityX: data.exitVelocityX,
+    exitVelocityY: data.exitVelocityY,
+    posX: data.posX,
+    remotePlayerID: this.id
+  });
 }
 
 function onNewPlayer(data) {
@@ -116,7 +131,8 @@ function onBrickKillFromClient(data) {
   this.broadcast.emit('brick kill to other clients', {
     brickIndex: data.brickIndex,
     exitVelocityX: data.exitVelocityX,
-    exitVelocityY: data.exitVelocityY
+    exitVelocityY: data.exitVelocityY,
+    remotePlayerID: this.id
   });
 }
 

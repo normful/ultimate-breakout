@@ -54,7 +54,7 @@
     background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
 
     // Check bounds collisions on all walls except bottom
-    game.physics.arcade.checkCollision.down = false;
+    // game.physics.arcade.checkCollision.down = false;
 
     createBricks();
     createLocalPaddle();
@@ -136,6 +136,7 @@
     remoteBall.body.velocity.x = data.exitVelocityX;
     remoteBall.body.velocity.y = data.exitVelocityY;
 
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
     // ball.events.onOutOfBounds.add(ballLost, this);
   }
 
@@ -166,7 +167,9 @@
 
   function onKillRemoteBall(data) {
     console.log('onKillRemoteBall invoked');
-    remoteBall.kill();
+
+    var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
+    b.kill();
   }
 
   function onExistingBall(data) {
@@ -184,15 +187,18 @@
 
     remoteBall.body.velocity.x = data.velocityX;
     remoteBall.body.velocity.y = data.velocityY;
+
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
   }
 
   function onBallHitPaddle(data) {
     console.log(data.exitVelocityX);
     console.log(data.exitVelocityY);
 
-    // Change the velocity of the remote ball
-    remoteBall.body.velocity.x = data.exitVelocityX;
-    remoteBall.body.velocity.y = data.exitVelocityY;
+    // Identify remote player's ball and change its velocity accordingly
+    var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
+    b.body.velocity.x = data.exitVelocityX;
+    b.body.velocity.y = data.exitVelocityY;
   }
 
   function onPaddleReleaseBall(data) {
@@ -256,8 +262,9 @@
     console.log(data.exitVelocityY);
 
     // Change the velocity of the remote ball
-    remoteBall.body.velocity.x = data.exitVelocityX;
-    remoteBall.body.velocity.y = data.exitVelocityY;
+    var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
+    b.body.velocity.x = data.exitVelocityX;
+    b.body.velocity.y = data.exitVelocityY;
 
     bricks.children[data.brickIndex].kill();
   }
