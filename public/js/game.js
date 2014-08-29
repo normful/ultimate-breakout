@@ -135,6 +135,7 @@
     remotePlayers[player].paddle.body.collideWorldBounds = true;
     remotePlayers[player].paddle.body.bounce.set(1);
     remotePlayers[player].paddle.body.immovable = true;
+    remotePlayers[player].paddle.name = player;
 
     //remotePaddles.callAll('revive');
   }
@@ -196,9 +197,10 @@
   }
 
   function onRemovePlayer(data) {
-    remotePlayers[data.id].paddle.kill();
+    remotePlayers[data.id].paddle.parent.removeChild(remotePlayers[data.id].paddle);
     if (delete remotePlayers[data.id]) {
       console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
+
     } else {
       console.log(data.id + ' not found in remotePlayers');
     }

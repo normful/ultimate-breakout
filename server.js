@@ -109,7 +109,7 @@ function isEmpty(obj) {
 }
 
 function onUpdatePaddlePosition(data) {
-  util.log('paddle position received: x: ' + data.x + ' for client: ' + data.id );
+  // util.log('paddle position received: x: ' + data.x + ' for client: ' + data.id );
   this.broadcast.emit('updated paddle positions', { id: data.id, x: data.x });
 }
 /*
