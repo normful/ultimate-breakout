@@ -53,7 +53,7 @@
     background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
 
     // Check bounds collisions on all walls except bottom
-    game.physics.arcade.checkCollision.down = false;
+    // game.physics.arcade.checkCollision.down = false;
 
     createBricks();
     createLocalPaddle();
@@ -173,21 +173,25 @@
 
   function onExistingBall(data) {
     console.log('onExistingBall invoked');
-
     //Creating a remoteball
-    var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
-    remoteBall.anchor.set(0.5);
-    remoteBall.checkWorldBounds = true;
-    game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
-    remoteBall.body.collideWorldBounds = true;
-    remoteBall.body.bounce.set(1);
-    remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
-    remoteBall.animations.play('spin');
 
-    remoteBall.body.velocity.x = data.velocityX;
-    remoteBall.body.velocity.y = data.velocityY;
+    var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
 
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+    if (typeof b === "undefined") {
+      var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
+      remoteBall.anchor.set(0.5);
+      remoteBall.checkWorldBounds = true;
+      game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
+      remoteBall.body.collideWorldBounds = true;
+      remoteBall.body.bounce.set(1);
+      remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+      remoteBall.animations.play('spin');
+
+      remoteBall.body.velocity.x = data.velocityX;
+      remoteBall.body.velocity.y = data.velocityY;
+
+      remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+    }
   }
 
   function onBallHitPaddle(data) {
@@ -221,17 +225,21 @@
 
   function onNewPlayer(data) {
 
-    // Notify new player of client's ball position and velocity
-    socket.emit('existing ball', {
-      velocityX: ball.body.velocity.x,
-      velocityY: ball.body.velocity.y,
-      posX: ball.body.position.x,
-      posY: ball.body.position.y
-    });
+    // Notify new player of client's ball position and velocity, but only do so if player hasn't released ball
 
-    console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
+    if (!ballOnPaddle) {
+      socket.emit('existing ball', {
+        velocityX: ball.body.velocity.x,
+        velocityY: ball.body.velocity.y,
+        posX: ball.body.position.x,
+        posY: ball.body.position.y
+      });
+    }
+
+    // Commented out due to errors with Converting circular structure to JSON
+    // console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score };
-    console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+    // console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onRemovePlayer(data) {
