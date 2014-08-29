@@ -137,6 +137,8 @@
     socket.on('remove player', onRemovePlayer);
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
+    socket.on('update local score', onUpdateLocalScore);
+    socket.on('update remote score', onUpdateRemoteScore);
   }
 
   function onSocketConnect() {
@@ -179,6 +181,18 @@
   function onBrickKillToOtherClients(data) {
     console.log('onBrickKillToOtherClients invoked');
     bricks.children[data.brickIndex].kill();
+  }
+
+  function onUpdateLocalScore(data) {
+    console.log('onLocalRemoteScore invoked');
+    score = data.score;
+    scoreText.text = 'score: ' + score;
+  }
+
+  function onUpdateRemoteScore(data) {
+    console.log('onUpdateRemoteScore invoked');
+    remotePlayers[data.id].score = data.score;
+    console.log('remotePlayers = ' + JSON.stringify(remotePlayers));
   }
 
   function update() {
@@ -233,8 +247,6 @@
     bricks.callAll('revive');
     if (lives !==0 ) {
       putBallOnPaddle();
-      score += 1000;
-      scoreText.text = 'score: ' + score;
       infoText.text = 'Next Round';
     }
   }
@@ -248,11 +260,7 @@
 
   function ballHitBrick(_ball, _brick) {
     socket.emit('brick kill from client', { brickIndex: _brick.brickIndex });
-
     _brick.kill();
-
-    score += 10;
-    scoreText.text = 'score: ' + score;
   }
 
   function ballHitPaddle(_ball, _paddle) {

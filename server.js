@@ -90,10 +90,35 @@ function onClientDisconnect() {
 }
 
 function onBrickKillFromClient(data) {
-  // util.log(this.id + ' sent "brick kill from client" message. brickIndex = ' + data.brickIndex);
+  util.log(this.id + ' sent "brick kill from client" message. brickIndex = ' + data.brickIndex);
+
+  if (bricks.charAt(data.brickIndex) === "0") {
+    util.log('brick ' + data.brickIndex + ' already dead. Brick kill message not broadcasted to other clients and no points rewarded to ' +  this.id);
+    return;
+  }
+
   bricks = bricks.slice(0, data.brickIndex) + "0" + bricks.slice(data.brickIndex + 1);
-  // util.log('Server bricks updated: ' + bricks);
+
+  if (bricks.indexOf("1") === -1) {
+    resetBricks();
+    players[this.id].score += 100;
+  } else {
+    players[this.id].score += 10;
+  }
+  util.log(this.id + " new score = " + players[this.id].score);
+
+  util.log('"brick kill to other clients" message broadcast to other clients');
   this.broadcast.emit('brick kill to other clients', { brickIndex: data.brickIndex });
+
+  this.emit('update local score', {
+    score: players[this.id].score
+  });
+
+  this.broadcast.emit('update remote score', {
+    id: this.id,
+    score: players[this.id].score
+  });
+
 }
 
 function resetBricks() {
