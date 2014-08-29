@@ -19,7 +19,6 @@
   var PADDLE_WIDTH = 48;
 
   var ball;
-  var remoteBall;
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
   var BALL_HEIGHT = 16;
@@ -54,7 +53,7 @@
     background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
 
     // Check bounds collisions on all walls except bottom
-    // game.physics.arcade.checkCollision.down = false;
+    game.physics.arcade.checkCollision.down = false;
 
     createBricks();
     createLocalPaddle();
@@ -123,7 +122,7 @@
     console.log('releaseRemoteBall invoked');
 
     //Creating a remoteball
-    remoteBall = game.add.sprite(data.posX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
+    var remoteBall = game.add.sprite(data.posX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
     remoteBall.anchor.set(0.5);
     remoteBall.checkWorldBounds = true;
     game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
@@ -176,7 +175,7 @@
     console.log('onExistingBall invoked');
 
     //Creating a remoteball
-    remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
+    var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
     remoteBall.anchor.set(0.5);
     remoteBall.checkWorldBounds = true;
     game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
