@@ -157,9 +157,9 @@
 
   function onRemovePlayer(data) {
     var newRemotePlayers = {};
-    for (var i in remotePlayers) {
-      if (i !== data.id) {
-        newRemotePlayers[i] = remotePlayers[i];
+    for (var id in remotePlayers) {
+      if (id !== data.id) {
+        newRemotePlayers[id] = remotePlayers[id];
       }
     }
     remotePlayers = newRemotePlayers;
