@@ -35,6 +35,7 @@
 
   var socket;
   var localPlayerName;
+  var localPlayerID;
   var remotePlayers = {};
 
   var $leaderboard = $("#leaderboard");
@@ -136,7 +137,7 @@
     console.log('attachSocketHandlers invoked');
     socket.on('connect', onSocketConnect);
     socket.on('disconnect', onSocketDisconnect);
-    socket.on('local player name', onLocalPlayerName);
+    socket.on('local player', onLocalPlayer);
     socket.on('new player', onNewPlayer);
     socket.on('remove player', onRemovePlayer);
     socket.on('initial bricks', onInitialBricks);
@@ -155,7 +156,8 @@
     console.log('onSocketDisconnect invoked');
   }
 
-  function onLocalPlayerName(data) {
+  function onLocalPlayer(data) {
+    localPlayerID = data.id;
     localPlayerName = data.name;
   }
 

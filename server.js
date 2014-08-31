@@ -58,9 +58,12 @@ function onNewPlayer(data) {
   this.emit('initial bricks', { initialBricks: bricks });
   util.log(this.id + ' has been sent the existing brick layout: ' + bricks);
 
-  // Assign player name
+  // Assign player id and name
   // TODO: Make this a random funny name instead of the client id
-  this.emit('local player name', { name: this.id });
+  this.emit('local player', {
+    id: this.id,
+    name: this.id
+  });
 
   // Add new player to players array
   players[this.id] = { name: this.id, score: 0 };
