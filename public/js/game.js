@@ -168,8 +168,7 @@
   function onKillRemoteBall(data) {
     console.log('onKillRemoteBall invoked');
 
-    var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
-    b.kill();
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"].kill();
   }
 
   function onExistingBall(data) {
@@ -243,17 +242,24 @@
     // console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
-  function onRemovePlayer(data) {
-    if (delete remotePlayers[data.id]) {
-      console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
-    } else {
-      console.log(data.id + ' not found in remotePlayers');
-    }
-  }
+  // function onRemovePlayer(data) {
+  //   if (delete remotePlayers[data.id]) {
+  //     console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
+  //   } else {
+  //     console.log(data.id + ' not found in remotePlayers');
+  //   }
+  // }
 
-  function onKillDisconnectedBall(data) {
-    console.log('onKillDisconnectedBall invoked');
-    remotePlayers[data.id]["remotePlayerBall"].kill();
+  function onRemovePlayer(data) {  remotePlayers[data.id].remotePlayerBall.parent.removeChild(remotePlayers[data.id].remotePlayerBall);
+    var newRemotePlayers = {};
+
+    for (var i in remotePlayers) {
+      if (i != data.id) {
+        newRemotePlayers[i] = remotePlayers[i];
+      }
+    }
+
+    remotePlayers = newRemotePlayers;
   }
 
   function onInitialBricks(data) {
