@@ -1,4 +1,4 @@
-;(function () {
+// ;(function () {
 
   var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
   var GAME_WIDTH = 800;
@@ -162,6 +162,7 @@
     socket.on('ball hit paddle', onBallHitPaddle);
     socket.on('existing ball', onExistingBall);
     socket.on('kill remote ball', onKillRemoteBall);
+    socket.on('kill disconnected ball', onKillDisconnectedBall);
   }
 
   function onKillRemoteBall(data) {
@@ -195,8 +196,8 @@
   }
 
   function onBallHitPaddle(data) {
-    console.log(data.exitVelocityX);
-    console.log(data.exitVelocityY);
+    // console.log(data.exitVelocityX);
+    // console.log(data.exitVelocityY);
 
     // Identify remote player's ball and change its velocity accordingly
     var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
@@ -206,9 +207,9 @@
 
   function onPaddleReleaseBall(data) {
     console.log("received message that other client has released ball");
-    console.log("exit x vel = " + data.exitVelocityX);
-    console.log("exit y vel = " + data.exitVelocityY);
-    console.log("pos x = " + data.posX);
+    // console.log("exit x vel = " + data.exitVelocityX);
+    // console.log("exit y vel = " + data.exitVelocityY);
+    // console.log("pos x = " + data.posX);
 
     releaseRemoteBall(data);
   }
@@ -237,20 +238,22 @@
     }
 
     // Commented out due to errors with Converting circular structure to JSON
-    // console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
+    console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score };
     // console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onRemovePlayer(data) {
-
-    remotePlayers[data.id]["remotePlayerBall"].kill();
-
     if (delete remotePlayers[data.id]) {
       console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
     } else {
       console.log(data.id + ' not found in remotePlayers');
     }
+  }
+
+  function onKillDisconnectedBall(data) {
+    console.log('onKillDisconnectedBall invoked');
+    remotePlayers[data.id]["remotePlayerBall"].kill();
   }
 
   function onInitialBricks(data) {
@@ -267,9 +270,7 @@
   }
 
   function onBrickKillToOtherClients(data) {
-    console.log('onBrickKillToOtherClients invoked');
-    console.log(data.exitVelocityX);
-    console.log(data.exitVelocityY);
+    // console.log('onBrickKillToOtherClients invoked');
 
     // Change the velocity of the remote ball
     var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
@@ -408,4 +409,4 @@
     return result;
   }
 
-}());
+// }());
