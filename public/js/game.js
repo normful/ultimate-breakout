@@ -1,4 +1,4 @@
-// ;(function () {
+;(function () {
 
   var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
   var GAME_WIDTH = 800;
@@ -406,4 +406,4 @@
     return result;
   }
 
-// }());
+}());
