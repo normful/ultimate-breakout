@@ -194,9 +194,6 @@
   }
 
   function onBallHitPaddle(data) {
-    // console.log(data.exitVelocityX);
-    // console.log(data.exitVelocityY);
-
     // Identify remote player's ball and change its velocity accordingly
     var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
     b.body.velocity.x = data.exitVelocityX;
@@ -205,10 +202,6 @@
 
   function onPaddleReleaseBall(data) {
     console.log("received message that other client has released ball");
-    // console.log("exit x vel = " + data.exitVelocityX);
-    // console.log("exit y vel = " + data.exitVelocityY);
-    // console.log("pos x = " + data.posX);
-
     releaseRemoteBall(data);
   }
 
@@ -278,9 +271,11 @@
     // console.log('onBrickKillToOtherClients invoked');
 
     // Change the velocity of the remote ball
-    var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
-    b.body.velocity.x = data.exitVelocityX;
-    b.body.velocity.y = data.exitVelocityY;
+    if (typeof remotePlayers[data.remotePlayerID] != "undefined") {
+      var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
+      b.body.velocity.x = data.exitVelocityX;
+      b.body.velocity.y = data.exitVelocityY;
+    }
 
     bricks.children[data.brickIndex].kill();
   }
@@ -390,9 +385,6 @@
       //  Add a little random X to stop it bouncing straight up!
       _ball.body.velocity.x = BALL_VELOCITY_MULTIPLIER_X * 0.2 + Math.random() * BALL_VELOCITY_MULTIPLIER_X * 0.8;
     }
-
-    console.log(_ball.body.velocity.x);
-    console.log(_ball.body.velocity.y);
 
     socket.emit('ball hit paddle', {
       exitVelocityX: _ball.body.velocity.x,
