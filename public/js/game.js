@@ -344,7 +344,7 @@
 
   function updatePaddlePositions() {
     $.each(remotePlayers, function(key, val){
-      val.paddle.body.x = val.paddleX;
+      val.paddle.body.x = val.paddleX - 70;
     });
   };
 
