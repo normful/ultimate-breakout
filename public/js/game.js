@@ -53,7 +53,7 @@
     background = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'starfield');
 
     // Check bounds collisions on all walls except bottom
-    // game.physics.arcade.checkCollision.down = false;
+    game.physics.arcade.checkCollision.down = false;
 
     createBricks();
     createLocalPaddle();
@@ -162,7 +162,6 @@
     socket.on('ball hit paddle', onBallHitPaddle);
     socket.on('existing ball', onExistingBall);
     socket.on('kill remote ball', onKillRemoteBall);
-    socket.on('kill disconnected ball', onKillDisconnectedBall);
   }
 
   function onKillRemoteBall(data) {
