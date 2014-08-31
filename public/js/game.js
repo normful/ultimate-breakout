@@ -243,6 +243,9 @@
   }
 
   function onRemovePlayer(data) {
+
+    remotePlayers[data.id]["remotePlayerBall"].kill();
+
     if (delete remotePlayers[data.id]) {
       console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
     } else {
