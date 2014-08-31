@@ -156,11 +156,13 @@
   }
 
   function onRemovePlayer(data) {
-    if (delete remotePlayers[data.id]) {
-      console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
-    } else {
-      console.log(data.id + ' not found in remotePlayers');
+    var newRemotePlayers = {};
+    for (var i in remotePlayers) {
+      if (i !== data.id) {
+        newRemotePlayers[i] = remotePlayers[i];
+      }
     }
+    remotePlayers = newRemotePlayers;
   }
 
   function onInitialBricks(data) {
