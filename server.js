@@ -115,6 +115,9 @@ function onClientDisconnect() {
     util.log(this.id + ' not found in players');
   }
 
+  // Broadcast kill disconnected ball to connected socket clients
+  this.broadcast.emit('kill disconnected ball', { id: this.id });
+
   // Broadcast removed player to connected socket clients
   this.broadcast.emit('remove player', { id: this.id });
   util.log(this.id + ' removal broadcast to existing players');
