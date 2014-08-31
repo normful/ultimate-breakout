@@ -156,6 +156,7 @@
   }
 
   function onRemovePlayer(data) {
+    console.log('onRemovePlayer invoked');
     var newRemotePlayers = {};
     for (var id in remotePlayers) {
       if (id !== data.id) {
@@ -163,6 +164,7 @@
       }
     }
     remotePlayers = newRemotePlayers;
+    console.log('remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onInitialBricks(data) {
