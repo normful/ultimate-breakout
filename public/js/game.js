@@ -38,7 +38,7 @@
   var localPlayerID;
   var remotePlayers = {};
 
-  var $leaderboard = $("#leaderboard");
+  var $leaderboard = $("#leaderboard-table-body");
 
   function preload() {
     console.log('preload invoked');
@@ -159,6 +159,7 @@
   function onLocalPlayer(data) {
     localPlayerID = data.id;
     localPlayerName = data.name;
+    addPlayerToLeaderboard(data);
   }
 
   function onNewPlayer(data) {
@@ -167,7 +168,20 @@
       name: data.name,
       score: data.score
     };
+    addPlayerToLeaderboard(data);
     console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+  }
+
+  function addPlayerToLeaderboard(data) {
+    var $tr = $('<tr>');
+    var $tdScore;
+    var $tdName = $('<td>').text(data.name);
+    if (data.hasOwnProperty('score')) {
+      $tdScore = $('<td>').text(data.score);
+    } else {
+      $tdScore = $('<td>').text(score);
+    }
+    $tr.append($tdScore).append($tdName).appendTo($leaderboard);
   }
 
   function onRemovePlayer(data) {
