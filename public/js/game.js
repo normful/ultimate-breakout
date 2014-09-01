@@ -66,6 +66,8 @@
 
     game.input.onDown.add(releaseBall, this);
 
+    initializeMixItUp();
+
     socket = io.connect(window.location.hostname);
     attachSocketHandlers();
   }
@@ -131,6 +133,19 @@
     infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to start',
       { font: '40px Arial', fill: '#ffffff', align: 'center' });
     infoText.anchor.setTo(0.5, 0.5);
+  }
+
+  function initializeMixItUp() {
+    $(function(){
+      $leaderboard.mixItUp({
+        selectors: {
+          target: "tr"
+        },
+        layout: {
+          display: 'block'
+        }
+      });
+    });
   }
 
   function attachSocketHandlers() {
@@ -244,6 +259,8 @@
 
     var $tdScore = $tr.children().first();
     $tdScore.text(message.score);
+
+    $leaderboard.mixItUp('sort', 'score:desc');
   }
 
   function update() {
