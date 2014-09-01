@@ -259,8 +259,6 @@
   function onRemovePlayer(data) {
     console.log('onRemovePlayer invoked');
 
-    if (typeof remotePlayers[data.id].remotePlayerBall !== "undefined") { remotePlayers[data.id].remotePlayerBall.parent.removeChild(remotePlayers[data.id].remotePlayerBall);
-    }
     var newRemotePlayers = {};
     for (var id in remotePlayers) {
       if (id !== data.id) {
