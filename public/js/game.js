@@ -139,6 +139,22 @@
     // ball.events.onOutOfBounds.add(ballLost, this);
   }
 
+  function createRemoteBall(data) {
+    var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
+    remoteBall.anchor.set(0.5);
+    remoteBall.checkWorldBounds = true;
+    game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
+    remoteBall.body.collideWorldBounds = true;
+    remoteBall.body.bounce.set(1);
+    remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+    remoteBall.animations.play('spin');
+
+    remoteBall.body.velocity.x = data.velocityX;
+    remoteBall.body.velocity.y = data.velocityY;
+
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+  }
+
   function createText() {
     console.log('createText invoked');
     scoreText = game.add.text(32, TEXT_Y, 'score: 0',
@@ -177,19 +193,7 @@
     var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
 
     if (typeof b === "undefined") {
-      var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
-      remoteBall.anchor.set(0.5);
-      remoteBall.checkWorldBounds = true;
-      game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
-      remoteBall.body.collideWorldBounds = true;
-      remoteBall.body.bounce.set(1);
-      remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
-      remoteBall.animations.play('spin');
-
-      remoteBall.body.velocity.x = data.velocityX;
-      remoteBall.body.velocity.y = data.velocityY;
-
-      remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+      createRemoteBall(data);
     }
   }
 
