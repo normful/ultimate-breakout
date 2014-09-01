@@ -264,7 +264,7 @@
   }
 
   function onBrickKillToOtherClients(data) {
-    // console.log('onBrickKillToOtherClients invoked');
+    console.log('onBrickKillToOtherClients invoked');
 
     // Change the velocity of the remote ball
     if (typeof remotePlayers[data.remotePlayerID] !== "undefined") {
