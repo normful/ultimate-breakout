@@ -275,7 +275,7 @@
     // console.log('onBrickKillToOtherClients invoked');
 
     // Change the velocity of the remote ball
-    if (typeof remotePlayers[data.remotePlayerID] != "undefined") {
+    if (typeof remotePlayers[data.remotePlayerID] !== "undefined") {
       var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
       b.body.velocity.x = data.exitVelocityX;
       b.body.velocity.y = data.exitVelocityY;
