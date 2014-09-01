@@ -268,7 +268,6 @@
       }
     }
     remotePlayers = newRemotePlayers;
-    console.log('remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onInitialBricks(data) {
