@@ -238,24 +238,16 @@
     // console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
-  // function onRemovePlayer(data) {
-  //   if (delete remotePlayers[data.id]) {
-  //     console.log(data.id + ' removed from remotePlayers: ' + JSON.stringify(remotePlayers));
-  //   } else {
-  //     console.log(data.id + ' not found in remotePlayers');
-  //   }
-  // }
-
-  function onRemovePlayer(data) {  remotePlayers[data.id].remotePlayerBall.parent.removeChild(remotePlayers[data.id].remotePlayerBall);
+  function onRemovePlayer(data) {
+    console.log('onRemovePlayer invoked');  remotePlayers[data.id].remotePlayerBall.parent.removeChild(remotePlayers[data.id].remotePlayerBall);
     var newRemotePlayers = {};
-
-    for (var i in remotePlayers) {
-      if (i != data.id) {
-        newRemotePlayers[i] = remotePlayers[i];
+    for (var id in remotePlayers) {
+      if (id !== data.id) {
+        newRemotePlayers[id] = remotePlayers[id];
       }
     }
-
     remotePlayers = newRemotePlayers;
+    console.log('remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onInitialBricks(data) {
