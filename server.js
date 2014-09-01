@@ -9,6 +9,8 @@ var util = require('util');
 var utilInspectOpts = { showHidden: false, depth: 1, colors: true };
 
 var players = {};
+var adjNoun = require('adj-noun');
+adjNoun.seed(8612);
 var bricks;
 var allBricks;
 
@@ -59,21 +61,24 @@ function onNewPlayer(data) {
   util.log(this.id + ' has been sent the existing brick layout: ' + bricks);
 
   // Assign player id and name
-  // TODO: Make this a random funny name instead of the client id
+  var funnyName = adjNoun().join(' ');
   this.emit('local player', {
     id: this.id,
-    name: this.id
+    name: funnyName
   });
 
   // Add new player to players array
-  players[this.id] = { name: this.id, score: 0 };
+  players[this.id] = {
+    name: funnyName,
+    score: 0
+  };
   util.log(this.id + ' added to players');
   util.log('players = ' + util.inspect(players, utilInspectOpts));
 
   // Broadcast new player to all socket clients except this new one
   this.broadcast.emit('new player', {
     id: this.id,
-    name: this.id,
+    name: funnyName,
     score: 0
   });
   util.log(this.id + ' broadcast to all existing players');
