@@ -30,6 +30,15 @@ function onSocketConnection(client) {
   client.on('ball hit paddle', onBallHitPaddle);
   client.on('existing ball', onExistingBall);
   client.on('kill remote ball', onKillRemoteBall);
+  client.on('update ball', onUpdateBall);
+}
+
+function onUpdateBall(data) {
+  this.broadcast.emit('update ball', {
+    x: data.x,
+    y: data.y,
+    id: this.id
+  });
 }
 
 function onKillRemoteBall() {

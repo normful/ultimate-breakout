@@ -64,6 +64,13 @@
 
     socket = io.connect(window.location.hostname);
     attachSocketHandlers();
+
+    setInterval(function() {
+      socket.emit('update ball', {
+        x: ball.body.x,
+        y: ball.body.y
+      });
+    }, 50);
   }
 
   function createBricks() {
@@ -116,6 +123,16 @@
     ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
 
     ball.events.onOutOfBounds.add(ballLost, this);
+  }
+
+  function onUpdateBall(data) {
+    if (typeof remotePlayers[data.id] !== "undefined") {
+      if (typeof remotePlayers[data.id].remotePlayerBall !== "undefined") {
+        remotePlayers[data.id].remotePlayerBall.x = data.x;
+        remotePlayers[data.id].remotePlayerBall.y = data.y;
+        console.log('remote ball position updated');
+      }
+    }
   }
 
   function releaseRemoteBall(data) {
@@ -178,6 +195,7 @@
     socket.on('ball hit paddle', onBallHitPaddle);
     socket.on('existing ball', onExistingBall);
     socket.on('kill remote ball', onKillRemoteBall);
+    socket.on('update ball', onUpdateBall);
   }
 
   function onKillRemoteBall(data) {
@@ -271,9 +289,11 @@
 
     // Change the velocity of the remote ball
     if (typeof remotePlayers[data.remotePlayerID] !== "undefined") {
-      var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
-      b.body.velocity.x = data.exitVelocityX;
-      b.body.velocity.y = data.exitVelocityY;
+      if (typeof remotePlayers[data.remotePlayerID].remotePlayerBall !== "undefined") {
+        var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
+        b.body.velocity.x = data.exitVelocityX;
+        b.body.velocity.y = data.exitVelocityY;
+      }
     }
 
     bricks.children[data.brickIndex].kill();
