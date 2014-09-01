@@ -22,9 +22,9 @@
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
   var BALL_HEIGHT = 16;
-  var BALL_RELEASE_VELOCITY_X = -75;
-  var BALL_RELEASE_VELOCITY_Y = -300;
-  var BALL_VELOCITY_MULTIPLIER_X = 10;
+  var BALL_RELEASE_VELOCITY_X = -60;
+  var BALL_RELEASE_VELOCITY_Y = -240;
+  var BALL_VELOCITY_MULTIPLIER_X = 8;
 
   var score = 0;
   var lives = 3;
@@ -386,19 +386,17 @@
   }
 
   function ballHitPaddle(_ball, _paddle) {
-    var diff = 0;
+    var ballCenter = _ball.body.x + BALL_WIDTH / 2;
+    var paddleCenter = _paddle.body.x + PADDLE_WIDTH / 2;
+    var diff;
 
-    if (_ball.body.x < _paddle.body.x) {
-      //  Ball is on the left-hand side of the paddle
-      diff = _paddle.body.x - _ball.body.x;
+    if (ballCenter < paddleCenter) {
+      diff = paddleCenter - ballCenter;
       _ball.body.velocity.x = (BALL_VELOCITY_MULTIPLIER_X * diff * -1);
-    } else if (_ball.body.x > _paddle.body.x) {
-      //  Ball is on the right-hand side of the paddle
-      diff = _ball.body.x -_paddle.body.x;
+    } else if (ballCenter > paddleCenter) {
+      diff = ballCenter - paddleCenter;
       _ball.body.velocity.x = (BALL_VELOCITY_MULTIPLIER_X * diff);
     } else {
-      //  Ball is perfectly in the middle
-      //  Add a little random X to stop it bouncing straight up!
       _ball.body.velocity.x = BALL_VELOCITY_MULTIPLIER_X * 0.2 + Math.random() * BALL_VELOCITY_MULTIPLIER_X * 0.8;
     }
 
