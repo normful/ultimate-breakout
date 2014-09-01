@@ -22,9 +22,9 @@
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
   var BALL_HEIGHT = 16;
-  var BALL_RELEASE_VELOCITY_X = -75;
-  var BALL_RELEASE_VELOCITY_Y = -300;
-  var BALL_VELOCITY_MULTIPLIER_X = 10;
+  var BALL_RELEASE_VELOCITY_X = -60;
+  var BALL_RELEASE_VELOCITY_Y = -240;
+  var BALL_VELOCITY_MULTIPLIER_X = 8;
 
   var score = 0;
   var lives = 3;
