@@ -172,15 +172,26 @@
     console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
-  function addPlayerToLeaderboard(data) {
-    var $tr = $('<tr>');
+  function addPlayerToLeaderboard(message) {
+    var playerScore;
+    var $tr;
     var $tdScore;
-    var $tdName = $('<td>').text(data.name);
-    if (data.hasOwnProperty('score')) {
-      $tdScore = $('<td>').text(data.score);
+    var $tdName;
+
+    if (message.hasOwnProperty('score')) {
+      // remote player
+      playerScore = message.score;
     } else {
-      $tdScore = $('<td>').text(score);
+      // local player
+      playerScore = score;
     }
+
+    $tr = $('<tr></tr>');
+    $tr.attr('data-score', playerScore);
+    $tr.attr('data-id', message.id);
+    $tdScore = $('<td></td>').text(playerScore);
+    $tdName = $('<td></td>').text(message.name);
+
     $tr.append($tdScore).append($tdName).appendTo($leaderboard);
   }
 
@@ -218,12 +229,21 @@
     console.log('onLocalRemoteScore invoked');
     score = data.score;
     scoreText.text = 'score: ' + score;
+    updateLeaderboard(data);
   }
 
   function onUpdateRemoteScore(data) {
     console.log('onUpdateRemoteScore invoked');
     remotePlayers[data.id].score = data.score;
-    console.log('remotePlayers = ' + JSON.stringify(remotePlayers));
+    updateLeaderboard(data);
+  }
+
+  function updateLeaderboard(message) {
+    var $tr = $leaderboard.find("[data-id='" + message.id + "']");
+    $tr.attr('data-score', message.score);
+
+    var $tdScore = $tr.children().first();
+    $tdScore.text(message.score);
   }
 
   function update() {

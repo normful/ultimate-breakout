@@ -120,6 +120,7 @@ function onBrickKillFromClient(data) {
   this.broadcast.emit('brick kill to other clients', { brickIndex: data.brickIndex });
 
   this.emit('update local score', {
+    id: this.id,
     score: players[this.id].score
   });
 
