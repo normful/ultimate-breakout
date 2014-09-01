@@ -199,6 +199,7 @@
     } else {
       // local player
       playerScore = score;
+      message.name += " (You)";
     }
 
     $tr = $('<tr></tr>');
