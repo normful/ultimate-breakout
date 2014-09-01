@@ -350,7 +350,7 @@
 
   // jquery watch for mousemovements and send a message
   $('#breakout').on("mousemove", function(event){
-    socket.emit("update paddle position", { id: currentClient, x: event.pageX });
+    socket.emit("update paddle position", { id: currentClient, x: game.input.x - 0.5 * PADDLE_WIDTH });
   });
 
 }());
