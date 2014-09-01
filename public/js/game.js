@@ -339,12 +339,16 @@
   function onUpdatedPaddlePositions(data) {
     console.log('onUpdatedPaddlePositions invoked');
     var player = data.id;
-    remotePlayers[player].paddleX = data.x;
+    if (remotePlayers[player] != undefined){
+      remotePlayers[player].paddleX = data.x;
+    }
   }
 
   function updatePaddlePositions() {
     $.each(remotePlayers, function(key, val){
-      val.paddle.body.x = val.paddleX - 70;
+      if (val.paddle != undefined) {
+        val.paddle.body.x = val.paddleX;
+      }
     });
   };
 
