@@ -212,10 +212,10 @@
   }
 
   function onBallHitPaddle(data) {
-    // Identify remote player's ball and change its velocity accordingly
-    var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
-    b.body.velocity.x = data.exitVelocityX;
-    b.body.velocity.y = data.exitVelocityY;
+    console.log('onPaddleHitBall invoked');
+    var remoteBall = remotePlayers[data.remotePlayerID].remotePlayerBall;
+    remoteBall.body.velocity.x = data.exitVelocityX;
+    remoteBall.body.velocity.y = data.exitVelocityY;
   }
 
   function onPaddleReleaseBall(data) {
