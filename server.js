@@ -10,7 +10,7 @@ var utilInspectOpts = { showHidden: false, depth: 1, colors: true };
 
 var players = {};
 var adjNoun = require('adj-noun');
-adjNoun.seed(8612);
+adjNoun.seed(Math.floor(Math.random() * 1000));
 var bricks;
 var allBricks;
 
