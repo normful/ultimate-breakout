@@ -35,6 +35,7 @@
 
   var socket;
   var remotePlayers = {};
+  var SET_INTERVAL_DELAY = 50;
 
   function preload() {
     console.log('preload invoked');
@@ -70,7 +71,7 @@
         x: ball.body.x,
         y: ball.body.y
       });
-    }, 50);
+    }, SET_INTERVAL_DELAY);
   }
 
   function createBricks() {
