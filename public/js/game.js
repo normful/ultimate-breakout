@@ -336,8 +336,6 @@
     var $tdName;
     var $color;
 
-    debugger
-
     if (message.hasOwnProperty('score')) {
       // remote player
       playerScore = message.score;
