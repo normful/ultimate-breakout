@@ -219,7 +219,7 @@
   }
 
   function onPaddleReleaseBall(data) {
-    console.log("received message that other client has released ball");
+    console.log('onPaddleReleaseBall invoked');
     releaseRemoteBall(data);
   }
 
@@ -234,9 +234,9 @@
   }
 
   function onNewPlayer(data) {
+    console.log('onNewPlayer invoked');
 
     // Notify new player of client's ball position and velocity, but only do so if player hasn't released ball
-
     if (!ballOnPaddle) {
       socket.emit('existing ball', {
         velocityX: ball.body.velocity.x,
@@ -246,10 +246,7 @@
       });
     }
 
-    // Commented out due to errors with Converting circular structure to JSON
-    console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
     remotePlayers[data.id] = { score: data.score };
-    // console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onRemovePlayer(data) {
