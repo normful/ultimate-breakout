@@ -18,7 +18,8 @@ body {
 
 table {
   table-layout: fixed;
-  width: 400px;
+  width: 800px;
+  margin: 0 auto;
 }
 
 tr {
