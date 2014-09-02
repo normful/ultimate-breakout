@@ -13,7 +13,8 @@
   "main": "server.js",
   "dependencies": {
     "express": "3.0.0",
-    "socket.io": "1.0.6"
+    "socket.io": "1.0.6",
+    "adj-noun": "^0.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
