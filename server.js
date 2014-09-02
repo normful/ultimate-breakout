@@ -168,9 +168,9 @@ function onBrickKillFromClient(data) {
 
   if (bricks.indexOf("1") === -1) {
     resetBricks();
-    players[this.id].score += 100;
+    players[this.id].score += 1000;
   } else {
-    players[this.id].score += 10;
+    players[this.id].score += 100;
   }
   util.log(this.id + " new score = " + players[this.id].score);
 
