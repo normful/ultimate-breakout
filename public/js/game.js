@@ -136,27 +136,6 @@
     }
   }
 
-  function releaseRemoteBall(data) {
-    console.log('releaseRemoteBall invoked');
-
-    //Creating a remoteball
-    var remoteBall = game.add.sprite(data.posX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
-    remoteBall.anchor.set(0.5);
-    remoteBall.checkWorldBounds = true;
-    game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
-    remoteBall.body.collideWorldBounds = true;
-    remoteBall.body.bounce.set(1);
-    remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
-    remoteBall.animations.play('spin');
-
-    remoteBall.body.x = data.posX;
-    remoteBall.body.velocity.x = data.exitVelocityX;
-    remoteBall.body.velocity.y = data.exitVelocityY;
-
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
-    // ball.events.onOutOfBounds.add(ballLost, this);
-  }
-
   function createRemoteBall(data) {
     var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
     remoteBall.anchor.set(0.5);
@@ -201,7 +180,7 @@
 
   function onKillRemoteBall(data) {
     console.log('onKillRemoteBall invoked');
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"].kill();
+    remotePlayers[data.remotePlayerID].remotePlayerBall.kill();
   }
 
   function onExistingBall(data) {
@@ -213,14 +192,17 @@
 
   function onBallHitPaddle(data) {
     console.log('onPaddleHitBall invoked');
-    var remoteBall = remotePlayers[data.remotePlayerID].remotePlayerBall;
-    remoteBall.body.velocity.x = data.exitVelocityX;
-    remoteBall.body.velocity.y = data.exitVelocityY;
+    var remotePlayer = remotePlayers[data.remotePlayerID];
+    var remoteBall = remotePlayer.remotePlayerBall;
+    if (typeof remotePlayer !== "undefined" && typeof remoteBall !== "undefined") {
+      remoteBall.body.velocity.x = data.exitVelocityX;
+      remoteBall.body.velocity.y = data.exitVelocityY;
+    }
   }
 
   function onPaddleReleaseBall(data) {
     console.log('onPaddleReleaseBall invoked');
-    releaseRemoteBall(data);
+    createRemoteBall(data);
   }
 
   function onSocketConnect() {
@@ -323,9 +305,10 @@
 
       // Tell other clients of the release of ball
       socket.emit('paddle release ball', {
-        exitVelocityX: ball.body.velocity.x,
-        exitVelocityY: ball.body.velocity.y,
+        velocityX: ball.body.velocity.x,
+        velocityY: ball.body.velocity.y,
         posX: ball.body.x,
+        posY: ball.body.y
       });
     }
   }
@@ -371,8 +354,8 @@
   function ballHitBrick(_ball, _brick) {
     socket.emit('brick kill from client', {
       brickIndex: _brick.brickIndex,
-      exitVelocityX: ball.body.velocity.x,
-      exitVelocityY: ball.body.velocity.y
+      velocityX: ball.body.velocity.x,
+      velocityY: ball.body.velocity.y
     });
 
     _brick.kill();
@@ -397,8 +380,8 @@
     }
 
     socket.emit('ball hit paddle', {
-      exitVelocityX: _ball.body.velocity.x,
-      exitVelocityY: _ball.body.velocity.y
+      velocityX: _ball.body.velocity.x,
+      velocityY: _ball.body.velocity.y
     });
   }
 

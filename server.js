@@ -57,17 +57,18 @@ function onExistingBall(data) {
 
 function onBallHitPaddle(data) {
   this.broadcast.emit('ball hit paddle', {
-    exitVelocityX: data.exitVelocityX,
-    exitVelocityY: data.exitVelocityY,
+    velocityX: data.velocityX,
+    velocityY: data.velocityY,
     remotePlayerID: this.id
   });
 }
 
 function onPaddleReleaseBall(data) {
   this.broadcast.emit('paddle release ball', {
-    exitVelocityX: data.exitVelocityX,
-    exitVelocityY: data.exitVelocityY,
+    velocityX: data.velocityX,
+    velocityY: data.velocityY,
     posX: data.posX,
+    posY: data.posY,
     remotePlayerID: this.id
   });
 }
@@ -139,8 +140,8 @@ function onBrickKillFromClient(data) {
   // util.log('Server bricks updated: ' + bricks);
   this.broadcast.emit('brick kill to other clients', {
     brickIndex: data.brickIndex,
-    exitVelocityX: data.exitVelocityX,
-    exitVelocityY: data.exitVelocityY,
+    velocityX: data.velocityX,
+    velocityY: data.velocityY,
     remotePlayerID: this.id
   });
 }
