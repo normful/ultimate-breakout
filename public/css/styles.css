@@ -3,48 +3,66 @@
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
 }
 
 body {
   background-color: #191919;
-  font-family: 'Shadows Into Light Two', cursive;
+  font-family: 'VT323';
   color: #fff;
 }
 
 #header {
   text-align: center;
+  padding: 10px 0px;
+  background: #111;
+}
+
+.container {
+  width: 1250px;
+  margin: 0 auto;
 }
 
 #breakout {
   border: 2px solid black;
   width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 15px;
+  float: left;
   cursor: pointer;
 }
 
+#leaderboard {
+  margin-top: 15px;
+}
+
 table {
+  display: inline-block;
   table-layout: fixed;
-  width: 800px;
+  width: 400px;
   margin: 0 auto;
-  font-size: 1.75em;
+  font-size: 1em;
 }
 
 tr {
-  width: 400px;
+  width: auto;
 }
 
 th, td {
   text-align: left;
   color: white;
-  width: 350px;
+  width: 85% !important;
   font-family: 'VT323';
 }
 
+td {
+  border-top: 1px solid #ccc;
+}
+
 th:first-child, td:first-child {
-  width: 50px;
+  width: 15% !important;
 }
 
 h1 {
-  font-size: 5em;
+  font-size: 2em;
 }

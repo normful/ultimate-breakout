@@ -205,11 +205,11 @@
   function createText() {
     console.log('createText invoked');
     scoreText = game.add.text(32, TEXT_Y, 'score: 0',
-      { font: '20px Arial', fill: '#ffffff', align: 'left' });
+      { font: '20px VT323', fill: '#ffffff', align: 'left' });
     livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: 3',
-      { font: '20px Arial', fill: '#ffffff', align: 'left' });
-    infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to start',
-      { font: '40px Arial', fill: '#ffffff', align: 'center' });
+      { font: '20px VT323', fill: '#ffffff', align: 'left' });
+    infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to Start',
+      { font: '40px VT323', fill: '#ffffff', align: 'center' });
     infoText.anchor.setTo(0.5, 0.5);
   }
 
