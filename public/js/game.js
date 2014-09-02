@@ -330,9 +330,13 @@
 
   function addPlayerToLeaderboard(message) {
     var playerScore;
+    var playerColor = "#" + message.color.replace(/^0x/, "");
     var $tr;
     var $tdScore;
     var $tdName;
+    var $color;
+
+    debugger
 
     if (message.hasOwnProperty('score')) {
       // remote player
@@ -343,6 +347,9 @@
       message.name += " (You)";
     }
 
+    $color = $('<span></span>');
+    $color.css({ background : playerColor, height: '15px', width: '15px', display: 'inline-block', 'margin-right': '5px', 'border-radius' : '50%' });
+
     $tr = $('<tr></tr>');
     $tr.attr('data-score', playerScore);
     $tr.attr('data-id', message.id);
@@ -350,6 +357,9 @@
     $tdName = $('<td></td>').text(message.name);
 
     $tr.append($tdScore).append($tdName).appendTo($leaderboard);
+
+    $tdName.prepend($color);
+
   }
 
   function onRemovePlayer(data) {
