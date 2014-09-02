@@ -1,4 +1,4 @@
-;(function () {
+//;(function () {
 
   var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
   var GAME_WIDTH = 800;
@@ -328,11 +328,18 @@
 
   function addPlayerToLeaderboard(message) {
     var playerScore;
-    var playerColor = "#" + message.color.substring(2, message.color.length);
+    var playerHex = message.color.substring(2, message.color.length);
+    var playerColor;
     var $tr;
     var $tdScore;
     var $tdName;
     var $colorCircle;
+
+    if (playerHex.length < 6 ) {
+      playerColor = "#0" + playerHex;
+    } else {
+      playerColor = "#" + playerHex;
+    }
 
     if (message.hasOwnProperty('score')) {
       // remote player
@@ -577,4 +584,4 @@
     });
   };
 
-}());
+//}());
