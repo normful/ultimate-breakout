@@ -126,7 +126,7 @@
     ball.events.onOutOfBounds.add(ballLost, this);
   }
 
-  function onUpdateBall(data) {
+  function onUpdateRemoteBall(data) {
     if (typeof remotePlayers[data.id] !== "undefined") {
       if (typeof remotePlayers[data.id].remotePlayerBall !== "undefined") {
         remotePlayers[data.id].remotePlayerBall.x = data.x;
@@ -166,15 +166,15 @@
     console.log('attachSocketHandlers invoked');
     socket.on('connect', onSocketConnect);
     socket.on('disconnect', onSocketDisconnect);
-    socket.on('new player', onNewPlayer);
+    socket.on('new player', onNewRemotePlayer);
     socket.on('remove player', onRemovePlayer);
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
-    socket.on('paddle release ball', onPaddleReleaseBall);
-    socket.on('ball hit paddle', onBallHitPaddle);
-    socket.on('existing ball', onExistingBall);
+    socket.on('paddle release ball', onRemotePaddleReleaseBall);
+    socket.on('ball hit paddle', onRemoteBallHitPaddle);
+    socket.on('existing ball', onRemoteExistingBall);
     socket.on('kill remote ball', onKillRemoteBall);
-    socket.on('update ball', onUpdateBall);
+    socket.on('update ball', onUpdateRemoteBall);
   }
 
   function onKillRemoteBall(data) {
@@ -182,14 +182,14 @@
     remotePlayers[data.remotePlayerID].remotePlayerBall.kill();
   }
 
-  function onExistingBall(data) {
-    console.log('onExistingBall invoked');
+  function onRemoteExistingBall(data) {
+    console.log('onRemoteExistingBall invoked');
     if (typeof remotePlayers[data.remotePlayerID].remotePlayerBall === "undefined") {
       createRemoteBall(data);
     }
   }
 
-  function onBallHitPaddle(data) {
+  function onRemoteBallHitPaddle(data) {
     console.log('onPaddleHitBall invoked');
     var remotePlayer = remotePlayers[data.remotePlayerID];
     var remoteBall = remotePlayer.remotePlayerBall;
@@ -199,8 +199,8 @@
     }
   }
 
-  function onPaddleReleaseBall(data) {
-    console.log('onPaddleReleaseBall invoked');
+  function onRemotePaddleReleaseBall(data) {
+    console.log('onRemotePaddleReleaseBall invoked');
     createRemoteBall(data);
   }
 
@@ -214,8 +214,8 @@
     console.log('onSocketDisconnect invoked');
   }
 
-  function onNewPlayer(data) {
-    console.log('onNewPlayer invoked');
+  function onNewRemotePlayer(data) {
+    console.log('onNewRemotePlayer invoked');
 
     // Notify new player of client's ball position and velocity, but only do so if player hasn't released ball
     if (!ballOnPaddle) {
