@@ -40,7 +40,6 @@ table {
   display: inline-block;
   table-layout: fixed;
   width: 400px;
-  margin: 0 auto;
   font-size: 1em;
 }
 
@@ -51,7 +50,7 @@ tr {
 th, td {
   text-align: left;
   color: white;
-  width: 85% !important;
+  width: 85%;
   font-family: 'VT323';
 }
 
@@ -61,7 +60,7 @@ td {
 }
 
 th:first-child, td:first-child {
-  width: 15% !important;
+  width: 15%;
 }
 
 h1 {
