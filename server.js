@@ -77,6 +77,10 @@ function onPaddleReleaseBall(data) {
 }
 
 function onNewPlayer(data) {
+
+  var color = '0x'+Math.floor(Math.random()*16777215).toString(16);
+
+
   util.log(this.id + ' sent "new player" message');
 
   // First 'new player' message sets initial brick layout
@@ -97,7 +101,8 @@ function onNewPlayer(data) {
       this.emit('new player', {
         id: playerID,
         name: players[playerID].name,
-        score: players[playerID].score
+        score: players[playerID].score,
+        color: players[playerID].color
       });
     }
   }
@@ -110,11 +115,13 @@ function onNewPlayer(data) {
   var funnyName = adjNoun().join(' ');
   this.emit('local player', {
     id: this.id,
-    name: funnyName
+    name: funnyName,
+    color: color
   });
 
   // Add new player to players array
   players[this.id] = {
+    color: color,
     name: funnyName,
     score: 0
   };
@@ -125,6 +132,7 @@ function onNewPlayer(data) {
   this.broadcast.emit('new player', {
     id: this.id,
     name: funnyName,
+    color: color,
     score: 0
   });
   util.log(this.id + ' broadcast to all existing players');
