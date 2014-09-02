@@ -281,17 +281,15 @@
 
   function onBrickKillToOtherClients(data) {
     console.log('onBrickKillToOtherClients invoked');
-
-    // Change the velocity of the remote ball
-    if (typeof remotePlayers[data.remotePlayerID] !== "undefined") {
-      if (typeof remotePlayers[data.remotePlayerID].remotePlayerBall !== "undefined") {
-        var b = remotePlayers[data.remotePlayerID]["remotePlayerBall"];
-        b.body.velocity.x = data.exitVelocityX;
-        b.body.velocity.y = data.exitVelocityY;
-      }
-    }
-
     bricks.children[data.brickIndex].kill();
+
+    var remotePlayer = remotePlayers[data.remotePlayerID];
+    var remotePlayerBall = remotePlayer.remotePlayerBall;
+
+    if (typeof remotePlayer !== "undefined" && remotePlayerBall !== "undefined" ) {
+        remotePlayerBall.body.velocity.x = data.exitVelocityX;
+        remotePlayerBall.body.velocity.y = data.exitVelocityY;
+    }
   }
 
   function update() {
