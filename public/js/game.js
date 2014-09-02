@@ -131,7 +131,6 @@
       if (typeof remotePlayers[data.id].remotePlayerBall !== "undefined") {
         remotePlayers[data.id].remotePlayerBall.x = data.x;
         remotePlayers[data.id].remotePlayerBall.y = data.y;
-        console.log('remote ball position updated');
       }
     }
   }
@@ -262,7 +261,6 @@
   }
 
   function onBrickKillToOtherClients(data) {
-    console.log('onBrickKillToOtherClients invoked');
     bricks.children[data.brickIndex].kill();
 
     var remotePlayer = remotePlayers[data.remotePlayerID];
