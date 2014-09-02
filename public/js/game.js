@@ -175,7 +175,6 @@
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
     socket.on('updated paddle positions', onUpdatedPaddlePositions);
-    socket.on('current player id', getCurrentPlayerId);
   }
 
   function onSocketConnect() {
@@ -356,7 +355,7 @@
 
   // jquery watch for mousemovements and send a message
   $('#breakout').on("mousemove", function(event){
-    socket.emit("update paddle position", { id: currentClient, x: game.input.x - 0.5 * PADDLE_WIDTH });
+    socket.emit("update paddle position", { x: game.input.x - 0.5 * PADDLE_WIDTH });
   });
 
 }());
