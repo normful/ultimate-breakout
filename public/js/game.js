@@ -335,11 +335,7 @@
     var $tdName;
     var $colorCircle;
 
-    if (playerHex.length < 6 ) {
-      playerColor = "#0" + playerHex;
-    } else {
-      playerColor = "#" + playerHex;
-    }
+    playerColor = "#" + padHex(playerHex, 6);
 
     if (message.hasOwnProperty('score')) {
       // remote player
@@ -583,5 +579,10 @@
       }
     });
   };
+
+  function padHex(n, width) {
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(0) + n;
+  }
 
 }());
