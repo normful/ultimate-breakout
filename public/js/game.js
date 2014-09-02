@@ -220,7 +220,7 @@
           target: "tr"
         },
         layout: {
-          display: 'block'
+          display: 'table-row'
         }
       });
     });
