@@ -18,6 +18,8 @@
   var PADDLE_Y = 500;
   var PADDLE_WIDTH = 48;
 
+  var remotePaddles;
+
   var ball;
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
@@ -34,7 +36,13 @@
   var TEXT_Y = 550;
 
   var socket;
+  var localPlayerName;
+  var localPlayerID;
   var remotePlayers = {};
+  var SET_INTERVAL_DELAY = 50;
+  var currentClient;
+
+  var $leaderboard = $("#leaderboard-table-body");
 
   function preload() {
     console.log('preload invoked');
@@ -55,6 +63,7 @@
     // Check bounds collisions on all walls except bottom
     game.physics.arcade.checkCollision.down = false;
 
+    createRemotePaddles();
     createBricks();
     createLocalPaddle();
     createLocalBall();
@@ -62,8 +71,23 @@
 
     game.input.onDown.add(releaseBall, this);
 
+    initializeMixItUp();
+
     socket = io.connect(window.location.hostname);
     attachSocketHandlers();
+
+    $('#breakout').on("mousemove", function mouseMoveHandler(event) {
+      socket.emit("update paddle position", {
+        x: game.input.x - 0.5 * PADDLE_WIDTH
+      });
+    });
+
+    setInterval(function() {
+      socket.emit('update ball', {
+        x: ball.body.x,
+        y: ball.body.y
+      });
+    }, SET_INTERVAL_DELAY);
   }
 
   function createBricks() {
@@ -102,6 +126,37 @@
     paddle.body.immovable = true;
   }
 
+  // create group for remote paddles
+  function createRemotePaddles() {
+    console.log('createRemotePaddles invoked');
+    remotePaddles = game.add.group();
+    remotePaddles.enableBody = true;
+    remotePaddles.physicsBodyType = Phaser.Physics.ARCADE;
+  }
+
+  // add sprite for remote paddle and associate it with the player
+  function createRemotePaddle(data){
+    console.log('createRemotePaddle invoked');
+    var player = data.id;
+
+    if (typeof remotePlayers[player].paddle !== "object"){
+
+      remotePlayers[player].paddle = remotePaddles.create(
+            game.world.centerX,
+            PADDLE_Y,
+            'breakout',
+            'paddle_big.png'
+          );
+
+      remotePlayers[player].paddle.anchor.setTo(0.5, 0.5);
+      game.physics.enable(remotePlayers[player].paddle, Phaser.Physics.ARCADE);
+      remotePlayers[player].paddle.body.collideWorldBounds = true;
+      remotePlayers[player].paddle.body.bounce.set(1);
+      remotePlayers[player].paddle.body.immovable = true;
+      remotePlayers[player].paddle.name = player;
+    }
+  }
+
   function createLocalBall() {
     console.log('createLocalBall invoked');
     ball = game.add.sprite(game.world.centerX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
@@ -118,6 +173,31 @@
     ball.events.onOutOfBounds.add(ballLost, this);
   }
 
+  function onUpdateRemoteBall(data) {
+    if (typeof remotePlayers[data.id] !== "undefined") {
+      if (typeof remotePlayers[data.id].remotePlayerBall !== "undefined") {
+        remotePlayers[data.id].remotePlayerBall.x = data.x;
+        remotePlayers[data.id].remotePlayerBall.y = data.y;
+      }
+    }
+  }
+
+  function createRemoteBall(data) {
+    var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
+    remoteBall.anchor.set(0.5);
+    remoteBall.checkWorldBounds = true;
+    game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
+    remoteBall.body.collideWorldBounds = true;
+    remoteBall.body.bounce.set(1);
+    remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+    remoteBall.animations.play('spin');
+
+    remoteBall.body.velocity.x = data.velocityX;
+    remoteBall.body.velocity.y = data.velocityY;
+
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+  }
+
   function createText() {
     console.log('createText invoked');
     scoreText = game.add.text(32, TEXT_Y, 'score: 0',
@@ -129,14 +209,63 @@
     infoText.anchor.setTo(0.5, 0.5);
   }
 
+  function initializeMixItUp() {
+    $(function(){
+      $leaderboard.mixItUp({
+        selectors: {
+          target: "tr"
+        },
+        layout: {
+          display: 'block'
+        }
+      });
+    });
+  }
+
   function attachSocketHandlers() {
     console.log('attachSocketHandlers invoked');
     socket.on('connect', onSocketConnect);
     socket.on('disconnect', onSocketDisconnect);
-    socket.on('new player', onNewPlayer);
+    socket.on('new player', onNewRemotePlayer);
+    socket.on('local player', onLocalPlayer);
     socket.on('remove player', onRemovePlayer);
+    socket.on('update paddle position', onUpdatePaddlePosition);
     socket.on('initial bricks', onInitialBricks);
     socket.on('brick kill to other clients', onBrickKillToOtherClients);
+    socket.on('paddle release ball', onRemotePaddleReleaseBall);
+    socket.on('ball hit paddle', onRemoteBallHitPaddle);
+    socket.on('existing ball', onRemoteExistingBall);
+    socket.on('kill remote ball', onKillRemoteBall);
+    socket.on('update ball', onUpdateRemoteBall);
+    socket.on('update local score', onUpdateLocalScore);
+    socket.on('update remote score', onUpdateRemoteScore);
+  }
+
+  function onKillRemoteBall(data) {
+    console.log('onKillRemoteBall invoked');
+    remotePlayers[data.remotePlayerID].remotePlayerBall.kill();
+  }
+
+  function onRemoteExistingBall(data) {
+    console.log('onRemoteExistingBall invoked');
+    if (typeof remotePlayers[data.remotePlayerID].remotePlayerBall === "undefined") {
+      createRemoteBall(data);
+    }
+  }
+
+  function onRemoteBallHitPaddle(data) {
+    console.log('onPaddleHitBall invoked');
+    var remotePlayer = remotePlayers[data.remotePlayerID];
+    var remoteBall = remotePlayer.remotePlayerBall;
+    if (typeof remotePlayer !== "undefined" && typeof remoteBall !== "undefined") {
+      remoteBall.body.velocity.x = data.exitVelocityX;
+      remoteBall.body.velocity.y = data.exitVelocityY;
+    }
+  }
+
+  function onRemotePaddleReleaseBall(data) {
+    console.log('onRemotePaddleReleaseBall invoked');
+    createRemoteBall(data);
   }
 
   function onSocketConnect() {
@@ -149,14 +278,72 @@
     console.log('onSocketDisconnect invoked');
   }
 
-  function onNewPlayer(data) {
-    console.log('onNewPlayer invoked. data = ' + JSON.stringify(data));
-    remotePlayers[data.id] = { score: data.score };
-    console.log(data.id + ' added to remotePlayers: ' + JSON.stringify(remotePlayers));
+  function onNewRemotePlayer(data) {
+    console.log('onNewRemotePlayer invoked');
+
+    remotePlayers[data.id] = {
+      name: data.name,
+      score: data.score,
+      paddleX: game.world.centerX
+    };
+    addPlayerToLeaderboard(data);
+
+    createRemotePaddle(data);
+
+    // Notify new player of client's ball position and velocity, but only do so if player hasn't released ball
+    if (!ballOnPaddle) {
+      socket.emit('existing ball', {
+        velocityX: ball.body.velocity.x,
+        velocityY: ball.body.velocity.y,
+        posX: ball.body.position.x,
+        posY: ball.body.position.y
+      });
+    }
+  }
+
+  function onLocalPlayer(data) {
+    localPlayerID = data.id;
+    localPlayerName = data.name;
+    addPlayerToLeaderboard(data);
+  }
+
+  function addPlayerToLeaderboard(message) {
+    var playerScore;
+    var $tr;
+    var $tdScore;
+    var $tdName;
+
+    if (message.hasOwnProperty('score')) {
+      // remote player
+      playerScore = message.score;
+    } else {
+      // local player
+      playerScore = score;
+      message.name += " (You)";
+    }
+
+    $tr = $('<tr></tr>');
+    $tr.attr('data-score', playerScore);
+    $tr.attr('data-id', message.id);
+    $tdScore = $('<td></td>').text(playerScore);
+    $tdName = $('<td></td>').text(message.name);
+
+    $tr.append($tdScore).append($tdName).appendTo($leaderboard);
   }
 
   function onRemovePlayer(data) {
     console.log('onRemovePlayer invoked');
+
+    var remotePlayerBall = remotePlayers[data.id].remotePlayerBall;
+    if (typeof remotePlayerBall !== "undefined") {
+      remotePlayerBall.kill();
+    }
+
+    var remotePlayerPaddle = remotePlayers[data.id].paddle;
+    if (typeof remotePlayerPaddle !== "undefined") {
+      remotePlayerPaddle.kill();
+    }
+
     var newRemotePlayers = {};
     for (var id in remotePlayers) {
       if (id !== data.id) {
@@ -164,11 +351,10 @@
       }
     }
     remotePlayers = newRemotePlayers;
-    console.log('remotePlayers: ' + JSON.stringify(remotePlayers));
   }
 
   function onInitialBricks(data) {
-    console.log('onInitialBricks invoked. data = ' + JSON.stringify(data));
+    console.log('onInitialBricks invoked.');
     var i;
     for (var row = 0; row < BRICK_ROWS; row++) {
       for (var col = 0; col < BRICK_COLS; col++) {
@@ -181,8 +367,38 @@
   }
 
   function onBrickKillToOtherClients(data) {
-    console.log('onBrickKillToOtherClients invoked');
     bricks.children[data.brickIndex].kill();
+
+    var remotePlayer = remotePlayers[data.remotePlayerID];
+    var remotePlayerBall = remotePlayer.remotePlayerBall;
+
+    if (typeof remotePlayer !== "undefined" && typeof remotePlayerBall !== "undefined" ) {
+        remotePlayerBall.body.velocity.x = data.exitVelocityX;
+        remotePlayerBall.body.velocity.y = data.exitVelocityY;
+    }
+  }
+
+  function onUpdateLocalScore(data) {
+    console.log('onLocalRemoteScore invoked');
+    score = data.score;
+    scoreText.text = 'score: ' + score;
+    updateLeaderboard(data);
+  }
+
+  function onUpdateRemoteScore(data) {
+    console.log('onUpdateRemoteScore invoked');
+    remotePlayers[data.id].score = data.score;
+    updateLeaderboard(data);
+  }
+
+  function updateLeaderboard(message) {
+    var $tr = $leaderboard.find("[data-id='" + message.id + "']");
+    $tr.attr('data-score', message.score);
+
+    var $tdScore = $tr.children().first();
+    $tdScore.text(message.score);
+
+    $leaderboard.mixItUp('sort', 'score:desc');
   }
 
   function update() {
@@ -204,6 +420,10 @@
     if (bricks.countLiving() === 0) {
       startNewRound();
     }
+
+    if (!$.isEmptyObject(remotePlayers)) {
+      updatePaddlePositions();
+    };
   }
 
   function releaseBall() {
@@ -213,10 +433,20 @@
       ball.body.velocity.y = BALL_RELEASE_VELOCITY_Y;
       ball.animations.play('spin');
       infoText.visible = false;
+
+      // Tell other clients of the release of ball
+      socket.emit('paddle release ball', {
+        velocityX: ball.body.velocity.x,
+        velocityY: ball.body.velocity.y,
+        posX: ball.body.x,
+        posY: ball.body.y
+      });
     }
   }
 
   function ballLost() {
+    socket.emit('kill remote ball');
+
     lives--;
     livesText.text = 'lives: ' + lives;
     if (lives === 0) {
@@ -233,12 +463,12 @@
   }
 
   function startNewRound() {
+    socket.emit('kill remote ball');
+
     console.log('startNewRound invoked');
     bricks.callAll('revive');
     if (lives !==0 ) {
       putBallOnPaddle();
-      score += 1000;
-      scoreText.text = 'score: ' + score;
       infoText.text = 'Next Round';
     }
   }
@@ -251,12 +481,13 @@
   }
 
   function ballHitBrick(_ball, _brick) {
-    socket.emit('brick kill from client', { brickIndex: _brick.brickIndex });
+    socket.emit('brick kill from client', {
+      brickIndex: _brick.brickIndex,
+      velocityX: ball.body.velocity.x,
+      velocityY: ball.body.velocity.y
+    });
 
     _brick.kill();
-
-    score += 10;
-    scoreText.text = 'score: ' + score;
   }
 
   function ballHitPaddle(_ball, _paddle) {
@@ -273,6 +504,11 @@
     } else {
       _ball.body.velocity.x = BALL_VELOCITY_MULTIPLIER_X * 0.2 + Math.random() * BALL_VELOCITY_MULTIPLIER_X * 0.8;
     }
+
+    socket.emit('ball hit paddle', {
+      velocityX: _ball.body.velocity.x,
+      velocityY: _ball.body.velocity.y
+    });
   }
 
   function bricksString(bricksGroup) {
@@ -288,5 +524,24 @@
     }
     return result;
   }
+
+  function getCurrentPlayerId(data) {
+    currentClient = data.id;
+  }
+
+  function onUpdatePaddlePosition(data) {
+    var player = data.id;
+    if (remotePlayers[player] != undefined){
+      remotePlayers[player].paddleX = data.x;
+    }
+  }
+
+  function updatePaddlePositions() {
+    $.each(remotePlayers, function(key, val){
+      if (val.paddle != undefined) {
+        val.paddle.body.x = val.paddleX;
+      }
+    });
+  };
 
 }());
