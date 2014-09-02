@@ -119,22 +119,24 @@
   // add sprite for remote paddle and associate it with the player
   function createRemotePaddle(data){
     console.log('createRemotePaddle invoked');
-
     var player = data.id;
 
-    remotePlayers[player].paddle = remotePaddles.create(
-          game.world.centerX,
-          PADDLE_Y,
-          'breakout',
-          'paddle_big.png'
-        );
+    if (typeof remotePlayers[player].paddle !== "object"){
+      
+      remotePlayers[player].paddle = remotePaddles.create(
+            game.world.centerX,
+            PADDLE_Y,
+            'breakout',
+            'paddle_big.png'
+          );
 
-    remotePlayers[player].paddle.anchor.setTo(0.5, 0.5);
-    game.physics.enable(remotePlayers[player].paddle, Phaser.Physics.ARCADE);
-    remotePlayers[player].paddle.body.collideWorldBounds = true;
-    remotePlayers[player].paddle.body.bounce.set(1);
-    remotePlayers[player].paddle.body.immovable = true;
-    remotePlayers[player].paddle.name = player;
+      remotePlayers[player].paddle.anchor.setTo(0.5, 0.5);
+      game.physics.enable(remotePlayers[player].paddle, Phaser.Physics.ARCADE);
+      remotePlayers[player].paddle.body.collideWorldBounds = true;
+      remotePlayers[player].paddle.body.bounce.set(1);
+      remotePlayers[player].paddle.body.immovable = true;
+      remotePlayers[player].paddle.name = player;
+    }
   }
 
   function createLocalBall() {
