@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Permanent+Marker|Shadows+Into+Light+Two|VT323);
 * {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -5,7 +6,13 @@
 }
 
 body {
-  background-color: #333;
+  background-color: #191919;
+  font-family: 'Shadows Into Light Two', cursive;
+  color: #fff;
+}
+
+#header {
+  text-align: center;
 }
 
 #breakout {
@@ -20,6 +27,7 @@ table {
   table-layout: fixed;
   width: 800px;
   margin: 0 auto;
+  font-size: 1.75em;
 }
 
 tr {
@@ -30,8 +38,13 @@ th, td {
   text-align: left;
   color: white;
   width: 350px;
+  font-family: 'VT323';
 }
 
 th:first-child, td:first-child {
   width: 50px;
+}
+
+h1 {
+  font-size: 5em;
 }
