@@ -266,7 +266,7 @@
     var remotePlayer = remotePlayers[data.remotePlayerID];
     var remotePlayerBall = remotePlayer.remotePlayerBall;
 
-    if (typeof remotePlayer !== "undefined" && remotePlayerBall !== "undefined" ) {
+    if (typeof remotePlayer !== "undefined" && typeof remotePlayerBall !== "undefined" ) {
         remotePlayerBall.body.velocity.x = data.exitVelocityX;
         remotePlayerBall.body.velocity.y = data.exitVelocityY;
     }
