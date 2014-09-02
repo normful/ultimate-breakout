@@ -1,36 +1,71 @@
+@import url(http://fonts.googleapis.com/css?family=Permanent+Marker|Shadows+Into+Light+Two|VT323);
+
 * {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
 }
 
 body {
-  background-color: #333;
+  background-color: #191919;
+  font-family: 'VT323';
+  color: #fff;
+}
+
+#header {
+  text-align: center;
+  padding: 10px 0px;
+  background: #111;
+}
+
+.container {
+  width: 1230px;
+  margin: 0 auto;
 }
 
 #breakout {
   border: 2px solid black;
   width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 15px;
+  float: left;
   cursor: pointer;
 }
 
+#leaderboard {
+  margin-top: 15px;
+}
+
 table {
+  display: inline-block;
   table-layout: fixed;
   width: 400px;
+  font-size: 1em;
+  background: #111;
 }
 
 tr {
-  width: 400px;
+  width: 100%;
 }
 
 th, td {
   text-align: left;
   color: white;
-  width: 350px;
+  width: 325px;
+  font-family: 'VT323';
+  font-size: 1.2em;
+}
+
+td {
+  border-top: 1px solid #ccc;
+  padding: 5px 0px;
 }
 
 th:first-child, td:first-child {
-  width: 50px;
+  width: 75px;
+}
+
+h1 {
+  font-size: 2em;
 }
