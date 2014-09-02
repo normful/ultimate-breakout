@@ -124,6 +124,7 @@
     paddle.body.collideWorldBounds = true;
     paddle.body.bounce.set(1);
     paddle.body.immovable = true;
+    paddle.tint = 0xa42424;
   }
 
   // create group for remote paddles
@@ -171,6 +172,7 @@
     ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
 
     ball.events.onOutOfBounds.add(ballLost, this);
+    ball.tint = 0x1f7250;
   }
 
   function onUpdateRemoteBall(data) {
