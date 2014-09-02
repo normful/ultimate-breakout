@@ -201,7 +201,6 @@
 
   function onKillRemoteBall(data) {
     console.log('onKillRemoteBall invoked');
-
     remotePlayers[data.remotePlayerID]["remotePlayerBall"].kill();
   }
 
