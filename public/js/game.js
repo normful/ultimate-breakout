@@ -379,12 +379,18 @@
   function onBrickKillToOtherClients(data) {
     bricks.children[data.brickIndex].kill();
 
-    var remotePlayer = remotePlayers[data.remotePlayerID];
-    var remotePlayerBall = remotePlayer.remotePlayerBall;
+    var remotePlayer;
+    var remotePlayerBall;
 
-    if (typeof remotePlayer !== "undefined" && typeof remotePlayerBall !== "undefined" ) {
-        remotePlayerBall.body.velocity.x = data.exitVelocityX;
-        remotePlayerBall.body.velocity.y = data.exitVelocityY;
+    remotePlayer = remotePlayers[data.remotePlayerID];
+
+    if (typeof remotePlayer !== 'undefined') {
+      remotePlayerBall = remotePlayer.remotePlayerBall;
+    }
+
+    if (typeof remotePlayerBall !== 'undefined' ) {
+      remotePlayerBall.body.velocity.x = data.exitVelocityX;
+      remotePlayerBall.body.velocity.y = data.exitVelocityY;
     }
   }
 
