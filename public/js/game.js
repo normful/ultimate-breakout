@@ -38,6 +38,7 @@
   var socket;
   var localPlayerName;
   var localPlayerID;
+  var localPlayerColor;
   var remotePlayers = {};
   var SET_INTERVAL_DELAY = 50;
   var currentClient;
@@ -154,6 +155,7 @@
       remotePlayers[player].paddle.body.bounce.set(1);
       remotePlayers[player].paddle.body.immovable = true;
       remotePlayers[player].paddle.name = player;
+      remotePlayers[player].paddle.tint = data.color;
     }
   }
 
@@ -196,6 +198,8 @@
     remoteBall.body.velocity.y = data.velocityY;
 
     remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"].tint = remotePlayers[data.remotePlayerID].color;
   }
 
   function createText() {
@@ -294,6 +298,7 @@
     remotePlayers[data.id] = {
       name: data.name,
       score: data.score,
+      color: data.color,
       paddleX: game.world.centerX
     };
     addPlayerToLeaderboard(data);
@@ -314,14 +319,20 @@
   function onLocalPlayer(data) {
     localPlayerID = data.id;
     localPlayerName = data.name;
+    localPlayerColor = data.color;
     addPlayerToLeaderboard(data);
+
+    paddle.tint = localPlayerColor;
+    ball.tint = localPlayerColor;
   }
 
   function addPlayerToLeaderboard(message) {
     var playerScore;
+    var playerColor = "#" + message.color.replace(/^0x/, "");
     var $tr;
     var $tdScore;
     var $tdName;
+    var $colorCircle;
 
     if (message.hasOwnProperty('score')) {
       // remote player
@@ -332,6 +343,9 @@
       message.name += " (You)";
     }
 
+    $colorCircle = $('<span></span>');
+    $colorCircle.css({ background : playerColor, height: '15px', width: '15px', display: 'inline-block', 'margin-right': '5px', 'border-radius' : '50%' });
+
     $tr = $('<tr></tr>');
     $tr.attr('data-score', playerScore);
     $tr.attr('data-id', message.id);
@@ -339,6 +353,9 @@
     $tdName = $('<td></td>').text(message.name);
 
     $tr.append($tdScore).append($tdName).appendTo($leaderboard);
+
+    $tdName.prepend($colorCircle);
+
   }
 
   function onRemovePlayer(data) {
