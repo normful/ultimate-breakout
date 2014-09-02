@@ -199,6 +199,8 @@
     remoteBall.body.velocity.y = data.velocityY;
 
     remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"].tint = 0x62cae4;
   }
 
   function createText() {
