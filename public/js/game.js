@@ -420,8 +420,10 @@
 
   function onUpdateRemoteScore(data) {
     console.log('onUpdateRemoteScore invoked');
-    remotePlayers[data.id].score = data.score;
-    updateLeaderboard(data);
+    if (typeof remotePlayers[data.id] !== 'undefined' ) {
+      remotePlayers[data.id].score = data.score;
+      updateLeaderboard(data);
+    }
   }
 
   function updateLeaderboard(message) {
