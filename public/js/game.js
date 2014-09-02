@@ -243,7 +243,17 @@
 
   function onKillRemoteBall(data) {
     console.log('onKillRemoteBall invoked');
-    remotePlayers[data.remotePlayerID].remotePlayerBall.kill();
+    var remotePlayer;
+    var remotePlayerBall;
+
+    remotePlayer = remotePlayers[data.remotePlayerID];
+
+    if (typeof remotePlayer !== 'undefined') {
+      remotePlayerBall = remotePlayer.remotePlayerBall;
+    }
+    if (typeof remotePlayerBall !== 'undefined') {
+      remotePlayerBall.kill();
+    }
   }
 
   function onRemoteExistingBall(data) {
