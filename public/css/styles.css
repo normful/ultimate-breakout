@@ -1,11 +1,36 @@
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
 body {
   background-color: #333;
 }
 
 #breakout {
-  border: 2px solid white;
+  border: 2px solid black;
   width: 800px;
   margin-left: auto;
   margin-right: auto;
   cursor: pointer;
+}
+
+table {
+  table-layout: fixed;
+  width: 400px;
+}
+
+tr {
+  width: 400px;
+}
+
+th, td {
+  text-align: left;
+  color: white;
+  width: 350px;
+}
+
+th:first-child, td:first-child {
+  width: 50px;
 }

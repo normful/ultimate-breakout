@@ -36,9 +36,13 @@
   var TEXT_Y = 550;
 
   var socket;
+  var localPlayerName;
+  var localPlayerID;
   var remotePlayers = {};
   var SET_INTERVAL_DELAY = 50;
   var currentClient;
+
+  var $leaderboard = $("#leaderboard-table-body");
 
   function preload() {
     console.log('preload invoked');
@@ -66,6 +70,8 @@
     createText();
 
     game.input.onDown.add(releaseBall, this);
+
+    initializeMixItUp();
 
     socket = io.connect(window.location.hostname);
     attachSocketHandlers();
@@ -203,11 +209,25 @@
     infoText.anchor.setTo(0.5, 0.5);
   }
 
+  function initializeMixItUp() {
+    $(function(){
+      $leaderboard.mixItUp({
+        selectors: {
+          target: "tr"
+        },
+        layout: {
+          display: 'block'
+        }
+      });
+    });
+  }
+
   function attachSocketHandlers() {
     console.log('attachSocketHandlers invoked');
     socket.on('connect', onSocketConnect);
     socket.on('disconnect', onSocketDisconnect);
     socket.on('new player', onNewRemotePlayer);
+    socket.on('local player', onLocalPlayer);
     socket.on('remove player', onRemovePlayer);
     socket.on('update paddle position', onUpdatePaddlePosition);
     socket.on('initial bricks', onInitialBricks);
@@ -217,6 +237,8 @@
     socket.on('existing ball', onRemoteExistingBall);
     socket.on('kill remote ball', onKillRemoteBall);
     socket.on('update ball', onUpdateRemoteBall);
+    socket.on('update local score', onUpdateLocalScore);
+    socket.on('update remote score', onUpdateRemoteScore);
   }
 
   function onKillRemoteBall(data) {
@@ -259,7 +281,13 @@
   function onNewRemotePlayer(data) {
     console.log('onNewRemotePlayer invoked');
 
-    remotePlayers[data.id] = { score: data.score, paddleX: game.world.centerX };
+    remotePlayers[data.id] = {
+      name: data.name,
+      score: data.score,
+      paddleX: game.world.centerX
+    };
+    addPlayerToLeaderboard(data);
+
     createRemotePaddle(data);
 
     // Notify new player of client's ball position and velocity, but only do so if player hasn't released ball
@@ -271,6 +299,36 @@
         posY: ball.body.position.y
       });
     }
+  }
+
+  function onLocalPlayer(data) {
+    localPlayerID = data.id;
+    localPlayerName = data.name;
+    addPlayerToLeaderboard(data);
+  }
+
+  function addPlayerToLeaderboard(message) {
+    var playerScore;
+    var $tr;
+    var $tdScore;
+    var $tdName;
+
+    if (message.hasOwnProperty('score')) {
+      // remote player
+      playerScore = message.score;
+    } else {
+      // local player
+      playerScore = score;
+      message.name += " (You)";
+    }
+
+    $tr = $('<tr></tr>');
+    $tr.attr('data-score', playerScore);
+    $tr.attr('data-id', message.id);
+    $tdScore = $('<td></td>').text(playerScore);
+    $tdName = $('<td></td>').text(message.name);
+
+    $tr.append($tdScore).append($tdName).appendTo($leaderboard);
   }
 
   function onRemovePlayer(data) {
@@ -296,7 +354,7 @@
   }
 
   function onInitialBricks(data) {
-    console.log('onInitialBricks invoked. data = ' + JSON.stringify(data));
+    console.log('onInitialBricks invoked.');
     var i;
     for (var row = 0; row < BRICK_ROWS; row++) {
       for (var col = 0; col < BRICK_COLS; col++) {
@@ -318,6 +376,29 @@
         remotePlayerBall.body.velocity.x = data.exitVelocityX;
         remotePlayerBall.body.velocity.y = data.exitVelocityY;
     }
+  }
+
+  function onUpdateLocalScore(data) {
+    console.log('onLocalRemoteScore invoked');
+    score = data.score;
+    scoreText.text = 'score: ' + score;
+    updateLeaderboard(data);
+  }
+
+  function onUpdateRemoteScore(data) {
+    console.log('onUpdateRemoteScore invoked');
+    remotePlayers[data.id].score = data.score;
+    updateLeaderboard(data);
+  }
+
+  function updateLeaderboard(message) {
+    var $tr = $leaderboard.find("[data-id='" + message.id + "']");
+    $tr.attr('data-score', message.score);
+
+    var $tdScore = $tr.children().first();
+    $tdScore.text(message.score);
+
+    $leaderboard.mixItUp('sort', 'score:desc');
   }
 
   function update() {
@@ -388,8 +469,6 @@
     bricks.callAll('revive');
     if (lives !==0 ) {
       putBallOnPaddle();
-      score += 1000;
-      scoreText.text = 'score: ' + score;
       infoText.text = 'Next Round';
     }
   }
@@ -409,9 +488,6 @@
     });
 
     _brick.kill();
-
-    score += 10;
-    scoreText.text = 'score: ' + score;
   }
 
   function ballHitPaddle(_ball, _paddle) {
