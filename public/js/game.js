@@ -42,6 +42,8 @@
   var SET_INTERVAL_DELAY = 50;
   var currentClient;
 
+  var color = '0x'+Math.floor(Math.random()*16777215).toString(16);
+
   var $leaderboard = $("#leaderboard-table-body");
 
   function preload() {
@@ -124,7 +126,7 @@
     paddle.body.collideWorldBounds = true;
     paddle.body.bounce.set(1);
     paddle.body.immovable = true;
-    paddle.tint = 0xf3f00a;
+    paddle.tint = color;
   }
 
   // create group for remote paddles
@@ -173,7 +175,7 @@
     ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
 
     ball.events.onOutOfBounds.add(ballLost, this);
-    ball.tint = 0xf3f00a;
+    ball.tint = color;
   }
 
   function onUpdateRemoteBall(data) {
@@ -200,7 +202,7 @@
 
     remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
 
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"].tint = 0x62cae4;
+    remotePlayers[data.remotePlayerID]["remotePlayerBall"].tint = "0x62cae4";
   }
 
   function createText() {
