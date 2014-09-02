@@ -34,6 +34,7 @@ function onSocketConnection(client) {
   client.on('existing ball', onExistingBall);
   client.on('kill remote ball', onKillRemoteBall);
   client.on('update ball', onUpdateBall);
+  client.on('player game over', onPlayerGameOver);
 }
 
 function onUpdateBall(data) {
@@ -101,7 +102,8 @@ function onNewPlayer(data) {
         id: playerID,
         name: players[playerID].name,
         score: players[playerID].score,
-        color: players[playerID].color
+        color: players[playerID].color,
+        gameOver: players[playerID].gameOver
       });
     }
   }
@@ -115,14 +117,16 @@ function onNewPlayer(data) {
   this.emit('local player', {
     id: this.id,
     name: funnyName,
-    color: color
+    color: color,
+    gameOver: false
   });
 
   // Add new player to players array
   players[this.id] = {
     color: color,
     name: funnyName,
-    score: 0
+    score: 0,
+    gameOver: false
   };
   util.log(this.id + ' added to players');
   util.log('players = ' + util.inspect(players, utilInspectOpts));
@@ -132,7 +136,8 @@ function onNewPlayer(data) {
     id: this.id,
     name: funnyName,
     color: color,
-    score: 0
+    score: 0,
+    gameOver: false
   });
   util.log(this.id + ' broadcast to all existing players');
 }
@@ -207,6 +212,13 @@ function onUpdatePaddlePosition(data) {
   this.broadcast.emit('update paddle position', {
     id: this.id,
     x: data.x
+  });
+}
+
+function onPlayerGameOver() {
+  players[this.id].gameOver = true;
+  this.broadcast.emit('remote player game over', {
+    id: this.id,
   });
 }
 
