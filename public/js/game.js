@@ -328,14 +328,11 @@
 
   function addPlayerToLeaderboard(message) {
     var playerScore;
-    var playerHex = message.color.substring(2, message.color.length);
-    var playerColor;
+    var playerColor = "#" + padHex(message.color.substring(2), 6);
     var $tr;
     var $tdScore;
     var $tdName;
     var $colorCircle;
-
-    playerColor = "#" + padHex(playerHex, 6);
 
     if (message.hasOwnProperty('score')) {
       // remote player
@@ -358,7 +355,6 @@
     $tr.append($tdScore).append($tdName).appendTo($leaderboard);
 
     $tdName.prepend($colorCircle);
-
   }
 
   function onRemovePlayer(data) {
