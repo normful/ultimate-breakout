@@ -328,7 +328,7 @@
 
   function addPlayerToLeaderboard(message) {
     var playerScore;
-    var playerColor = "#" + message.color.replace(/^0x/, "");
+    var playerColor = "#" + message.color.substring(2, message.color.length);
     var $tr;
     var $tdScore;
     var $tdName;
