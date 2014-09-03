@@ -1,6 +1,6 @@
 ;(function () {
 
-  var gameState = { preload: preload, create: create, update: update }
+  var gameState = { preload: preload, create: create, update: update };
   var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', gameState);
   var GAME_WIDTH = 800;
   var GAME_HEIGHT = 600;
@@ -31,6 +31,7 @@
   var BALL_RELEASE_VELOCITY_X = -75;
   var BALL_RELEASE_VELOCITY_Y = -300;
   var BALL_VELOCITY_MULTIPLIER_X = 10;
+  var BALL_VELOCITY_CHANGE = 2.0;
 
   var score = 0;
   var lives = 3;
@@ -489,29 +490,40 @@
     _item.kill();
 
     if (_item.type === 'extraLife') {
-      console.log('paddle caught extraLife');
-      lives++;
-      livesText.text = 'lives: ' + lives;
+      addExtraLife();
     } else if (_item.type === 'increaseSpeed') {
-      console.log('paddle caught increaseSpeed');
-
-      BALL_VELOCITY_MULTIPLIER_X = BALL_VELOCITY_MULTIPLIER_X * 100;
-
-      setTimeout(function(){
-        BALL_VELOCITY_MULTIPLIER_X = 10;
-      }, 2000);
+      increaseBallSpeed();
+      setTimeout(decreaseBallSpeed, 5000);
     } else if (_item.type === 'decreaseSpeed') {
-      console.log('paddle caught decreaseSpeed');
-
-      BALL_VELOCITY_MULTIPLIER_X = BALL_VELOCITY_MULTIPLIER_X * 0.5;
-
-      setTimeout(function(){
-        BALL_VELOCITY_MULTIPLIER_X = 10;
-      }, 2000);
+      decreaseBallSpeed();
+      setTimeout(increaseBallSpeed, 5000);
     } else {
       console.log('paddle caught something else. _item.type = ' + _item.type);
     }
-    // TODO: Insert other else if cases for other catching other items
+  }
+
+  function addExtraLife() {
+    console.log('addExtraLife invoked');
+    lives++;
+    livesText.text = 'lives: ' + lives;
+  }
+
+  function increaseBallSpeed() {
+    console.log('increaseBallSpeed invoked');
+    ball.body.velocity.x *= BALL_VELOCITY_CHANGE;
+    ball.body.velocity.y *= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_X *= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_Y *= BALL_VELOCITY_CHANGE;
+    BALL_VELOCITY_MULTIPLIER_X *= BALL_VELOCITY_CHANGE;
+  }
+
+  function decreaseBallSpeed() {
+    console.log('decreaseBallSpeed invoked');
+    ball.body.velocity.x /= BALL_VELOCITY_CHANGE;
+    ball.body.velocity.y /= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_X /= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_Y /= BALL_VELOCITY_CHANGE;
+    BALL_VELOCITY_MULTIPLIER_X /= BALL_VELOCITY_CHANGE;
   }
 
   function releaseBall() {
@@ -571,13 +583,13 @@
   function ballHitBrick(_ball, _brick) {
     var randNum = Math.floor(Math.random() * 20);
 
-    // if (randNum === 0) {
-    //   createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
-    // } else if (randNum === 1) {
-    //   createItem('increaseSpeed', 'power_up.png', _brick.x, _brick.y);
-    // } else if (randNum === 2) {
+    if (randNum === 0) {
+      createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
+    } else if (randNum === 1) {
+      createItem('increaseSpeed', 'power_up.png', _brick.x, _brick.y);
+    } else if (randNum === 2) {
       createItem('decreaseSpeed', 'power_down.png', _brick.x, _brick.y);
-    // }
+    }
 
     socket.emit('brick kill from client', {
       brickIndex: _brick.brickIndex,
