@@ -8,6 +8,7 @@
   var background;
 
   var bricks;
+  var brickBurstEmitter;
   var BRICK_ROWS = 4;
   var BRICK_COLS = 15;
   var BRICK_START_X = 120;
@@ -68,6 +69,7 @@
 
     createRemotePaddles();
     createBricks();
+    createBrickBurstEmitter();
     createItems();
     createLocalPaddle();
     createLocalBall();
@@ -116,6 +118,12 @@
         brick.brickIndex = brickCount++;
       }
     }
+  }
+
+  function createBrickBurstEmitter() {
+    brickBurstEmitter = game.add.emitter(0, 0, 500);
+    brickBurstEmitter.makeParticles('breakout', 'brick_chunk.png');
+    brickBurstEmitter.gravity = 500;
   }
 
   function createItems() {
@@ -473,6 +481,7 @@
       updatePaddlePositions();
     }
 
+    game.physics.arcade.collide(brickBurstEmitter);
     game.physics.arcade.collide(paddle, items, paddleCaughtItem, null, gameState);
   }
 
@@ -555,7 +564,14 @@
       velocityY: ball.body.velocity.y
     });
 
+    renderBrickBurst(_brick);
     _brick.kill();
+  }
+
+  function renderBrickBurst(_brick) {
+    brickBurstEmitter.x = _brick.x;
+    brickBurstEmitter.y = _brick.y;
+    brickBurstEmitter.start(true, 2000, null, 7);
   }
 
   function createItem(itemType, itemImage, x, y) {
