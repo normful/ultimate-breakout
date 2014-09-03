@@ -262,7 +262,8 @@
 
   function onRemoteExistingBall(data) {
     console.log('onRemoteExistingBall invoked');
-    if (typeof remotePlayers[data.remotePlayerID].remotePlayerBall === "undefined") {
+    if (typeof remotePlayers[data.remotePlayerID] !== 'undefined' &&
+        typeof remotePlayers[data.remotePlayerID].remotePlayerBall === 'undefined') {
       createRemoteBall(data);
     }
   }
