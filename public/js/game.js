@@ -573,12 +573,12 @@
   }
 
   function updatePaddlePositions() {
-    $.each(remotePlayers, function(key, val){
-      if (val.paddle != undefined) {
-        val.paddle.body.x = val.paddleX;
+    $.each(remotePlayers, function(remotePlayerID, remotePlayer) {
+      if (typeof remotePlayer.paddle !== 'undefined') {
+        remotePlayer.paddle.body.x = remotePlayer.paddleX;
       }
     });
-  };
+  }
 
   function padHex(n, width) {
     n = n + '';
