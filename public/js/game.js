@@ -615,7 +615,7 @@
   function renderBrickBurst(_brick) {
     brickBurstEmitter.x = _brick.x;
     brickBurstEmitter.y = _brick.y;
-    brickBurstEmitter.start(true, 2000, null, 7);
+    brickBurstEmitter.start(true, 2000, null, Math.floor(Math.random() * 10) + 5);
   }
 
   function createItem(itemType, itemImage, x, y) {
