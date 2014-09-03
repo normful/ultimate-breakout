@@ -584,11 +584,11 @@
     var randNum = Math.floor(Math.random() * 20);
 
     if (randNum === 0) {
-      createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
+      createItem('extraLife', 'extra_life.png', _brick.x, _brick.y);
     } else if (randNum === 1) {
-      createItem('increaseSpeed', 'power_up.png', _brick.x, _brick.y);
+      createItem('increaseSpeed', 'increase_speed.png', _brick.x, _brick.y);
     } else if (randNum === 2) {
-      createItem('decreaseSpeed', 'power_down.png', _brick.x, _brick.y);
+      createItem('decreaseSpeed', 'decrease_speed.png', _brick.x, _brick.y);
     }
 
     socket.emit('brick kill from client', {

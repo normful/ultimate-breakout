@@ -169,7 +169,7 @@
 	"sourceSize": {"w":32,"h":16}
 },
 {
-	"filename": "power_down.png",
+	"filename": "decrease_speed.png",
 	"frame": {"x":200,"y":2,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
@@ -177,8 +177,16 @@
 	"sourceSize": {"w":16,"h":16}
 },
 {
-	"filename": "power_up.png",
+	"filename": "increase_speed.png",
 	"frame": {"x":182,"y":38,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
+},
+{
+	"filename": "extra_life.png",
+	"frame": {"x":80,"y":45,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
