@@ -534,9 +534,13 @@
   function createPowerup(x, y) {
     powerup = game.add.sprite(x + 15, y + 20, 'breakout', 'power_up.png');
     powerup.anchor.setTo(0.5, 0.5);
+    powerup.checkWorldBounds = true;
     game.physics.enable(powerup, Phaser.Physics.ARCADE);
     powerup.body.velocity.y = 100;
     powerupExists = true;
+    powerup.events.onOutOfBounds.add(function () {
+      powerupExists = false;
+    }, this);
   }
 
   function ballHitBrick(_ball, _brick) {
@@ -545,8 +549,8 @@
     var brickY = _brick.body.y;
 
     if (powerupExists == false) {
-      // var randomNum = Math.floor((Math.random() * 40) + 1);
-      var randomNum = 1 //for testing purposes
+      var randomNum = Math.floor((Math.random() * 40) + 1);
+      // var randomNum = 1 //for testing purposes
       if (randomNum === 1) {
         createPowerup(brickX, brickY);
       }
