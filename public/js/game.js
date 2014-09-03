@@ -44,7 +44,8 @@
 
   var $leaderboard = $("#leaderboard-table-body");
 
-  var powerup
+  var powerup;
+  var powerupExists = false;
 
   function preload() {
     console.log('preload invoked');
@@ -470,6 +471,7 @@
 
   function extraLife() {
     console.log("extraLife invoked");
+    powerupExists = false;
     powerup.kill();
     lives++;
     livesText.text = 'lives: ' + lives;
@@ -534,6 +536,7 @@
     powerup.anchor.setTo(0.5, 0.5);
     game.physics.enable(powerup, Phaser.Physics.ARCADE);
     powerup.body.velocity.y = 100;
+    powerupExists = true;
   }
 
   function ballHitBrick(_ball, _brick) {
@@ -541,10 +544,12 @@
     var brickX = _brick.body.x;
     var brickY = _brick.body.y;
 
-    // var randomNum = Math.floor((Math.random() * 40) + 1);
-    var randomNum = 1 //for testing purposes
-    if (randomNum === 1) {
-      createPowerup(brickX, brickY);
+    if (powerupExists == false) {
+      // var randomNum = Math.floor((Math.random() * 40) + 1);
+      var randomNum = 1 //for testing purposes
+      if (randomNum === 1) {
+        createPowerup(brickX, brickY);
+      }
     }
 
     socket.emit('brick kill from client', {
