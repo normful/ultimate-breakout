@@ -77,7 +77,7 @@
     socket = io.connect(window.location.hostname);
     attachSocketHandlers();
 
-    $('#breakout').on("mousemove", function mouseMoveHandler(event) {
+    $('#breakout').on("mousemove", function mouseMoveHandler() {
       socket.emit("update paddle position", {
         x: game.input.x - 0.5 * PADDLE_WIDTH
       });
