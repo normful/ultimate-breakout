@@ -1,6 +1,6 @@
 ;(function () {
 
-  var gameState = { preload: preload, create: create, update: update }
+  var gameState = { preload: preload, create: create, update: update };
   var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', gameState);
   var GAME_WIDTH = 800;
   var GAME_HEIGHT = 600;
@@ -31,6 +31,7 @@
   var BALL_RELEASE_VELOCITY_X = -75;
   var BALL_RELEASE_VELOCITY_Y = -300;
   var BALL_VELOCITY_MULTIPLIER_X = 10;
+  var BALL_VELOCITY_CHANGE = 1.1;
 
   var score = 0;
   var lives = 3;
@@ -496,14 +497,42 @@
 
   function paddleCaughtItem(_paddle, _item) {
     _item.kill();
+
     if (_item.type === 'extraLife') {
-      console.log('paddle caught extraLife');
-      lives++;
-      livesText.text = 'lives: ' + lives;
+      addExtraLife();
+    } else if (_item.type === 'increaseSpeed') {
+      increaseBallSpeed();
+      setTimeout(decreaseBallSpeed, 5000);
+    } else if (_item.type === 'decreaseSpeed') {
+      decreaseBallSpeed();
+      setTimeout(increaseBallSpeed, 5000);
     } else {
       console.log('paddle caught something else. _item.type = ' + _item.type);
     }
-    // TODO: Insert other else if cases for other catching other items
+  }
+
+  function addExtraLife() {
+    console.log('addExtraLife invoked');
+    lives++;
+    livesText.text = 'lives: ' + lives;
+  }
+
+  function increaseBallSpeed() {
+    console.log('increaseBallSpeed invoked');
+    ball.body.velocity.x *= BALL_VELOCITY_CHANGE;
+    ball.body.velocity.y *= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_X *= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_Y *= BALL_VELOCITY_CHANGE;
+    BALL_VELOCITY_MULTIPLIER_X *= BALL_VELOCITY_CHANGE;
+  }
+
+  function decreaseBallSpeed() {
+    console.log('decreaseBallSpeed invoked');
+    ball.body.velocity.x /= BALL_VELOCITY_CHANGE;
+    ball.body.velocity.y /= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_X /= BALL_VELOCITY_CHANGE;
+    BALL_RELEASE_VELOCITY_Y /= BALL_VELOCITY_CHANGE;
+    BALL_VELOCITY_MULTIPLIER_X /= BALL_VELOCITY_CHANGE;
   }
 
   function releaseBall() {
@@ -566,7 +595,11 @@
     var randNum = Math.floor(Math.random() * 20);
 
     if (randNum === 0) {
-      createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
+      createItem('extraLife', 'extra_life.png', _brick.x, _brick.y);
+    } else if (randNum === 1) {
+      createItem('increaseSpeed', 'increase_speed.png', _brick.x, _brick.y);
+    } else if (randNum === 2) {
+      createItem('decreaseSpeed', 'decrease_speed.png', _brick.x, _brick.y);
     }
 
     socket.emit('brick kill from client', {
