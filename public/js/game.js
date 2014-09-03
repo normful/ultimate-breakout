@@ -530,7 +530,7 @@
   }
 
   function createPowerup(x, y) {
-    powerup = game.add.sprite(x, y, 'breakout', 'power_up.png');
+    powerup = game.add.sprite(x + 15, y + 20, 'breakout', 'power_up.png');
     powerup.anchor.setTo(0.5, 0.5);
     game.physics.enable(powerup, Phaser.Physics.ARCADE);
     powerup.body.velocity.y = 100;
