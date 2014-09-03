@@ -1,6 +1,7 @@
 ;(function () {
 
-  var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', { preload: preload, create: create, update: update });
+  var gameState = { preload: preload, create: create, update: update }
+  var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakout', gameState);
   var GAME_WIDTH = 800;
   var GAME_HEIGHT = 600;
 
@@ -14,6 +15,8 @@
   var BRICK_START_Y = 100;
   var BRICK_SPACING_X = 36;
   var BRICK_SPACING_Y = 52;
+
+  var items;
 
   var paddle;
   var PADDLE_Y = 500;
@@ -67,11 +70,12 @@
     createRemotePaddles();
     createBricks();
     createBrickBurstEmitter();
+    createItems();
     createLocalPaddle();
     createLocalBall();
     createText();
 
-    game.input.onDown.add(releaseBall, this);
+    game.input.onDown.add(releaseBall, gameState);
 
     initializeMixItUp();
 
@@ -120,6 +124,13 @@
     brickBurstEmitter = game.add.emitter(0, 0, 500);
     brickBurstEmitter.makeParticles('breakout', 'brick_chunk.png');
     brickBurstEmitter.gravity = 500;
+  }
+
+  function createItems() {
+    console.log('createItems invoked');
+    items = game.add.group();
+    items.enableBody = true;
+    items.physicsBodyType = Phaser.Physics.ARCADE;
   }
 
   function createLocalPaddle() {
@@ -458,8 +469,8 @@
     if (ballOnPaddle) {
       ball.body.x = paddle.body.x + 0.5 * PADDLE_WIDTH - 0.5 * BALL_WIDTH;
     } else {
-      game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
-      game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
+      game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, gameState);
+      game.physics.arcade.collide(ball, bricks, ballHitBrick, null, gameState);
     }
 
     if (bricks.countLiving() === 0) {
@@ -471,6 +482,19 @@
     }
 
     game.physics.arcade.collide(brickBurstEmitter);
+    game.physics.arcade.collide(paddle, items, paddleCaughtItem, null, gameState);
+  }
+
+  function paddleCaughtItem(_paddle, _item) {
+    _item.kill();
+    if (_item.type === 'extraLife') {
+      console.log('paddle caught extraLife');
+      lives++;
+      livesText.text = 'lives: ' + lives;
+    } else {
+      console.log('paddle caught something else. _item.type = ' + _item.type);
+    }
+    // TODO: Insert other else if cases for other catching other items
   }
 
   function releaseBall() {
@@ -528,6 +552,12 @@
   }
 
   function ballHitBrick(_ball, _brick) {
+    var randNum = Math.floor(Math.random() * 20);
+
+    if (randNum === 0) {
+      createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
+    }
+
     socket.emit('brick kill from client', {
       brickIndex: _brick.brickIndex,
       velocityX: ball.body.velocity.x,
@@ -542,6 +572,16 @@
     brickBurstEmitter.x = _brick.x;
     brickBurstEmitter.y = _brick.y;
     brickBurstEmitter.start(true, 2000, null, 7);
+  }
+
+  function createItem(itemType, itemImage, x, y) {
+    var item = items.create(x, y, 'breakout', itemImage);
+    item.type = itemType;
+    item.anchor.setTo(0.5, 0.5);
+    item.checkWorldBounds = true;
+    item.outOfBoundsKill = true;
+    game.physics.enable(item, Phaser.Physics.ARCADE);
+    item.body.velocity.y = 100;
   }
 
   function ballHitPaddle(_ball, _paddle) {
