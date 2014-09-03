@@ -460,7 +460,7 @@
 
     if (!$.isEmptyObject(remotePlayers)) {
       updatePaddlePositions();
-    };
+    }
   }
 
   function releaseBall() {
