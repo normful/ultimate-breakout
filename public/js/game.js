@@ -566,8 +566,7 @@
   }
 
   function onUpdatePaddlePosition(data) {
-    var player = data.id;
-    if (remotePlayers[player] != undefined){
+    if (typeof remotePlayers[data.id] !== 'undefined') {
       remotePlayers[player].paddleX = data.x;
     }
   }
