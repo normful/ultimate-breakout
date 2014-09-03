@@ -31,7 +31,7 @@
   var BALL_RELEASE_VELOCITY_X = -75;
   var BALL_RELEASE_VELOCITY_Y = -300;
   var BALL_VELOCITY_MULTIPLIER_X = 10;
-  var BALL_VELOCITY_CHANGE = 2.0;
+  var BALL_VELOCITY_CHANGE = 1.2;
 
   var score = 0;
   var lives = 3;
