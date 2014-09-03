@@ -543,8 +543,7 @@
   }
 
   function ballHitBrick(_ball, _brick) {
-
-    var randNum = Math.floor(Math.random() * 1);
+    var randNum = Math.floor(Math.random() * 20);
 
     if (randNum === 0) {
       createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
