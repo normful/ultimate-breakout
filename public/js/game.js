@@ -270,8 +270,9 @@
   function onRemoteBallHitPaddle(data) {
     console.log('onPaddleHitBall invoked');
     var remotePlayer = remotePlayers[data.remotePlayerID];
+    var remoteBall;
     if (typeof remotePlayer !== "undefined") {
-      var remoteBall = remotePlayer.remotePlayerBall;
+      remoteBall = remotePlayer.remotePlayerBall;
     }
     if (typeof remoteBall !== "undefined") {
       remoteBall.body.velocity.x = data.exitVelocityX;
