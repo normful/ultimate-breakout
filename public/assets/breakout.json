@@ -137,6 +137,14 @@
 	"sourceSize": {"w":32,"h":16}
 },
 {
+	"filename": "brick_chunk.png",
+	"frame": {"x":0,"y":0,"w":5,"h":5},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":5,"h":5},
+	"sourceSize": {"w":5,"h":5}
+},
+{
 	"filename": "one.png",
 	"frame": {"x":66,"y":2,"w":30,"h":48},
 	"rotated": false,

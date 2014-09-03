@@ -49,7 +49,6 @@
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
     game.load.image('starfield', '/assets/starfield.jpg');
-    game.load.image('chunk', '/assets/chunk.png');
   }
 
   function create() {
@@ -119,7 +118,7 @@
 
   function createBrickBurstEmitter() {
     brickBurstEmitter = game.add.emitter(0, 0, 500);
-    brickBurstEmitter.makeParticles('chunk');
+    brickBurstEmitter.makeParticles('breakout', 'brick_chunk.png');
     brickBurstEmitter.gravity = 500;
   }
 
