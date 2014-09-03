@@ -76,7 +76,7 @@
     socket = io.connect(window.location.hostname);
     attachSocketHandlers();
 
-    $('#breakout').on("mousemove", function mouseMoveHandler(event) {
+    $('#breakout').on("mousemove", function mouseMoveHandler() {
       socket.emit("update paddle position", {
         x: game.input.x - 0.5 * PADDLE_WIDTH
       });
@@ -196,9 +196,9 @@
     remoteBall.body.velocity.x = data.velocityX;
     remoteBall.body.velocity.y = data.velocityY;
 
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+    remotePlayers[data.remotePlayerID].remotePlayerBall = remoteBall;
 
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"].tint = remotePlayers[data.remotePlayerID].color;
+    remotePlayers[data.remotePlayerID].remotePlayerBall.tint = remotePlayers[data.remotePlayerID].color;
   }
 
   function createText() {
@@ -269,8 +269,9 @@
   function onRemoteBallHitPaddle(data) {
     console.log('onPaddleHitBall invoked');
     var remotePlayer = remotePlayers[data.remotePlayerID];
+    var remoteBall;
     if (typeof remotePlayer !== "undefined") {
-      var remoteBall = remotePlayer.remotePlayerBall;
+      remoteBall = remotePlayer.remotePlayerBall;
     }
     if (typeof remoteBall !== "undefined") {
       remoteBall.body.velocity.x = data.exitVelocityX;
@@ -458,7 +459,7 @@
 
     if (!$.isEmptyObject(remotePlayers)) {
       updatePaddlePositions();
-    };
+    }
   }
 
   function releaseBall() {
