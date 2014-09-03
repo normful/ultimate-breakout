@@ -44,6 +44,8 @@
 
   var $leaderboard = $("#leaderboard-table-body");
 
+  var powerup
+
   function preload() {
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
@@ -439,6 +441,9 @@
   }
 
   function update() {
+
+    game.physics.arcade.collide(powerup, paddle, extraLife, null, this);
+
     paddle.body.x = game.input.x - 0.5 * PADDLE_WIDTH;
 
     if (paddle.body.x < 0) {
@@ -461,6 +466,13 @@
     if (!$.isEmptyObject(remotePlayers)) {
       updatePaddlePositions();
     }
+  }
+
+  function extraLife() {
+    console.log("extraLife invoked");
+    powerup.kill();
+    lives++;
+    livesText.text = 'lives: ' + lives;
   }
 
   function releaseBall() {
@@ -517,7 +529,25 @@
     infoText.visible = true;
   }
 
+  function createPowerup(x, y) {
+    powerup = game.add.sprite(x, y, 'breakout', 'paddle_big.png');
+    powerup.anchor.setTo(0.5, 0.5);
+    game.physics.enable(powerup, Phaser.Physics.ARCADE);
+    powerup.body.velocity.y = 100;
+  }
+
   function ballHitBrick(_ball, _brick) {
+
+    var brickX = _brick.body.x;
+    var brickY = _brick.body.y;
+
+    var randomNum = Math.floor((Math.random() * 40) + 1);
+    // var randomNum = 1 //for testing purposes
+    console.log(randomNum)
+    if (randomNum === 1) {
+      createPowerup(brickX, brickY);
+    }
+
     socket.emit('brick kill from client', {
       brickIndex: _brick.brickIndex,
       velocityX: ball.body.velocity.x,
