@@ -508,6 +508,19 @@
       ball.body.velocity.x = originalVelocityX;
       ball.body.velocity.y = originalVelocityY;
       }, 2000);
+    } else if (_item.type === 'decreaseSpeed') {
+      console.log('paddle caught decreaseSpeed');
+
+      BALL_VELOCITY_MULTIPLIER_X = BALL_VELOCITY_MULTIPLIER_X * 0.9;
+
+      ball.body.velocity.x = originalVelocityX * 0.5;
+      ball.body.velocity.y = originalVelocityY * 0.5;
+
+      setTimeout(function(){
+        BALL_VELOCITY_MULTIPLIER_X = 10
+      ball.body.velocity.x = originalVelocityX;
+      ball.body.velocity.y = originalVelocityY;
+      }, 2000);
     } else {
       console.log('paddle caught something else. _item.type = ' + _item.type);
     }
@@ -577,6 +590,8 @@
       createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
     } else if (randNum === 1) {
       createItem('increaseSpeed', 'power_up.png', _brick.x, _brick.y);
+    } else if (randNum === 2) {
+      createItem('decreaseSpeed', 'power_down.png', _brick.x, _brick.y);
     }
 
     socket.emit('brick kill from client', {
