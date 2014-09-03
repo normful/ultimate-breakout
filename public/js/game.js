@@ -487,13 +487,32 @@
 
   function paddleCaughtItem(_paddle, _item) {
     _item.kill();
+
+    var originalVelocityX = ball.body.velocity.x;
+    var originalVelocityY = ball.body.velocity.y;
+
     if (_item.type === 'extraLife') {
       console.log('paddle caught extraLife');
       lives++;
       livesText.text = 'lives: ' + lives;
+    } else if (_item.type === 'increaseSpeed') {
+      console.log('paddle caught increaseSpeed');
+
+      BALL_VELOCITY_MULTIPLIER_X = BALL_VELOCITY_MULTIPLIER_X * 1.1;
+
+      ball.body.velocity.x = originalVelocityX * 1.5;
+      ball.body.velocity.y = originalVelocityY * 1.5;
+
+      setTimeout(function(){
+        BALL_VELOCITY_MULTIPLIER_X = 10
+      ball.body.velocity.x = originalVelocityX;
+      ball.body.velocity.y = originalVelocityY;
+      }, 2000);
     } else {
       console.log('paddle caught something else. _item.type = ' + _item.type);
     }
+
+    
     // TODO: Insert other else if cases for other catching other items
   }
 
@@ -556,6 +575,8 @@
 
     if (randNum === 0) {
       createItem('extraLife', 'power_up.png', _brick.x, _brick.y);
+    } else if (randNum === 1) {
+      createItem('increaseSpeed', 'power_up.png', _brick.x, _brick.y);
     }
 
     socket.emit('brick kill from client', {
