@@ -87,7 +87,7 @@ function onNewPlayer(data) {
   if (isEmpty(players)) {
 
     bricks = data.existingBricks;
-    util.log('first new player setting brick layout to: ' + bricks)
+    util.log('first new player setting brick layout to: ' + bricks);
 
     // string of "1", repeated data.brickCount times
     allBricks = new Array(data.existingBricks.length + 1).join("1");
