@@ -197,9 +197,9 @@
     remoteBall.body.velocity.x = data.velocityX;
     remoteBall.body.velocity.y = data.velocityY;
 
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"] = remoteBall;
+    remotePlayers[data.remotePlayerID].remotePlayerBall = remoteBall;
 
-    remotePlayers[data.remotePlayerID]["remotePlayerBall"].tint = remotePlayers[data.remotePlayerID].color;
+    remotePlayers[data.remotePlayerID].remotePlayerBall.tint = remotePlayers[data.remotePlayerID].color;
   }
 
   function createText() {
