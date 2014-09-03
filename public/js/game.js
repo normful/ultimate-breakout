@@ -203,6 +203,13 @@
   }
 
   function createRemoteBall(data) {
+    console.log('createRemoteBall invoked');
+
+    if (remotePlayers[data.remotePlayerID].gameOver === true) {
+      console.log("createRemoteBall exiting early because remote player's game is over");
+      return;
+    }
+
     var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
     remoteBall.anchor.set(0.5);
     remoteBall.checkWorldBounds = true;
@@ -261,6 +268,7 @@
     socket.on('update ball', onUpdateRemoteBall);
     socket.on('update local score', onUpdateLocalScore);
     socket.on('update remote score', onUpdateRemoteScore);
+    socket.on('remote player game over', onRemotePlayerGameOver);
   }
 
   function onKillRemoteBall(data) {
@@ -321,6 +329,7 @@
       name: data.name,
       score: data.score,
       color: data.color,
+      gameOver: data.gameOver,
       paddleX: game.world.centerX
     };
     addPlayerToLeaderboard(data);
@@ -549,6 +558,8 @@
 
     infoText.text = 'Game Over!';
     infoText.visible = true;
+
+    socket.emit('player game over');
   }
 
   function ballHitBrick(_ball, _brick) {
@@ -631,6 +642,12 @@
         remotePlayer.paddle.body.x = remotePlayer.paddleX;
       }
     });
+  }
+
+  function onRemotePlayerGameOver(data) {
+    if (typeof remotePlayers[data.id] !== 'undefined') {
+      remotePlayers[data.id].gameOver = true;
+    }
   }
 
   function padHex(n, width) {
