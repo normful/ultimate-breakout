@@ -41,7 +41,6 @@
   var localPlayerColor;
   var remotePlayers = {};
   var SET_INTERVAL_DELAY = 50;
-  var currentClient;
 
   var $leaderboard = $("#leaderboard-table-body");
 
@@ -559,10 +558,6 @@
       }
     }
     return result;
-  }
-
-  function getCurrentPlayerId(data) {
-    currentClient = data.id;
   }
 
   function onUpdatePaddlePosition(data) {
