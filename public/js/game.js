@@ -530,7 +530,7 @@
   }
 
   function createPowerup(x, y) {
-    powerup = game.add.sprite(x, y, 'breakout', 'paddle_big.png');
+    powerup = game.add.sprite(x, y, 'breakout', 'power_up.png');
     powerup.anchor.setTo(0.5, 0.5);
     game.physics.enable(powerup, Phaser.Physics.ARCADE);
     powerup.body.velocity.y = 100;
@@ -541,9 +541,8 @@
     var brickX = _brick.body.x;
     var brickY = _brick.body.y;
 
-    var randomNum = Math.floor((Math.random() * 40) + 1);
-    // var randomNum = 1 //for testing purposes
-    console.log(randomNum)
+    // var randomNum = Math.floor((Math.random() * 40) + 1);
+    var randomNum = 1 //for testing purposes
     if (randomNum === 1) {
       createPowerup(brickX, brickY);
     }
