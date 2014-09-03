@@ -7,6 +7,7 @@
   var background;
 
   var bricks;
+  var brickBurstEmitter;
   var BRICK_ROWS = 4;
   var BRICK_COLS = 15;
   var BRICK_START_X = 120;
@@ -48,6 +49,7 @@
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
     game.load.image('starfield', '/assets/starfield.jpg');
+    game.load.image('chunk', '/assets/chunk.png');
   }
 
   function create() {
@@ -65,6 +67,7 @@
 
     createRemotePaddles();
     createBricks();
+    createBrickBurstEmitter();
     createLocalPaddle();
     createLocalBall();
     createText();
@@ -112,6 +115,12 @@
         brick.brickIndex = brickCount++;
       }
     }
+  }
+
+  function createBrickBurstEmitter() {
+    brickBurstEmitter = game.add.emitter(0, 0, 500);
+    brickBurstEmitter.makeParticles('chunk');
+    brickBurstEmitter.gravity = 500;
   }
 
   function createLocalPaddle() {
@@ -461,6 +470,8 @@
     if (!$.isEmptyObject(remotePlayers)) {
       updatePaddlePositions();
     }
+
+    game.physics.arcade.collide(brickBurstEmitter);
   }
 
   function releaseBall() {
@@ -524,7 +535,14 @@
       velocityY: ball.body.velocity.y
     });
 
+    renderBrickBurst(_brick);
     _brick.kill();
+  }
+
+  function renderBrickBurst(_brick) {
+    brickBurstEmitter.x = _brick.x;
+    brickBurstEmitter.y = _brick.y;
+    brickBurstEmitter.start(true, 2000, null, 7);
   }
 
   function ballHitPaddle(_ball, _paddle) {
