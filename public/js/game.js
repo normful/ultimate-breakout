@@ -649,13 +649,16 @@
   }
 
   function ballHitBrick(_ball, _brick) {
-    var randNum = Math.floor(Math.random() * 20);
+    var randNum = Math.floor(Math.random() * 100);
 
-    if (randNum === 0) {
+    if (randNum >= 0 && randNum <= 1) {
+      // 2% chance
       createItem('extraLife', 'extra_life.png', _brick.x, _brick.y);
-    } else if (randNum === 1) {
+    } else if (randNum >= 10 && randNum <= 14) {
+      // 5% chance
       createItem('increaseSpeed', 'increase_speed.png', _brick.x, _brick.y);
-    } else if (randNum === 2) {
+    } else if (randNum >= 20 && randNum <= 24) {
+      // 5% chance
       createItem('decreaseSpeed', 'decrease_speed.png', _brick.x, _brick.y);
     }
 
