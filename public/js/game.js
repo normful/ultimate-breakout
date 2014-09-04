@@ -359,6 +359,7 @@
     socket.on('update local score', onUpdateLocalScore);
     socket.on('update remote score', onUpdateRemoteScore);
     socket.on('remote player game over', onRemotePlayerGameOver);
+    socket.on('high scores', onHighScores);
   }
 
   function onKillRemoteBall(data) {
@@ -806,6 +807,13 @@
     if (typeof remotePlayers[data.id] !== 'undefined') {
       remotePlayers[data.id].gameOver = true;
     }
+  }
+
+  function onHighScores(data) {
+    console.log(data.scores);
+    $.each(scores, function(index, val){
+      // add to #high-scores div
+    });
   }
 
   function padHex(n, width) {

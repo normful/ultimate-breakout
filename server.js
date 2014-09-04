@@ -164,6 +164,7 @@ function onNewPlayer(data) {
   util.log(this.id + ' broadcast to all existing players');
 
   loadHighScores();
+  this.emit('high scores', { scores: highScores });
 }
 
 function onClientDisconnect() {
@@ -264,8 +265,7 @@ function loadHighScores(){
 }
 
 function loadHighScoresCallback(err, scoresArray) {
-  allScores = scoresArray;
-  console.log(allScores);
+  highScores = scoresArray;
 }
 
 /*
