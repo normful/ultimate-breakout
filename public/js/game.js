@@ -26,13 +26,15 @@
   var remotePaddles;
 
   var ball;
+  var ballBlueGlowEmitter;
+  var ballGreenGlowEmitter;
   var ballOnPaddle = true;
   var BALL_WIDTH = 16;
   var BALL_HEIGHT = 16;
   var BALL_RELEASE_VELOCITY_X = -75;
   var BALL_RELEASE_VELOCITY_Y = -300;
   var BALL_VELOCITY_MULTIPLIER_X = 10;
-  var BALL_VELOCITY_CHANGE = 1.1;
+  var BALL_VELOCITY_CHANGE = 1.2;
 
   var score = 0;
   var lives = 3;
@@ -55,6 +57,8 @@
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
     game.load.image('starfield1', '/assets/starfield1.png');
     game.load.image('starfield2', '/assets/starfield2.png');
+    game.load.image('blueGlow', 'assets/blue.png');
+    game.load.image('greenGlow', 'assets/green.png');
   }
 
   function create() {
@@ -78,6 +82,8 @@
     createItems();
     createLocalPaddle();
     createLocalBall();
+    createBallBlueGlowEmitter();
+    createBallGreenGlowEmitter();
     createText();
 
     game.input.onDown.add(releaseBall, gameState);
@@ -196,6 +202,24 @@
     ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
 
     ball.events.onOutOfBounds.add(ballLost, this);
+  }
+
+  function createBallBlueGlowEmitter() {
+    ballBlueGlowEmitter = game.add.emitter(ball.body.x, ball.body.y, 200);
+    ballBlueGlowEmitter.makeParticles('blueGlow');
+    ballBlueGlowEmitter.gravity = 200;
+    ballBlueGlowEmitter.autoAlpha = true;
+    ballBlueGlowEmitter.maxParticleAlpha = 0.31;
+    ballBlueGlowEmitter.minParticleAlpha = 0.30;
+  }
+
+  function createBallGreenGlowEmitter() {
+    ballGreenGlowEmitter = game.add.emitter(ball.body.x, ball.body.y, 200);
+    ballGreenGlowEmitter.makeParticles('greenGlow');
+    ballGreenGlowEmitter.gravity = -200;
+    ballGreenGlowEmitter.autoAlpha = true;
+    ballGreenGlowEmitter.maxParticleAlpha = 0.31;
+    ballGreenGlowEmitter.minParticleAlpha = 0.30;
   }
 
   function onUpdateRemoteBall(data) {
@@ -500,6 +524,12 @@
 
     starfield1.tilePosition.x += 1;
     starfield2.tilePosition.x += 2;
+
+    ballBlueGlowEmitter.x = ball.body.x;
+    ballBlueGlowEmitter.y = ball.body.y;
+
+    ballGreenGlowEmitter.x = ball.body.x;
+    ballGreenGlowEmitter.y = ball.body.y;
   }
 
   function paddleCaughtItem(_paddle, _item) {
@@ -510,9 +540,15 @@
     } else if (_item.type === 'increaseSpeed') {
       increaseBallSpeed();
       setTimeout(decreaseBallSpeed, 5000);
+
+      ballGreenGlowEmitter.start(false, 100, 15);
+      setTimeout(turnOffGreenGlow, 5000);
     } else if (_item.type === 'decreaseSpeed') {
       decreaseBallSpeed();
       setTimeout(increaseBallSpeed, 5000);
+
+      ballBlueGlowEmitter.start(false, 120, 30);
+      setTimeout(turnOffBlueGlow, 5000);
     } else {
       console.log('paddle caught something else. _item.type = ' + _item.type);
     }
@@ -540,6 +576,14 @@
     BALL_RELEASE_VELOCITY_X /= BALL_VELOCITY_CHANGE;
     BALL_RELEASE_VELOCITY_Y /= BALL_VELOCITY_CHANGE;
     BALL_VELOCITY_MULTIPLIER_X /= BALL_VELOCITY_CHANGE;
+  }
+
+  function turnOffBlueGlow() {
+    ballBlueGlowEmitter.on = false;
+  }
+
+  function turnOffGreenGlow() {
+    ballGreenGlowEmitter.on = false;
   }
 
   function releaseBall() {
