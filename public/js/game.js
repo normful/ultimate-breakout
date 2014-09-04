@@ -416,14 +416,17 @@
   function onRemovePlayer(data) {
     console.log('onRemovePlayer invoked');
 
-    var remotePlayerBall = remotePlayers[data.id].remotePlayerBall;
-    if (typeof remotePlayerBall !== "undefined") {
-      remotePlayerBall.kill();
-    }
+    if (typeof remotePlayers[data.id] !== "undefined") {
+      var remotePlayerBall = remotePlayers[data.id].remotePlayerBall;
 
-    var remotePlayerPaddle = remotePlayers[data.id].paddle;
-    if (typeof remotePlayerPaddle !== "undefined") {
-      remotePlayerPaddle.kill();
+      if (typeof remotePlayerBall !== "undefined") {
+        remotePlayerBall.kill();
+      }
+
+      var remotePlayerPaddle = remotePlayers[data.id].paddle;
+      if (typeof remotePlayerPaddle !== "undefined") {
+        remotePlayerPaddle.kill();
+      }
     }
 
     var newRemotePlayers = {};
