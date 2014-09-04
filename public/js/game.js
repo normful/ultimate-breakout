@@ -810,12 +810,10 @@
   }
 
   function onHighScores(data) {
-    if(typeof data.scores !== 'undefined'){
-      console.log(data.scores);
-      $.each(scores, function(index, val){
-        // add to #high-scores div
-      });
-    }
+    console.log(data.scores);
+    $.each(data.scores, function(index, val){
+      // add to #high-scores div
+    });
   }
 
   function padHex(n, width) {
