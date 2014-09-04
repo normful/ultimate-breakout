@@ -57,6 +57,7 @@
     game.load.image('starfield', '/assets/starfield.png');
     game.load.image('blueGlow', 'assets/blue.png');
     game.load.image('greenGlow', 'assets/green.png');
+    game.load.audio('ping', 'assets/audio/ping.mp3');
   }
 
   function create() {
@@ -101,6 +102,8 @@
         y: ball.body.y
       });
     }, SET_INTERVAL_DELAY);
+
+    ping = game.add.audio('ping');
   }
 
   function createBricks() {
@@ -642,6 +645,8 @@
   }
 
   function ballHitBrick(_ball, _brick) {
+    ping.play();
+
     var randNum = Math.floor(Math.random() * 100);
 
     if (randNum >= 0 && randNum <= 1) {
