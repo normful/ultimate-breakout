@@ -48,6 +48,13 @@
 
   var $leaderboard = $("#leaderboard-table-body");
 
+  var $gameOverDialog= $(".game-over-dialog");
+  var $finalScoreSpan;
+  var $nameLabel;
+  var $nameText;
+  var $saveScoreButton;
+  var $playAgainButton;
+
   function preload() {
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
@@ -74,6 +81,7 @@
     createLocalPaddle();
     createLocalBall();
     createText();
+    createGameOverDialog();
 
     game.input.onDown.add(releaseBall, gameState);
 
@@ -229,13 +237,66 @@
 
   function createText() {
     console.log('createText invoked');
-    scoreText = game.add.text(32, TEXT_Y, 'score: 0',
+    scoreText = game.add.text(32, TEXT_Y, 'score: ' + score,
       { font: '20px VT323', fill: '#ffffff', align: 'left' });
-    livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: 3',
+    livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: ' + lives,
       { font: '20px VT323', fill: '#ffffff', align: 'left' });
     infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to Start',
       { font: '40px VT323', fill: '#ffffff', align: 'center' });
     infoText.anchor.setTo(0.5, 0.5);
+  }
+
+  function createGameOverDialog() {
+    $gameOverDialog.dialog({
+      dialogClass: 'no-close',
+      draggable: false,
+      autoOpen: false,
+      show: {
+        effect: 'fade',
+        duration: 1000
+      },
+      position: {
+        of: '#breakout'
+      }
+    });
+
+    $finalScoreSpan = $gameOverDialog.find('span.final-score');
+
+    $nameLabel = $gameOverDialog.find('h2.name');
+
+    $nameText = $gameOverDialog.find('input.name');
+    $nameText.bind('enterKey', function() {
+      submitFinalScore();
+    });
+    $nameText.keyup(function(event) {
+      if (event.keyCode === 13) {
+        $nameText.trigger('enterKey');
+      }
+    });
+
+    $saveScoreButton = $gameOverDialog.find('input.save-score');
+    $saveScoreButton.on('click', submitFinalScore);
+
+    $playAgainButton = $gameOverDialog.find('input.play-again');
+    $playAgainButton.on('click', reloadPage);
+  }
+
+  function submitFinalScore() {
+    socket.emit('player final score', {
+      name: $nameText.val(),
+      score: score
+    });
+    showSuccessfulScoreSubmission();
+  }
+
+  function showSuccessfulScoreSubmission() {
+    $nameLabel.text('SCORE SAVED');
+    $nameText.remove();
+    $saveScoreButton.remove();
+  }
+
+  function reloadPage() {
+    location.reload();
   }
 
   function initializeMixItUp() {
@@ -555,11 +616,15 @@
 
   function gameOver() {
     ball.body.velocity.setTo(0, 0);
-
-    infoText.text = 'Game Over!';
-    infoText.visible = true;
-
     socket.emit('player game over');
+    showGameOverDialog();
+  }
+
+  function showGameOverDialog() {
+    $gameOverDialog.dialog('open');
+    $nameText.val(localPlayerName);
+    $nameText.select();
+    $finalScoreSpan.text(score);
   }
 
   function ballHitBrick(_ball, _brick) {

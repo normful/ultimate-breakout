@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html> <!--<![endif]-->
 <head>
   <title>Breakout</title>
+  <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
   <link href="css/styles.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -22,10 +23,18 @@
       </tbody>
     </table>
   </div>
+  <div class="game-over-dialog .ui-dialog" title="GAME OVER">
+      <h1>YOUR SCORE: <span class="final-score"></span></h1>
+      <h2 class="name">ENTER YOUR NAME</h2>
+      <input type="text" class="name">
+      <input type="button" class="save-score" value="SAVE SCORE">
+      <input type="button" class="play-again" value="PLAY AGAIN">
+  </div>
   <script src="js/jquery-1.11.1.min.js"></script>
   <script src="js/phaser.min.js"></script>
   <script src="js/socket.io.js"></script>
   <script src="js/game.js"></script>
   <script src="js/jquery.mixitup.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
 </body>
 </html>

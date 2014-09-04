@@ -4,8 +4,8 @@
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -16,7 +16,7 @@ body {
 
 #header {
   text-align: center;
-  padding: 10px 0px;
+  padding: 10px 0;
   background: #111;
 }
 
@@ -59,7 +59,7 @@ th, td {
 
 td {
   border-top: 1px solid #ccc;
-  padding: 5px 0px;
+  padding: 5px 0;
 }
 
 th:first-child, td:first-child {
@@ -68,4 +68,34 @@ th:first-child, td:first-child {
 
 h1 {
   font-size: 2em;
+}
+
+#ui-id-2.ui-dialog-title {
+  width: 100%;
+  font-size: 2em;
+  text-align: center;
+}
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.game-over-dialog h1 {
+  font-size: 1.5em;
+  padding-bottom: 0.5em;
+  text-align: center;
+}
+
+.name {
+  font-size: 1em;
+  text-align: center;
+  margin-bottom: 0.25em;
+}
+
+.ui-widget input {
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  padding: 0.5em;
 }
