@@ -813,7 +813,7 @@
     console.log(data.scores);
     $.each(data.scores, function(index, val){
       var score = val.score.toString();
-      var playerScore = $('<span></span>').text(val.name + ': ' + score + '; ');
+      var playerScore = $('<span></span>').addClass('top-score').text(score + ' ' + val.name + ' | ');
       $('#high-scores').append(playerScore);
     });
   }
