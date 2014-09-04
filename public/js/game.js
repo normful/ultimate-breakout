@@ -812,6 +812,8 @@
   }
 
   function onHighScores(data) {
+    console.log('onHighScores invoked. data = ' + JSON.stringify(data));
+
     $highScoresMarquee.empty();
     $highScoresMarquee.append('HIGH SCORES: ');
 

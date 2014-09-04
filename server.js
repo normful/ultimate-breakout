@@ -252,6 +252,7 @@ function onPlayerGameOver() {
 function onPlayerFinalScore(data) {
   util.log('onPlayerFinalScore data.name = ' + data.name);
   util.log('onPlayerFinalScore data.score = ' + data.score);
+  var clientSubmittingScore = this;
 
   var player = new Player({
     name: data.name,
@@ -263,16 +264,19 @@ function onPlayerFinalScore(data) {
       return console.log(err);
     }
     // reload the highscores after the player adds their score
-    lastClientRequestingHighScores = this;
+    lastClientRequestingHighScores = clientSubmittingScore;
     loadHighScores();
   });
 }
 
 function loadHighScores() {
+  util.log('loadHighScores invoked');
   Player.find().sort({ score: -1 }).limit(10).exec(emitHighScores);
 }
 
 function emitHighScores(err, results) {
+  util.log('emitHighScores invoked');
+  util.log('results = ' + util.inspect(results, utilInspectOpts));
   lastClientRequestingHighScores.emit('high scores', { scores: results });
 }
 
