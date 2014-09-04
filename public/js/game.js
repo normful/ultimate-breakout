@@ -812,7 +812,9 @@
   function onHighScores(data) {
     console.log(data.scores);
     $.each(data.scores, function(index, val){
-      // add to #high-scores div
+      var score = val.score.toString();
+      var playerScore = $('<span></span>').text(val.name + ': ' + score + '; ');
+      $('#high-scores').append(playerScore);
     });
   }
 
