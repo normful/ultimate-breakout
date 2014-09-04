@@ -581,7 +581,7 @@
 
   function addExtraLife() {
     console.log('addExtraLife invoked');
-    if ($gameOverDialog.isOpen()) {
+    if ($gameOverDialog.dialog('isOpen')) {
       return;
     }
     lives++;
