@@ -260,7 +260,7 @@ function onPlayerFinalScore(data) {
 }
 
 function loadHighScores(){
-  Player.find().sort({ score: -1 }).exec(loadHighScoresCallback);
+  Player.find().sort({ score: -1 }).limit(10).exec(loadHighScoresCallback);
 }
 
 function loadHighScoresCallback(err, scoresArray) {
