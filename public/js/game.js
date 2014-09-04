@@ -7,6 +7,14 @@
 
   var background;
 
+  var cNote;
+  var eNote;
+  var gNote;
+  var cHighNote;
+  var gLowNote;
+  var powerUpSound;
+  var gameOverSound;
+
   var bricks;
   var brickBurstEmitter;
   var BRICK_ROWS = 4;
@@ -57,8 +65,13 @@
     game.load.image('starfield', '/assets/starfield.png');
     game.load.image('blueGlow', 'assets/blue.png');
     game.load.image('greenGlow', 'assets/green.png');
-
-    loadAudio();
+    game.load.audio('c', 'assets/audio/c.wav');
+    game.load.audio('e', 'assets/audio/e.wav');
+    game.load.audio('g', 'assets/audio/g.wav');
+    game.load.audio('cHigh', 'assets/audio/cHigh.wav');
+    game.load.audio('gLow', 'assets/audio/gLow.wav');
+    game.load.audio('powerUp', 'assets/audio/powerUp.wav');
+    game.load.audio('gameOver', 'assets/audio/gameOver.wav');
   }
 
   function create() {
@@ -83,7 +96,7 @@
     createBallBlueGlowEmitter();
     createBallGreenGlowEmitter();
     createText();
-    addAudio();
+    createAudio();
 
     game.input.onDown.add(releaseBall, gameState);
 
@@ -264,6 +277,16 @@
     infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to Start',
       { font: '40px VT323', fill: '#ffffff', align: 'center' });
     infoText.anchor.setTo(0.5, 0.5);
+  }
+
+  function createAudio() {
+    cNote = game.add.audio('c');
+    eNote = game.add.audio('e');
+    gNote = game.add.audio('g');
+    cHighNote = game.add.audio('cHigh');
+    gLowNote = game.add.audio('gLow');
+    powerUpSound = game.add.audio('powerUp');
+    gameOverSound = game.add.audio('gameOver');
   }
 
   function initializeMixItUp() {
@@ -780,26 +803,6 @@
   function padHex(n, width) {
     n = n + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join(0) + n;
-  }
-
-  function loadAudio() {
-    game.load.audio('c', 'assets/audio/c.wav');
-    game.load.audio('e', 'assets/audio/e.wav');
-    game.load.audio('g', 'assets/audio/g.wav');
-    game.load.audio('cHigh', 'assets/audio/cHigh.wav');
-    game.load.audio('gLow', 'assets/audio/gLow.wav');
-    game.load.audio('powerUp', 'assets/audio/powerUp.wav');
-    game.load.audio('gameOver', 'assets/audio/gameOver.wav');
-  }
-
-  function addAudio() {
-    cNote = game.add.audio('c');
-    eNote = game.add.audio('e');
-    gNote = game.add.audio('g');
-    cHighNote = game.add.audio('cHigh');
-    gLowNote = game.add.audio('gLow');
-    powerUpSound = game.add.audio('powerUp');
-    gameOverSound = game.add.audio('gameOver');
   }
 
 }());
