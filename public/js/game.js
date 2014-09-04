@@ -522,6 +522,12 @@
     console.log('addExtraLife invoked');
     lives++;
     livesText.text = 'lives: ' + lives;
+    var extraLifeIndicator = game.add.sprite(paddle.body.x, PADDLE_Y, 'breakout', 'extra_life_indicator.png');
+    extraLifeIndicator.enableBody = true;
+    game.physics.enable(extraLifeIndicator, Phaser.Physics.ARCADE);
+    extraLifeIndicator.body.velocity.y = -100;
+    extraLifeIndicator.lifespan = 2000;
+    game.add.tween(extraLifeIndicator).delay(500).to({alpha: 0}, 1500).start();
   }
 
   function increaseBallSpeed() {
