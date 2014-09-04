@@ -63,6 +63,8 @@
     game.load.audio('f', 'assets/audio/f.wav');
     game.load.audio('g', 'assets/audio/g.wav');
     game.load.audio('cHigh', 'assets/audio/cHigh.wav');
+    game.load.audio('gLow', 'assets/audio/gLow.wav');
+    game.load.audio('powerUpSound', 'assets/audio/powerUp.wav');
   }
 
   function create() {
@@ -114,6 +116,8 @@
     fNote = game.add.audio('f');
     gNote = game.add.audio('g');
     cHighNote = game.add.audio('cHigh');
+    gLowNote = game.add.audio('gLow');
+    powerUpSound = game.add.audio('powerUpSound');
   }
 
   function createBricks() {
@@ -539,6 +543,8 @@
   }
 
   function paddleCaughtItem(_paddle, _item) {
+    powerUpSound.play();
+
     _item.kill();
 
     if (_item.type === 'extraLife') {
@@ -656,15 +662,7 @@
 
   function ballHitBrick(_ball, _brick) {
 
-    if (_brick.y === 100) {
-      cHighNote.play();
-    } else if (_brick.y === 152) {
-      gNote.play();
-    } else if (_brick.y === 204) {
-      eNote.play();
-    } else {
-      cNote.play();
-    }
+    playBrickSound(_brick.y)
 
     var randNum = Math.floor(Math.random() * 100);
 
@@ -689,6 +687,18 @@
     _brick.kill();
   }
 
+  function playBrickSound(y) {
+    if (y === 100) {
+      cHighNote.play();
+    } else if (y === 152) {
+      gNote.play();
+    } else if (y === 204) {
+      eNote.play();
+    } else {
+      cNote.play();
+    }
+  }
+
   function renderBrickBurst(_brick) {
     brickBurstEmitter.x = _brick.x;
     brickBurstEmitter.y = _brick.y;
@@ -706,6 +716,8 @@
   }
 
   function ballHitPaddle(_ball, _paddle) {
+    gLowNote.play();
+
     var ballCenter = _ball.body.x + BALL_WIDTH / 2;
     var paddleCenter = _paddle.body.x + PADDLE_WIDTH / 2;
     var diff;
