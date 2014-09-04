@@ -39,7 +39,7 @@ var playerSchema = new mongoose.Schema({
 var Player = mongoose.model('Player', playerSchema);
 
 var highScores;
-var client;
+var lastClientRequestingHighScores;
 
 /*
  * Socket.IO code
@@ -166,7 +166,7 @@ function onNewPlayer(data) {
   });
   util.log(this.id + ' broadcast to all existing players');
 
-  client = this;
+  lastClientRequestingHighScores = this;
   loadHighScores();
 }
 
@@ -254,24 +254,27 @@ function onPlayerFinalScore(data) {
   util.log('onPlayerFinalScore data.name = ' + data.name);
   util.log('onPlayerFinalScore data.score = ' + data.score);
 
-  var player = new Player({ name: data.name, score: data.score });
+  var player = new Player({
+    name: data.name,
+    score: data.score
+  });
 
-  player.save(function(err, player){
-  if (err) return console.log(err);
-    console.log('player was saved');
+  player.save(function(err, player) {
+    if (err) {
+      return console.log(err);
+    }
     // reload the highscores after the player adds their score
+    lastClientRequestingHighScores = this;
     loadHighScores();
   });
 }
 
-function loadHighScores(){
-  Player.find().sort({ score: -1 }).limit(10).exec(loadHighScoresCallback);
+function loadHighScores() {
+  Player.find().sort({ score: -1 }).limit(10).exec(emitHighScores);
 }
 
-function loadHighScoresCallback(err, scoresArray) {
-  highScores = scoresArray;
-  client.emit('high scores', { scores: highScores });
-  console.log(highScores);
+function emitHighScores(err, results) {
+  lastClientRequestingHighScores.emit('high scores', { scores: results });
 }
 
 /*
