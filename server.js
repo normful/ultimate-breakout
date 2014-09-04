@@ -252,6 +252,13 @@ function onPlayerFinalScore(data) {
   player.save(function(err, player){
   if (err) return console.log(err);
     console.log('player was saved!');
+    console.log('player: ' + player);
+  });
+}
+
+function loadHighScores(){
+  var testQuery = Player.find({}, function(err, results) { 
+    console.log(results);
   });
 }
 
