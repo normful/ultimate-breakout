@@ -208,12 +208,18 @@
     ballBlueGlowEmitter = game.add.emitter(ball.body.x, ball.body.y, 200);
     ballBlueGlowEmitter.makeParticles('blueGlow');
     ballBlueGlowEmitter.gravity = 200;
+    ballBlueGlowEmitter.autoAlpha = true;
+    ballBlueGlowEmitter.maxParticleAlpha = 0.31;
+    ballBlueGlowEmitter.minParticleAlpha = 0.30;
   }
 
   function createBallGreenGlowEmitter() {
     ballGreenGlowEmitter = game.add.emitter(ball.body.x, ball.body.y, 200);
     ballGreenGlowEmitter.makeParticles('greenGlow');
     ballGreenGlowEmitter.gravity = -200;
+    ballGreenGlowEmitter.autoAlpha = true;
+    ballGreenGlowEmitter.maxParticleAlpha = 0.31;
+    ballGreenGlowEmitter.minParticleAlpha = 0.30;
   }
 
   function onUpdateRemoteBall(data) {
@@ -535,13 +541,13 @@
       increaseBallSpeed();
       setTimeout(decreaseBallSpeed, 5000);
 
-      ballGreenGlowEmitter.start(false, 100, 1);
+      ballGreenGlowEmitter.start(false, 100, 15);
       setTimeout(turnOffGreenGlow, 5000);
     } else if (_item.type === 'decreaseSpeed') {
       decreaseBallSpeed();
       setTimeout(increaseBallSpeed, 5000);
 
-      ballBlueGlowEmitter.start(false, 5, 1);
+      ballBlueGlowEmitter.start(false, 120, 30);
       setTimeout(turnOffBlueGlow, 5000);
     } else {
       console.log('paddle caught something else. _item.type = ' + _item.type);
