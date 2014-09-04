@@ -57,7 +57,12 @@
     game.load.image('starfield', '/assets/starfield.png');
     game.load.image('blueGlow', 'assets/blue.png');
     game.load.image('greenGlow', 'assets/green.png');
-    game.load.audio('ping', 'assets/audio/ping.mp3');
+    game.load.audio('c', 'assets/audio/c.wav');
+    game.load.audio('d', 'assets/audio/d.wav');
+    game.load.audio('e', 'assets/audio/e.wav');
+    game.load.audio('f', 'assets/audio/f.wav');
+    game.load.audio('g', 'assets/audio/g.wav');
+    game.load.audio('cHigh', 'assets/audio/cHigh.wav');
   }
 
   function create() {
@@ -103,7 +108,12 @@
       });
     }, SET_INTERVAL_DELAY);
 
-    ping = game.add.audio('ping');
+    cNote = game.add.audio('c');
+    dNote = game.add.audio('d');
+    eNote = game.add.audio('e');
+    fNote = game.add.audio('f');
+    gNote = game.add.audio('g');
+    cHighNote = game.add.audio('cHigh');
   }
 
   function createBricks() {
@@ -645,7 +655,16 @@
   }
 
   function ballHitBrick(_ball, _brick) {
-    ping.play();
+
+    if (_brick.y === 100) {
+      cHighNote.play();
+    } else if (_brick.y === 152) {
+      gNote.play();
+    } else if (_brick.y === 204) {
+      eNote.play();
+    } else {
+      cNote.play();
+    }
 
     var randNum = Math.floor(Math.random() * 100);
 
