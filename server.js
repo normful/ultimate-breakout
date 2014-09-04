@@ -35,6 +35,7 @@ function onSocketConnection(client) {
   client.on('kill remote ball', onKillRemoteBall);
   client.on('update ball', onUpdateBall);
   client.on('player game over', onPlayerGameOver);
+  client.on('player final score', onPlayerFinalScore);
 }
 
 function onUpdateBall(data) {
@@ -220,6 +221,11 @@ function onPlayerGameOver() {
   this.broadcast.emit('remote player game over', {
     id: this.id,
   });
+}
+
+function onPlayerFinalScore(data) {
+  util.log('onPlayerFinalScore data.name = ' + data.name);
+  util.log('onPlayerFinalScore data.score = ' + data.score);
 }
 
 /*
