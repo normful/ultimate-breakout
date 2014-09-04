@@ -784,9 +784,7 @@
 
   function loadAudio() {
     game.load.audio('c', 'assets/audio/c.wav');
-    game.load.audio('d', 'assets/audio/d.wav');
     game.load.audio('e', 'assets/audio/e.wav');
-    game.load.audio('f', 'assets/audio/f.wav');
     game.load.audio('g', 'assets/audio/g.wav');
     game.load.audio('cHigh', 'assets/audio/cHigh.wav');
     game.load.audio('gLow', 'assets/audio/gLow.wav');
@@ -796,9 +794,7 @@
 
   function addAudio() {
     cNote = game.add.audio('c');
-    dNote = game.add.audio('d');
     eNote = game.add.audio('e');
-    fNote = game.add.audio('f');
     gNote = game.add.audio('g');
     cHighNote = game.add.audio('cHigh');
     gLowNote = game.add.audio('gLow');
