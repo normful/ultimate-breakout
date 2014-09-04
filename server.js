@@ -271,7 +271,7 @@ function onPlayerFinalScore(data) {
 
 function loadHighScores() {
   util.log('loadHighScores invoked');
-  Player.find().sort({ score: -1 }).limit(10).exec(emitHighScores);
+  Player.find({}, 'name score').sort({ score: -1 }).limit(10).exec(emitHighScores);
 }
 
 function emitHighScores(err, results) {
