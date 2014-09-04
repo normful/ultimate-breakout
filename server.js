@@ -17,27 +17,28 @@ var allBricks;
 // Uncomment to see Express debugging
 // app.use(express.logger());
 
-// Retrieve mongodb and mongoose
-var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
+var mongoURI =
+  process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL ||
+  'mongodb://localhost/multiplayer-breakout';
 
-// Connect to the db
-mongoose.connect('mongodb://localhost/multiplayer-breakout');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-  console.log('it worked');
+mongoose.connect(mongoURI, function (err, res) {
+  if (err) {
+    console.log ('ERROR connecting to: ' + mongoURI + '. ' + err);
+  } else {
+    console.log ('SUCCESS connecting to: ' + mongoURI);
+  }
 });
 
-// Setup Player model in db
-var playerSchema = mongoose.Schema({
+var playerSchema = new mongoose.Schema({
   name: String,
   score: Number
 }, {collection: 'Player'});
 
 var Player = mongoose.model('Player', playerSchema);
-var highScores;
 
+var highScores;
 var client;
 
 /*
