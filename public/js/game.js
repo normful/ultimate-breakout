@@ -325,7 +325,7 @@
   }
 
   function reloadPage() {
-    location.reload();
+    location.reload(true);
   }
 
   function initializeMixItUp() {
@@ -810,12 +810,15 @@
   }
 
   function onHighScores(data) {
-    console.log(data.scores);
+    $('#high-scores').empty();
+    $('#high-scores').append('HIGH SCORES: ');
+
     $.each(data.scores, function(index, val){
       var score = val.score.toString();
       var place = (index + 1).toString();
       var playerScore = $('<span></span>').addClass('top-score').text(place + '. ' + score + ' ' + val.name + ' ');
       $('#high-scores').append(playerScore);
+      console.log(val.name, val.score);
     });
   }
 

@@ -38,6 +38,8 @@ var playerSchema = mongoose.Schema({
 var Player = mongoose.model('Player', playerSchema);
 var highScores;
 
+var client;
+
 /*
  * Socket.IO code
  */
@@ -163,8 +165,8 @@ function onNewPlayer(data) {
   });
   util.log(this.id + ' broadcast to all existing players');
 
+  client = this;
   loadHighScores();
-  this.emit('high scores', { scores: highScores });
 }
 
 function onClientDisconnect() {
@@ -255,8 +257,9 @@ function onPlayerFinalScore(data) {
 
   player.save(function(err, player){
   if (err) return console.log(err);
-    console.log('player was saved!');
-    console.log('player: ' + player);
+    console.log('player was saved');
+    // reload the highscores after the player adds their score
+    loadHighScores();
   });
 }
 
@@ -266,6 +269,8 @@ function loadHighScores(){
 
 function loadHighScoresCallback(err, scoresArray) {
   highScores = scoresArray;
+  client.emit('high scores', { scores: highScores });
+  console.log(highScores);
 }
 
 /*
