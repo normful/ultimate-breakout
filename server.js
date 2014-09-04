@@ -17,6 +17,26 @@ var allBricks;
 // Uncomment to see Express debugging
 // app.use(express.logger());
 
+// Retrieve mongodb and mongoose
+var MongoClient = require('mongodb').MongoClient;
+var mongoose = require('mongoose');
+
+// Connect to the db
+mongoose.connect('mongodb://localhost/multiplayer-breakout');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback () {
+  console.log('it worked');
+});
+
+// Setup Player model in db
+var playerSchema = mongoose.Schema({
+  name: String,
+  score: Number
+}, {collection: 'Player'});
+
+var Player = mongoose.model('Player', playerSchema);
+
 /*
  * Socket.IO code
  */
@@ -226,6 +246,13 @@ function onPlayerGameOver() {
 function onPlayerFinalScore(data) {
   util.log('onPlayerFinalScore data.name = ' + data.name);
   util.log('onPlayerFinalScore data.score = ' + data.score);
+
+  var player = new Player({ name: data.name, score: data.score });
+
+  player.save(function(err, player){
+  if (err) return console.log(err);
+    console.log('player was saved!');
+  });
 }
 
 /*
