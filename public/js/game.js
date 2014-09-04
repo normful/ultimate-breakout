@@ -297,6 +297,19 @@
     socket.on('update local score', onUpdateLocalScore);
     socket.on('update remote score', onUpdateRemoteScore);
     socket.on('remote player game over', onRemotePlayerGameOver);
+    socket.on('play brick hit sound', onPlayBrickHitSound);
+  }
+
+  function onPlayBrickHitSound(data) {
+    if (data.sound === 0) {
+      cNote.play();
+    } else if (data.sound === 1) {
+      eNote.play();
+    } else if (data.sound === 2) {
+      gNote.play();
+    } else {
+      cHighNote.play();
+    }
   }
 
   function onKillRemoteBall(data) {
@@ -650,7 +663,7 @@
 
   function ballHitBrick(_ball, _brick) {
 
-    playBrickSound(_brick.y)
+    playBrickHitSound(_brick.y)
 
     var randNum = Math.floor(Math.random() * 100);
 
@@ -675,15 +688,19 @@
     _brick.kill();
   }
 
-  function playBrickSound(y) {
+  function playBrickHitSound(y) {
     if (y === 100) {
       cHighNote.play();
+      socket.emit('play brick hit sound', {sound: 3});
     } else if (y === 152) {
       gNote.play();
+      socket.emit('play brick hit sound', {sound: 2});
     } else if (y === 204) {
       eNote.play();
+      socket.emit('play brick hit sound', {sound: 1});
     } else {
       cNote.play();
+      socket.emit('play brick hit sound', {sound: 0});
     }
   }
 
