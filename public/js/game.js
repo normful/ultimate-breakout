@@ -64,7 +64,8 @@
     game.load.audio('g', 'assets/audio/g.wav');
     game.load.audio('cHigh', 'assets/audio/cHigh.wav');
     game.load.audio('gLow', 'assets/audio/gLow.wav');
-    game.load.audio('powerUpSound', 'assets/audio/powerUp.wav');
+    game.load.audio('powerUp', 'assets/audio/powerUp.wav');
+    game.load.audio('gameOver', 'assets/audio/gameOver.wav');
   }
 
   function create() {
@@ -117,7 +118,8 @@
     gNote = game.add.audio('g');
     cHighNote = game.add.audio('cHigh');
     gLowNote = game.add.audio('gLow');
-    powerUpSound = game.add.audio('powerUpSound');
+    powerUpSound = game.add.audio('powerUp');
+    gameOverSound = game.add.audio('gameOver');
   }
 
   function createBricks() {
@@ -652,6 +654,8 @@
   }
 
   function gameOver() {
+    gameOverSound.play();
+
     ball.body.velocity.setTo(0, 0);
 
     infoText.text = 'Game Over!';
