@@ -36,6 +36,7 @@ var playerSchema = mongoose.Schema({
 }, {collection: 'Player'});
 
 var Player = mongoose.model('Player', playerSchema);
+var highScores;
 
 /*
  * Socket.IO code
@@ -161,6 +162,8 @@ function onNewPlayer(data) {
     gameOver: false
   });
   util.log(this.id + ' broadcast to all existing players');
+
+  loadHighScores();
 }
 
 function onClientDisconnect() {
@@ -257,8 +260,8 @@ function onPlayerFinalScore(data) {
 }
 
 function loadHighScores(){
-  var testQuery = Player.find({}, function(err, results) { 
-    console.log(results);
+  allScores = Player.find({}, function(err, allScoresArray) { 
+    console.log(allScoresArray);
   });
 }
 
