@@ -263,6 +263,7 @@ function onPlayerFinalScore(data) {
     if (err) {
       return console.log(err);
     }
+    console.log('Successfully saved score: ' + util.inspect(player, utilInspectOpts));
     // reload the highscores after the player adds their score
     lastClientRequestingHighScores = clientSubmittingScore;
     loadHighScores();
