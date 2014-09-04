@@ -5,8 +5,7 @@
   var GAME_WIDTH = 800;
   var GAME_HEIGHT = 600;
 
-  var starfield1;
-  var starfield2;
+  var background;
 
   var bricks;
   var brickBurstEmitter;
@@ -53,8 +52,7 @@
   function preload() {
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
-    game.load.image('starfield1', '/assets/starfield1.png');
-    game.load.image('starfield2', '/assets/starfield2.png');
+    game.load.image('starfield', '/assets/starfield.png');
   }
 
   function create() {
@@ -65,9 +63,7 @@
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    starfield1 = game.add.tileSprite(0, 0, 800, 600, 'starfield1');
-    starfield2 = game.add.tileSprite(0, 0, 800, 600, 'starfield2');
-    starfield2.blendMode = PIXI.blendModes.ADD;
+    background = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
     // Check bounds collisions on all walls except bottom
     game.physics.arcade.checkCollision.down = false;
@@ -497,9 +493,6 @@
 
     game.physics.arcade.collide(brickBurstEmitter);
     game.physics.arcade.collide(paddle, items, paddleCaughtItem, null, gameState);
-
-    starfield1.tilePosition.x += 1;
-    starfield2.tilePosition.x += 2;
   }
 
   function paddleCaughtItem(_paddle, _item) {
