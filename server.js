@@ -17,6 +17,29 @@ var allBricks;
 // Uncomment to see Express debugging
 // app.use(express.logger());
 
+var mongoose = require('mongoose');
+var mongoURI =
+  process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL ||
+  'mongodb://localhost/multiplayer-breakout';
+
+mongoose.connect(mongoURI, function (err, res) {
+  if (err) {
+    console.log ('ERROR connecting to: ' + mongoURI + '. ' + err);
+  } else {
+    console.log ('SUCCESS connecting to: ' + mongoURI);
+  }
+});
+
+var playerSchema = new mongoose.Schema({
+  name: String,
+  score: Number
+}, {collection: 'Player'});
+
+var Player = mongoose.model('Player', playerSchema);
+
+var lastClientRequestingHighScores;
+
 /*
  * Socket.IO code
  */
@@ -35,6 +58,7 @@ function onSocketConnection(client) {
   client.on('kill remote ball', onKillRemoteBall);
   client.on('update ball', onUpdateBall);
   client.on('player game over', onPlayerGameOver);
+  client.on('player final score', onPlayerFinalScore);
 }
 
 function onUpdateBall(data) {
@@ -140,6 +164,9 @@ function onNewPlayer(data) {
     gameOver: false
   });
   util.log(this.id + ' broadcast to all existing players');
+
+  lastClientRequestingHighScores = this;
+  loadHighScores();
 }
 
 function onClientDisconnect() {
@@ -220,6 +247,38 @@ function onPlayerGameOver() {
   this.broadcast.emit('remote player game over', {
     id: this.id,
   });
+}
+
+function onPlayerFinalScore(data) {
+  util.log('onPlayerFinalScore data.name = ' + data.name);
+  util.log('onPlayerFinalScore data.score = ' + data.score);
+  var clientSubmittingScore = this;
+
+  var player = new Player({
+    name: data.name,
+    score: data.score
+  });
+
+  player.save(function(err, player) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('Successfully saved score: ' + util.inspect(player, utilInspectOpts));
+    // reload the highscores after the player adds their score
+    lastClientRequestingHighScores = clientSubmittingScore;
+    loadHighScores();
+  });
+}
+
+function loadHighScores() {
+  util.log('loadHighScores invoked');
+  Player.find({}, 'name score').sort({ score: -1 }).limit(10).exec(emitHighScores);
+}
+
+function emitHighScores(err, results) {
+  util.log('emitHighScores invoked');
+  util.log('results = ' + util.inspect(results, utilInspectOpts));
+  lastClientRequestingHighScores.emit('high scores', { scores: results });
 }
 
 /*

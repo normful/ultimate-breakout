@@ -4,8 +4,8 @@
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -16,7 +16,7 @@ body {
 
 #header {
   text-align: center;
-  padding: 10px 0px;
+  padding: 10px 0;
   background: #111;
 }
 
@@ -25,10 +25,23 @@ body {
   margin: 0 auto;
 }
 
+#high-scores {
+  position: relative;
+  height: 35px;
+  overflow: hidden;
+  width: 100%;
+  margin-top: 15px;
+  padding: 5px;
+  background: #111;
+  font-size: 1.5em;
+  white-space: nowrap;
+}
+
 #breakout {
   border: 2px solid black;
   width: 800px;
   margin: 15px;
+  margin-left: 0px;
   float: left;
   cursor: pointer;
 }
@@ -52,14 +65,14 @@ tr {
 th, td {
   text-align: left;
   color: white;
-  width: 325px;
+  width: 340px;
   font-family: 'VT323';
   font-size: 1.2em;
 }
 
 td {
   border-top: 1px solid #ccc;
-  padding: 5px 0px;
+  padding: 5px 0;
 }
 
 th:first-child, td:first-child {
@@ -68,4 +81,38 @@ th:first-child, td:first-child {
 
 h1 {
   font-size: 2em;
+}
+
+#ui-id-2.ui-dialog-title {
+  width: 100%;
+  font-size: 2em;
+  text-align: center;
+}
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.game-over-dialog h1 {
+  font-size: 1.5em;
+  padding-bottom: 0.5em;
+  text-align: center;
+}
+
+.name {
+  font-size: 1em;
+  text-align: center;
+  margin-bottom: 0.25em;
+}
+
+.ui-widget input {
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  padding: 0.5em;
+}
+
+.top-score {
+  text-transform: uppercase;
 }
