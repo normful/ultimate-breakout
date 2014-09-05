@@ -1,197 +1,196 @@
-{"frames": {
-
-"Gears_Of_War_Marcus_Ill_Take_This.png":
+{"frames": [
 {
+  "filename": "Gears_Of_War_Marcus_Ill_Take_This.png",
 	"frame": {"x":32,"y":311,"w":16,"h":15},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":15},
 	"sourceSize": {"w":16,"h":15}
 },
-"Gears_Of_War_Marcus_Nice_Throw.png":
 {
+  "filename": "Gears_Of_War_Marcus_Nice_Throw.png",
 	"frame": {"x":112,"y":304,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"Mario_Kart_64_Luigi_Mamma_Mia.png":
 {
+  "filename": "Mario_Kart_64_Luigi_Mamma_Mia.png",
 	"frame": {"x":96,"y":304,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"SFIV_Ken_Hadouken.png":
 {
+  "filename": "SFIV_Ken_Hadouken.png",
 	"frame": {"x":112,"y":288,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"SFIV_Ryu_Shoryuken.png":
 {
+  "filename": "SFIV_Ryu_Shoryuken.png",
 	"frame": {"x":96,"y":288,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"SM64_Power_Star_Appears.png":
 {
+  "filename": "SM64_Power_Star_Appears.png",
 	"frame": {"x":112,"y":272,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"StarCraft_Fenix_Zealot_For_Aiur.png":
 {
+  "filename": "StarCraft_Fenix_Zealot_For_Aiur.png",
 	"frame": {"x":96,"y":272,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"The_Legend_of_Zelda_Get_Item.png":
 {
+  "filename": "The_Legend_of_Zelda_Get_Item.png",
 	"frame": {"x":80,"y":300,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"The_Legend_of_Zelda_Get_Rupee.png":
 {
+  "filename": "The_Legend_of_Zelda_Get_Rupee.png",
 	"frame": {"x":64,"y":300,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"ball.png":
 {
+  "filename": "ball.png",
 	"frame": {"x":101,"y":256,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"blue.png":
 {
+  "filename": "blue.png",
 	"frame": {"x":0,"y":128,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
 	"sourceSize": {"w":128,"h":128}
 },
-"brick_1_1.png":
 {
+  "filename": "brick_1_1.png",
 	"frame": {"x":0,"y":300,"w":32,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":16},
 	"sourceSize": {"w":32,"h":16}
 },
-"brick_2_1.png":
 {
+  "filename": "brick_2_1.png",
 	"frame": {"x":32,"y":284,"w":32,"h":15},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":15},
 	"sourceSize": {"w":32,"h":15}
 },
-"brick_3_1.png":
 {
+  "filename": "brick_3_1.png",
 	"frame": {"x":48,"y":268,"w":32,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":16},
 	"sourceSize": {"w":32,"h":16}
 },
-"brick_4_1.png":
 {
+  "filename": "brick_4_1.png",
 	"frame": {"x":0,"y":284,"w":32,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":16},
 	"sourceSize": {"w":32,"h":16}
 },
-"brick_chunk.png":
 {
+  "filename": "brick_chunk.png",
 	"frame": {"x":0,"y":316,"w":5,"h":5},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":5,"h":5},
 	"sourceSize": {"w":5,"h":5}
 },
-"decrease_speed.png":
 {
+  "filename": "decrease_speed.png",
 	"frame": {"x":80,"y":284,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"extra_life.png":
 {
+  "filename": "extra_life.png",
 	"frame": {"x":64,"y":284,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"green.png":
 {
+  "filename": "green.png",
 	"frame": {"x":0,"y":0,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
 	"sourceSize": {"w":128,"h":128}
 },
-"increase_speed.png":
 {
+  "filename": "increase_speed.png",
 	"frame": {"x":80,"y":268,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 	"sourceSize": {"w":16,"h":16}
 },
-"one_up.png":
 {
+  "filename": "one_up.png",
 	"frame": {"x":32,"y":299,"w":32,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":12},
 	"sourceSize": {"w":32,"h":12}
 },
-"paddle_big.png":
 {
+  "filename": "paddle_big.png",
 	"frame": {"x":0,"y":268,"w":48,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":16},
 	"sourceSize": {"w":48,"h":16}
 },
-"plus_1000.png":
 {
+  "filename": "plus_1000.png",
 	"frame": {"x":0,"y":256,"w":53,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":53,"h":12},
 	"sourceSize": {"w":53,"h":12}
 },
-"plus_500.png":
 {
+  "filename": "plus_500.png",
 	"frame": {"x":53,"y":256,"w":48,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":12},
 	"sourceSize": {"w":48,"h":12}
-}},
+}],
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",
