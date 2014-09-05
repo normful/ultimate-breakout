@@ -211,6 +211,10 @@ function onBrickKillFromClient(data) {
   if (bricks.indexOf("1") === -1) {
     resetBricks();
     players[client.id].score += 1000;
+    client.emit('render plus 1000', {
+      x: data.brickX,
+      y: data.brickY
+    });
   } else {
     players[client.id].score += 100;
   }

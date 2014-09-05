@@ -401,6 +401,7 @@
     socket.on('play brick hit sound', onPlayBrickHitSound);
     socket.on('first brick hit', onFirstBrickHit);
     socket.on('render plus 500', onRenderPlus500);
+    socket.on('render plus 1000', onRenderPlus1000);
     socket.on('play monster kill sound', onPlayMonsterKillSound);
     socket.on('high scores', onHighScores);
   }
@@ -425,6 +426,11 @@
   function onRenderPlus500(data) {
     console.log('onRenderPlus500 invoked');
     renderBonusIndicator(data.x, data.y, 'breakout', 'plus_500.png');
+  }
+
+  function onRenderPlus1000(data) {
+    console.log('onRenderPlus1000 invoked');
+    renderBonusIndicator(data.x, data.y, 'breakout', 'plus_1000.png');
   }
 
   function onKillRemoteBall(data) {
