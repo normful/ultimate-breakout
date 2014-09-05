@@ -92,24 +92,6 @@
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
 
-    game.load.image('starfield', '/assets/starfield.png');
-    game.load.image('blueGlow', 'assets/blue.png');
-    game.load.image('greenGlow', 'assets/green.png');
-
-    game.load.image('Decrease_Speed_Image', 'assets/decrease_speed.png');
-    game.load.image('Increase_Speed_Image', 'assets/increase_speed.png');
-    game.load.image('Extra_Life_Image', 'assets/extra_life.png');
-
-    game.load.image('Gears_Of_War_Marcus_Ill_Take_This_Image', 'assets/Gears_Of_War_Marcus_Ill_Take_This.png');
-    game.load.image('Gears_Of_War_Marcus_Nice_Throw_Image', 'assets/Gears_Of_War_Marcus_Nice_Throw.png');
-    game.load.image('Mario_Kart_64_Luigi_Mamma_Mia_Image', 'assets/Mario_Kart_64_Luigi_Mamma_Mia.png');
-    game.load.image('SFIV_Ken_Hadouken_Image', 'assets/SFIV_Ken_Hadouken.png');
-    game.load.image('SFIV_Ryu_Shoryuken_Image', 'assets/SFIV_Ryu_Shoryuken.png');
-    game.load.image('SM64_Power_Star_Appears_Image', 'assets/SM64_Power_Star_Appears.png');
-    game.load.image('StarCraft_Fenix_Zealot_For_Aiur_Image', 'assets/StarCraft_Fenix_Zealot_For_Aiur.png');
-    game.load.image('The_Legend_of_Zelda_Get_Item_Image', 'assets/The_Legend_of_Zelda_Get_Item.png');
-    game.load.image('The_Legend_of_Zelda_Get_Rupee_Image', 'assets/The_Legend_of_Zelda_Get_Rupee.png');
-
     game.load.audio('c', 'assets/audio/c.mp3', false);
     game.load.audio('e', 'assets/audio/e.mp3', false);
     game.load.audio('g', 'assets/audio/g.mp3', false);
@@ -923,40 +905,40 @@
 
     if (randNum > 0 && randNum < 0.02) {
       // 2% chance
-      createItem('extraLife', 'Extra_Life_Image', _brick.x, _brick.y);
+      createItem('extraLife', 'extra_life.png', _brick.x, _brick.y);
     } else if (randNum > 0.10 && randNum < 0.15) {
       // 5% chance
-      createItem('increaseSpeed', 'Increase_Speed_Image', _brick.x, _brick.y);
+      createItem('increaseSpeed', 'increase_speed.png', _brick.x, _brick.y);
     } else if (randNum > 0.15 && randNum < 0.20) {
       // 5% chance
-      createItem('decreaseSpeed', 'Decrease_Speed_Image', _brick.x, _brick.y);
+      createItem('decreaseSpeed', 'decrease_speed.png', _brick.x, _brick.y);
     } else if (randNum > 0.20 && randNum < 0.21) {
       // 1% chance
-      createItem('gowMarcusIllTakeThis', 'Gears_Of_War_Marcus_Ill_Take_This_Image', _brick.x, _brick.y);
+      createItem('gowMarcusIllTakeThis', 'Gears_Of_War_Marcus_Ill_Take_This.png', _brick.x, _brick.y);
     } else if (randNum > 0.21 && randNum < 0.22) {
       // 1% chance
-      createItem('gowMarcusNiceThrow', 'Gears_Of_War_Marcus_Nice_Throw_Image', _brick.x, _brick.y);
+      createItem('gowMarcusNiceThrow', 'Gears_Of_War_Marcus_Nice_Throw.png', _brick.x, _brick.y);
     } else if (randNum > 0.22 && randNum < 0.23) {
       // 1% chance
-      createItem('mk64Luigi', 'Mario_Kart_64_Luigi_Mamma_Mia_Image', _brick.x, _brick.y);
+      createItem('mk64Luigi', 'Mario_Kart_64_Luigi_Mamma_Mia.png', _brick.x, _brick.y);
     } else if (randNum > 0.23 && randNum < 0.24) {
       // 1% chance
-      createItem('kenHadouken', 'SFIV_Ken_Hadouken_Image', _brick.x, _brick.y);
+      createItem('kenHadouken', 'SFIV_Ken_Hadouken.png', _brick.x, _brick.y);
     } else if (randNum > 0.24 && randNum < 0.25) {
       // 1% chance
-      createItem('ryuShoruken', 'SFIV_Ryu_Shoryuken_Image', _brick.x, _brick.y);
+      createItem('ryuShoruken', 'SFIV_Ryu_Shoryuken.png', _brick.x, _brick.y);
     } else if (randNum > 0.25 && randNum < 0.26) {
       // 1% chance
-      createItem('sm64PowerStar', 'SM64_Power_Star_Appears_Image', _brick.x, _brick.y);
+      createItem('sm64PowerStar', 'SM64_Power_Star_Appears.png', _brick.x, _brick.y);
     } else if (randNum > 0.26 && randNum < 0.27) {
       // 1% chance
-      createItem('starcraftZeolot', 'StarCraft_Fenix_Zealot_For_Aiur_Image', _brick.x, _brick.y);
+      createItem('starcraftZeolot', 'StarCraft_Fenix_Zealot_For_Aiur.png', _brick.x, _brick.y);
     } else if (randNum > 0.27 && randNum < 0.28) {
       // 1% chance
-      createItem('zeldaItem', 'The_Legend_of_Zelda_Get_Item_Image', _brick.x, _brick.y);
+      createItem('zeldaItem', 'The_Legend_of_Zelda_Get_Item.png', _brick.x, _brick.y);
     } else if (randNum > 0.28 && randNum < 0.29) {
       // 1% chance
-      createItem('zeldaRupee', 'The_Legend_of_Zelda_Get_Rupee_Image', _brick.x, _brick.y);
+      createItem('zeldaRupee', 'The_Legend_of_Zelda_Get_Rupee.png', _brick.x, _brick.y);
     }
 
     renderBrickBurst(_brick);
@@ -989,7 +971,7 @@
   }
 
   function createItem(itemType, itemImage, x, y) {
-    var item = items.create(x, y, itemImage);
+    var item = items.create(x, y, 'breakout', itemImage);
     item.type = itemType;
     item.anchor.setTo(0.5, 0.5);
     item.checkWorldBounds = true;
