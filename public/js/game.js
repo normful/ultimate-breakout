@@ -116,10 +116,13 @@
     game.load.audio('cHigh', 'assets/audio/cHigh.mp3');
     game.load.audio('gLow', 'assets/audio/gLow.mp3');
 
+    game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
+  }
+
+  function loadSecondaryAudio() {
     game.load.audio('oneUp', 'assets/audio/oneUp.mp3');
     game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
     game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
-    game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
     game.load.audio('monsterKill', 'assets/audio/monsterKill.mp3');
 
     game.load.audio('counterTerroristsWin', 'assets/audio/Counter_Strike_Counter-Terrorists_Win.mp3');
@@ -177,6 +180,8 @@
         x: game.input.x - 0.5 * PADDLE_WIDTH
       });
     });
+
+    setTimeout(loadSecondaryAudio, 1000);
   }
 
   function createBricks() {
