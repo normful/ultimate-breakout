@@ -882,13 +882,40 @@
 
     if (randNum > 0 && randNum < 0.02) {
       // 2% chance
-      createItem('extraLife', 'extra_life.png', _brick.x, _brick.y);
-    } else if (randNum > 0.1 && randNum < 0.15) {
+      createItem('extraLife', 'Extra_Life_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.10 && randNum < 0.15) {
       // 5% chance
-      createItem('increaseSpeed', 'increase_speed.png', _brick.x, _brick.y);
-    } else if (randNum > 0.15 && randNum < 0.2) {
+      createItem('increaseSpeed', 'Increase_Speed_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.15 && randNum < 0.20) {
       // 5% chance
-      createItem('decreaseSpeed', 'decrease_speed.png', _brick.x, _brick.y);
+      createItem('decreaseSpeed', 'Decrease_Speed_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.20 && randNum < 0.21) {
+      // 1% chance
+      createItem('gowMarcusIllTakeThis', 'Gears_Of_War_Marcus_Ill_Take_This_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.21 && randNum < 0.22) {
+      // 1% chance
+      createItem('gowMarcusNiceThrow', 'Gears_Of_War_Marcus_Nice_Throw_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.22 && randNum < 0.23) {
+      // 1% chance
+      createItem('mk64Luigi', 'Mario_Kart_64_Luigi_Mamma_Mia_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.23 && randNum < 0.24) {
+      // 1% chance
+      createItem('kenHadouken', 'SFIV_Ken_Hadouken_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.24 && randNum < 0.25) {
+      // 1% chance
+      createItem('ryuShoruken', 'SFIV_Ryu_Shoryuken_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.25 && randNum < 0.26) {
+      // 1% chance
+      createItem('sm64PowerStar', 'SM64_Power_Star_Appears_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.26 && randNum < 0.27) {
+      // 1% chance
+      createItem('starcraftZeolot', 'StarCraft_Fenix_Zealot_For_Aiur_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.27 && randNum < 0.28) {
+      // 1% chance
+      createItem('zeldaItem', 'The_Legend_of_Zelda_Get_Item_Image', _brick.x, _brick.y);
+    } else if (randNum > 0.28 && randNum < 0.29) {
+      // 1% chance
+      createItem('zeldaRupee', 'The_Legend_of_Zelda_Get_Rupee_Image', _brick.x, _brick.y);
     }
 
     renderBrickBurst(_brick);
