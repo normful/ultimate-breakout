@@ -7,6 +7,8 @@
 
   var updateLoopRunning = false;
 
+  var sounds;
+
   var cNote;
   var eNote;
   var gNote;
@@ -18,8 +20,6 @@
   var gameOverSound;
   var firstBloodSound;
   var monsterKillSound;
-
-  var lastBrickSounds = [];
 
   var gowMarcusIllTakeThisSound;
   var gowMarcusNiceThrowSound;
@@ -90,59 +90,8 @@
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
 
-//     star 1 3
-// powerup 4 2
-// gameover 6 2
-// c 8 2
-// chigh 10 2
-// e 12 2
-// g 14 2
-// glow 16 2
-// monster 18 2
-// counter 21 1.5
-// mia 23 1
-// first 24 1
-// terr 25 1
-// outstand 26 1
-// nicethrow 27 1
-// slam 28 1
-// fire 29 1
-// levelup 30 1
-// take this 31 1
-// t 32 1
-// hadu 33 1
-// shoyru 34 1
-// t 35 1
-
     game.load.audio('sfx', 'assets/audio/breakout.mp3');
 
-    game.load.audio('c', 'assets/audio/c.mp3', false);
-    game.load.audio('e', 'assets/audio/e.mp3', false);
-    game.load.audio('g', 'assets/audio/g.mp3', false);
-    game.load.audio('cHigh', 'assets/audio/cHigh.mp3', false);
-    game.load.audio('gLow', 'assets/audio/gLow.mp3', false);
-
-    game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3', false);
-
-    game.load.audio('oneUp', 'assets/audio/oneUp.mp3', false);
-    game.load.audio('powerUp', 'assets/audio/powerUp.mp3', false);
-    game.load.audio('gameOver', 'assets/audio/gameOver.mp3', false);
-    game.load.audio('monsterKill', 'assets/audio/monsterKill.mp3', false);
-
-    game.load.audio('counterTerroristsWin', 'assets/audio/Counter_Strike_Counter-Terrorists_Win.mp3', false);
-    game.load.audio('terroristsWin', 'assets/audio/Counter_Strike_Terrorists_Win.mp3', false);
-    game.load.audio('slammin', 'assets/audio/StarCraft_Firebat_Slammin.mp3', false);
-    game.load.audio('outstanding', 'assets/audio/StarCraft_Marine_Outstanding.mp3', false);
-
-    game.load.audio('Gears_Of_War_Marcus_Ill_Take_This_Sound', 'assets/audio/Gears_Of_War_Marcus_Ill_Take_This.mp3', false);
-    game.load.audio('Gears_Of_War_Marcus_Nice_Throw_Sound', 'assets/audio/Gears_Of_War_Marcus_Nice_Throw.mp3', false);
-    game.load.audio('Mario_Kart_64_Luigi_Mamma_Mia_Sound', 'assets/audio/Mario_Kart_64_Luigi_Mamma_Mia.mp3', false);
-    game.load.audio('SFIV_Ken_Hadouken_Sound', 'assets/audio/SFIV_Ken_Hadouken.mp3', false);
-    game.load.audio('SFIV_Ryu_Shoryuken_Sound', 'assets/audio/SFIV_Ryu_Shoryuken.mp3', false);
-    game.load.audio('SM64_Power_Star_Appears_Sound', 'assets/audio/SM64_Power_Star_Appears.mp3', false);
-    game.load.audio('StarCraft_Fenix_Zealot_For_Aiur_Sound', 'assets/audio/StarCraft_Fenix_Zealot_For_Aiur.mp3', false);
-    game.load.audio('The_Legend_of_Zelda_Get_Item_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Item.mp3', false);
-    game.load.audio('The_Legend_of_Zelda_Get_Rupee_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Rupee.mp3', false);
   }
 
   function create() {
@@ -346,32 +295,31 @@
   }
 
   function createAudio() {
-    cNote = game.add.audio('c');
-    eNote = game.add.audio('e');
-    gNote = game.add.audio('g');
-    cHighNote = game.add.audio('cHigh');
-    gLowNote = game.add.audio('gLow');
+    sounds = game.add.audio('sfx');
 
-    oneUpSound = game.add.audio('oneUp');
-    powerUpSound = game.add.audio('powerUp');
-    gameOverSound = game.add.audio('gameOver');
-    firstBloodSound = game.add.audio('firstBlood');
-    monsterKillSound = game.add.audio('monsterKill');
-
-    lastBrickSounds.push(game.add.audio('counterTerroristsWin'));
-    lastBrickSounds.push(game.add.audio('terroristsWin'));
-    lastBrickSounds.push(game.add.audio('slammin'));
-    lastBrickSounds.push(game.add.audio('outstanding'));
-
-    gowMarcusIllTakeThisSound = game.add.audio('Gears_Of_War_Marcus_Ill_Take_This_Sound');
-    gowMarcusNiceThrowSound = game.add.audio('Gears_Of_War_Marcus_Nice_Throw_Sound');
-    mk64LuigiSound = game.add.audio('Mario_Kart_64_Luigi_Mamma_Mia_Sound');
-    kenHadoukenSound = game.add.audio('SFIV_Ken_Hadouken_Sound');
-    ryuShorukenSound = game.add.audio('SFIV_Ryu_Shoryuken_Sound');
-    sm64PowerStarSound = game.add.audio('SM64_Power_Star_Appears_Sound');
-    starcraftZeolotSound = game.add.audio('StarCraft_Fenix_Zealot_For_Aiur_Sound');
-    zeldaItemSound = game.add.audio('The_Legend_of_Zelda_Get_Item_Sound');
-    zeldaRupeeSound = game.add.audio('The_Legend_of_Zelda_Get_Rupee_Sound');
+    sounds.addMarker('SM64_Power_Star_Appears_Sound', 0, 5);
+    sounds.addMarker('powerUp', 5, 3);
+    sounds.addMarker('gameOver', 8, 4);
+    sounds.addMarker('c', 12, 3);
+    sounds.addMarker('cHigh', 15, 3);
+    sounds.addMarker('e', 18, 3);
+    sounds.addMarker('g', 21, 3);
+    sounds.addMarker('gLow', 24, 3);
+    sounds.addMarker('monsterKill', 27, 4.5);
+    sounds.addMarker('counterTerroristsWin', 32, 2.5);
+    sounds.addMarker('Mario_Kart_64_Luigi_Mamma_Mia_Sound', 35, 2);
+    sounds.addMarker('firstBlood', 37.5, 2);
+    sounds.addMarker('terroristsWin', 40, 2);
+    sounds.addMarker('outstanding', 42, 2);
+    sounds.addMarker('Gears_Of_War_Marcus_Nice_Throw_Sound', 44, 2);
+    sounds.addMarker('slammin', 46, 2);
+    sounds.addMarker('StarCraft_Fenix_Zealot_For_Aiur_Sound', 48, 2);
+    sounds.addMarker('oneUp', 50, 1);
+    sounds.addMarker('Gears_Of_War_Marcus_Ill_Take_This_Sound', 52, 2);
+    sounds.addMarker('The_Legend_of_Zelda_Get_Item_Sound', 54, 1);
+    sounds.addMarker('SFIV_Ken_Hadouken_Sound', 56, 1);
+    sounds.addMarker('SFIV_Ryu_Shoryuken_Sound', 58, 1);
+    sounds.addMarker('The_Legend_of_Zelda_Get_Rupee_Sound', 60, 1);
   }
 
   function createGameOverDialog() {
@@ -473,19 +421,19 @@
 
   function onPlayBrickHitSound(data) {
     if (data.sound === 0) {
-      cNote.play();
+      sounds.play('c');
     } else if (data.sound === 1) {
-      eNote.play();
+      sounds.play('e');
     } else if (data.sound === 2) {
-      gNote.play();
+      sounds.play('g');
     } else {
-      cHighNote.play();
+      sounds.play('cHigh');
     }
   }
 
   function onFirstBrickHit() {
     console.log('onFirstBrickHit invoked');
-    firstBloodSound.play();
+    sounds.play('firstBlood');
   }
 
   function onRenderPlus500(data) {
@@ -749,7 +697,7 @@
 
     if (_item.type === 'extraLife') {
       addExtraLife();
-      oneUpSound.play();
+      sounds.play('oneUp');
 
    } else if (_item.type === 'increaseSpeed') {
       increaseBallSpeed();
@@ -758,7 +706,7 @@
       ballGreenGlowEmitter.start(false, 100, 15);
       setTimeout(turnOffGreenGlow, 5000);
 
-      powerUpSound.play();
+      sounds.play('powerUp');
     } else if (_item.type === 'decreaseSpeed') {
       decreaseBallSpeed();
       setTimeout(increaseBallSpeed, 5000);
@@ -766,43 +714,43 @@
       ballBlueGlowEmitter.start(false, 120, 30);
       setTimeout(turnOffBlueGlow, 5000);
 
-      powerUpSound.play();
+      sounds.play('powerUp');
     } else if (_item.type === 'gowMarcusIllTakeThis') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      gowMarcusIllTakeThisSound.play();
+      sounds.play('Gears_Of_War_Marcus_Ill_Take_This_Sound');
     } else if (_item.type === 'gowMarcusNiceThrow') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      gowMarcusNiceThrowSound.play();
+      sounds.play('Gears_Of_War_Marcus_Nice_Throw_Sound');
     } else if (_item.type === 'mk64Luigi') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      mk64LuigiSound.play();
+      sounds.play('Mario_Kart_64_Luigi_Mamma_Mia_Sound');
     } else if (_item.type === 'kenHadouken') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      kenHadoukenSound.play();
+      sounds.play('SFIV_Ken_Hadouken_Sound');
     } else if (_item.type === 'ryuShoruken') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      ryuShorukenSound.play();
+      sounds.play('SFIV_Ryu_Shoryuken_Sound');
     } else if (_item.type === 'sm64PowerStar') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sm64PowerStarSound.play();
+      sounds.play('SM64_Power_Star_Appears_Sound');
     } else if (_item.type === 'starcraftZeolot') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      starcraftZeolotSound.play();
+      sounds.play('StarCraft_Fenix_Zealot_For_Aiur_Sound');
     } else if (_item.type === 'zeldaItem') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      zeldaItemSound.play();
+      sounds.play('The_Legend_of_Zelda_Get_Item_Sound');
     } else if (_item.type === 'zeldaRupee') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      zeldaRupeeSound.play();
+      sounds.play('The_Legend_of_Zelda_Get_Rupee_Sound');
     }
   }
 
@@ -900,7 +848,7 @@
   }
 
   function gameOver() {
-    gameOverSound.play();
+    sounds.play('gameOver');
 
     ball.body.velocity.setTo(0, 0);
     socket.emit('player game over');
@@ -974,16 +922,16 @@
 
   function playBrickHitSound(y) {
     if (y === 100) {
-      cHighNote.play();
+      sounds.play('cHigh');
       socket.emit('play brick hit sound', {sound: 3});
     } else if (y === 152) {
-      gNote.play();
+      sounds.play('g');
       socket.emit('play brick hit sound', {sound: 2});
     } else if (y === 204) {
-      eNote.play();
+      sounds.play('e');
       socket.emit('play brick hit sound', {sound: 1});
     } else {
-      cNote.play();
+      sounds.play('c');
       socket.emit('play brick hit sound', {sound: 0});
     }
   }
@@ -1012,7 +960,7 @@
     var lastFiveHitsTimeDifference = brickHitDates[length - 1] - brickHitDates[length - 6];
     if (lastFiveHitsTimeDifference < 550 && (new Date() - lastMonsterKillPlayDate > 10000)) {
       console.log('monsterKill awarded to this client');
-      monsterKillSound.play();
+      sounds.play('monsterKill');
       lastMonsterKillPlayDate = new Date();
       renderBonusIndicator(ball.body.x, ball.body.y, 'breakout', 'plus_1000.png');
       socket.emit('monster kill');
@@ -1021,17 +969,24 @@
 
   function onPlayMonsterKillSound() {
     console.log('onPlayMonsterKillSound invoked');
-    monsterKillSound.play();
+    sounds.play('monsterKill');
   }
 
   function onPlayLastBrickSound(data) {
-    var randomSoundIndex = Math.floor(data.randSoundNum * lastBrickSounds.length);
-    console.log(lastBrickSounds[randomSoundIndex]);
-    lastBrickSounds[randomSoundIndex].play();
+    var randomSoundIndex = Math.floor(data.randSoundNum * 4);
+    if (randomSoundIndex === 0) {
+      sounds.play('counterTerroristsWin');
+    } else if (randomSoundIndex === 1) {
+      sounds.play('terroristsWin');
+    } else if (randomSoundIndex === 2) {
+      sounds.play('slammin');
+    } else if (randomSoundIndex === 3) {
+      sounds.play('outstanding');
+    }
   }
 
   function ballHitPaddle(_ball, _paddle) {
-    gLowNote.play();
+    sounds.play('gLow');
 
     var ballCenter = _ball.body.x + BALL_WIDTH / 2;
     var paddleCenter = _paddle.body.x + PADDLE_WIDTH / 2;
