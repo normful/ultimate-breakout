@@ -9,6 +9,8 @@
 
   var sounds;
 
+  var background;
+
   var bricks;
   var brickBurstEmitter;
   var BRICK_ROWS = 4;
@@ -67,7 +69,7 @@
   function preload() {
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
-
+    game.load.image('blackStarField', '/assets/black_starfield.png');
     game.load.audio('sfx', 'assets/audio/breakout.mp3');
 
   }
@@ -79,6 +81,8 @@
     game.stage.disableVisibilityChange = true;
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    background = game.add.tileSprite(0, 0, 800, 600, 'blackStarfield');
 
     // Check bounds collisions on all walls except bottom
     game.physics.arcade.checkCollision.down = false;
