@@ -204,15 +204,7 @@ function onBrickKillFromClient(data) {
     return;
   }
 
-  if (bricks.indexOf("0") === -1) {
-    io.sockets.emit('first brick hit');
-
-    players[client.id].score += 500;
-    client.emit('render plus 500', {
-      x: data.brickX,
-      y: data.brickY
-    });
-  }
+  checkForFirstBlood(client, data.brickX, data.brickY);
 
   bricks = bricks.slice(0, data.brickIndex) + "0" + bricks.slice(data.brickIndex + 1);
 
@@ -234,6 +226,18 @@ function onBrickKillFromClient(data) {
   });
 
   broadcastUpdatedScore(client);
+}
+
+function checkForFirstBlood(client, brickX, brickY) {
+  if (bricks.indexOf("0") === -1) {
+    io.sockets.emit('first brick hit');
+
+    players[client.id].score += 500;
+    client.emit('render plus 500', {
+      x: brickX,
+      y: brickY
+    });
+  }
 }
 
 function broadcastUpdatedScore(client) {
