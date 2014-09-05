@@ -117,9 +117,12 @@
     game.load.audio('gLow', 'assets/audio/gLow.mp3');
 
     game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
+
+    setTimeout(loadSecondaryAudio, 10000);
   }
 
   function loadSecondaryAudio() {
+    console.log('loadSecondaryAudio invoked');
     game.load.audio('oneUp', 'assets/audio/oneUp.mp3');
     game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
     game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
@@ -180,8 +183,6 @@
         x: game.input.x - 0.5 * PADDLE_WIDTH
       });
     });
-
-    setTimeout(loadSecondaryAudio, 1000);
   }
 
   function createBricks() {
