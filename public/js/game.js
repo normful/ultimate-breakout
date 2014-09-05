@@ -259,7 +259,7 @@
   function createBallBlueGlowEmitter() {
     ballBlueGlowEmitter = game.add.emitter(ball.body.x, ball.body.y, 200);
     ballBlueGlowEmitter.makeParticles('breakout', 'blue_glow.png');
-    ballBlueGlowEmitter.gravity = 200e
+    ballBlueGlowEmitter.gravity = 200;
     ballBlueGlowEmitter.autoAlpha = true;
     ballBlueGlowEmitter.maxParticleAlpha = 0.31;
     ballBlueGlowEmitter.minParticleAlpha = 0.30;
