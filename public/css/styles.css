@@ -1,4 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=Permanent+Marker|Shadows+Into+Light+Two|VT323);
+@font-face {
+  font-family: "VT323";
+  src: url("../assets/VT323-Regular.ttf");
+}
 
 * {
   -webkit-box-sizing: border-box;
