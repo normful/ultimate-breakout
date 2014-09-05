@@ -14,6 +14,7 @@
   var gLowNote;
   var powerUpSound;
   var gameOverSound;
+  var firstBloodSound;
 
   var bricks;
   var brickBurstEmitter;
@@ -79,8 +80,9 @@
     game.load.audio('g', 'assets/audio/g.wav');
     game.load.audio('cHigh', 'assets/audio/cHigh.wav');
     game.load.audio('gLow', 'assets/audio/gLow.wav');
-    game.load.audio('powerUp', 'assets/audio/powerUp.wav');
+    game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
     game.load.audio('gameOver', 'assets/audio/gameOver.wav');
+    game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
   }
 
   function create() {
@@ -297,6 +299,7 @@
     gLowNote = game.add.audio('gLow');
     powerUpSound = game.add.audio('powerUp');
     gameOverSound = game.add.audio('gameOver');
+    firstBloodSound = game.add.audio('firstBlood');
   }
 
   function createGameOverDialog() {
@@ -384,6 +387,7 @@
     socket.on('update remote score', onUpdateRemoteScore);
     socket.on('remote player game over', onRemotePlayerGameOver);
     socket.on('play brick hit sound', onPlayBrickHitSound);
+    socket.on('first brick hit', onFirstBrickHit);
     socket.on('high scores', onHighScores);
   }
 
@@ -397,6 +401,11 @@
     } else {
       cHighNote.play();
     }
+  }
+
+  function onFirstBrickHit() {
+    console.log('onFirstBrickHit invoked');
+    firstBloodSound.play();
   }
 
   function onKillRemoteBall(data) {
