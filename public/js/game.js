@@ -265,7 +265,7 @@
 
   function createLocalBall() {
     console.log('createLocalBall invoked');
-    ball = game.add.sprite(game.world.centerX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball_1.png');
+    ball = game.add.sprite(game.world.centerX, PADDLE_Y - BALL_HEIGHT, 'breakout', 'ball.png');
     ball.anchor.set(0.5);
     ball.checkWorldBounds = true;
 
@@ -273,8 +273,6 @@
 
     ball.body.collideWorldBounds = true;
     ball.body.bounce.set(1);
-
-    ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
 
     ball.events.onOutOfBounds.add(ballLost, this);
   }
@@ -314,14 +312,12 @@
       return;
     }
 
-    var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball_1.png');
+    var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball.png');
     remoteBall.anchor.set(0.5);
     remoteBall.checkWorldBounds = true;
     game.physics.enable(remoteBall, Phaser.Physics.ARCADE);
     remoteBall.body.collideWorldBounds = true;
     remoteBall.body.bounce.set(1);
-    remoteBall.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
-    remoteBall.animations.play('spin');
 
     remoteBall.body.velocity.x = data.velocityX;
     remoteBall.body.velocity.y = data.velocityY;
@@ -858,7 +854,6 @@
       ballOnPaddle = false;
       ball.body.velocity.x = BALL_RELEASE_VELOCITY_X * ( Math.random() * 4 - 1 );
       ball.body.velocity.y = BALL_RELEASE_VELOCITY_Y;
-      ball.animations.play('spin');
       infoText.visible = false;
 
       socket.emit('paddle release ball', {
@@ -885,7 +880,6 @@
   function putBallOnPaddle() {
     ballOnPaddle = true;
     ball.reset(paddle.body.x + 0.5 * PADDLE_WIDTH - 0.5 * BALL_WIDTH, PADDLE_Y - BALL_HEIGHT);
-    ball.animations.stop();
   }
 
   function startNewRound() {
