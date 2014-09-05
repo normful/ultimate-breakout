@@ -371,7 +371,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
 	border: 1px solid #333333;
-	background: #333333 50% 50% repeat-x;
+	background: #333333;
 	font-weight: normal;
 	color: #ffffff;
 }
@@ -388,7 +388,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
 	border: 1px solid #222222;
-	background: #00498f 50% 50% repeat-x;
+	background: #00498f;
 	font-weight: normal;
 	color: #ffffff;
 }
@@ -407,7 +407,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
 	border: 1px solid #096ac8;
-	background: #292929 50% 50% repeat-x;
+	background: #292929;
 	font-weight: normal;
 	color: #ffffff;
 }
@@ -424,7 +424,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight {
 	border: 1px solid #052f57;
-	background: #0b58a2 50% 50% repeat;
+	background: #0b58a2;
 	color: #ffffff;
 }
 .ui-state-highlight a,
@@ -436,7 +436,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-error,
 .ui-widget-header .ui-state-error {
 	border: 1px solid #cd0a0a;
-	background: #a32d00 50% 50% repeat;
+	background: #a32d00;
 	color: #ffffff;
 }
 .ui-state-error a,
@@ -691,14 +691,14 @@ button.ui-button::-moz-focus-inner {
 
 /* Overlays */
 .ui-widget-overlay {
-	background: #aaaaaa 50% 50% repeat-x;
+	background: #aaaaaa;
 	opacity: .3;
 	filter: Alpha(Opacity=30); /* support: IE8 */
 }
 .ui-widget-shadow {
 	margin: -8px 0 0 -8px;
 	padding: 8px;
-	background: #aaaaaa 50% 50% repeat-x;
+	background: #aaaaaa;
 	opacity: .3;
 	filter: Alpha(Opacity=30); /* support: IE8 */
 	border-radius: 8px;
