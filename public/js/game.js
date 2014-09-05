@@ -74,11 +74,11 @@
     game.load.image('starfield', '/assets/starfield.png');
     game.load.image('blueGlow', 'assets/blue.png');
     game.load.image('greenGlow', 'assets/green.png');
-    game.load.audio('c', 'assets/audio/c.wav');
-    game.load.audio('e', 'assets/audio/e.wav');
-    game.load.audio('g', 'assets/audio/g.wav');
-    game.load.audio('cHigh', 'assets/audio/cHigh.wav');
-    game.load.audio('gLow', 'assets/audio/gLow.wav');
+    game.load.audio('c', 'assets/audio/c.mp3');
+    game.load.audio('e', 'assets/audio/e.mp3');
+    game.load.audio('g', 'assets/audio/g.mp3');
+    game.load.audio('cHigh', 'assets/audio/cHigh.mp3');
+    game.load.audio('gLow', 'assets/audio/gLow.mp3');
     game.load.audio('powerUp', 'assets/audio/powerUp.wav');
     game.load.audio('gameOver', 'assets/audio/gameOver.wav');
   }
