@@ -241,6 +241,7 @@
     remotePaddle.name = player;
     remotePaddle.tint = data.color;
     remotePaddle.blendMode = PIXI.blendModes.ADD;
+    remotePaddle.alpha = 0.4;
 
     remotePlayers[player].paddle = remotePaddle;
   }
@@ -306,6 +307,7 @@
 
     remoteBall.tint = remotePlayers[data.remotePlayerID].color;
     remoteBall.blendMode = PIXI.blendModes.ADD;
+    remoteBall.alpha = 0.4;
 
     remotePlayers[data.remotePlayerID].remotePlayerBall = remoteBall;
   }
