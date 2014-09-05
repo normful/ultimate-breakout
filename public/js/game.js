@@ -5,6 +5,8 @@
   var GAME_WIDTH = 800;
   var GAME_HEIGHT = 600;
 
+  var updateLoopRunning = false;
+
   var background;
 
   var cNote;
@@ -112,6 +114,8 @@
     game.input.onDown.add(releaseBall, gameState);
 
     initializeMixItUp();
+
+    setTimeout(checkFrozenGame, 500);
 
     socket = io.connect(window.location.hostname);
     attachSocketHandlers();
@@ -609,6 +613,10 @@
   }
 
   function update() {
+    if (!updateLoopRunning) {
+      console.log('update invoked for first time');
+      updateLoopRunning = true;
+    }
 
     socket.emit('update ball', {
       x: ball.body.x,
@@ -902,6 +910,12 @@
       var playerScoreSpan = $('<span></span>').addClass('top-score').text(rank + '. ' + val.name + ' (' + score + ') ');
       $highScoresMarquee.append(playerScoreSpan);
     });
+  }
+
+  function checkFrozenGame() {
+    if (!updateLoopRunning) {
+      reloadPage();
+    }
   }
 
   function padHex(n, width) {
