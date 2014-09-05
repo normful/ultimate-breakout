@@ -790,7 +790,13 @@
   }
 
   function ballHitBrick(_ball, _brick) {
-    playBrickHitSound(_brick.y)
+    playBrickHitSound(_brick.y);
+
+    socket.emit('brick kill from client', {
+      brickIndex: _brick.brickIndex,
+      velocityX: ball.body.velocity.x,
+      velocityY: ball.body.velocity.y
+    });
 
     var randNum = Math.floor(Math.random() * 100);
 
@@ -804,12 +810,6 @@
       // 5% chance
       createItem('decreaseSpeed', 'decrease_speed.png', _brick.x, _brick.y);
     }
-
-    socket.emit('brick kill from client', {
-      brickIndex: _brick.brickIndex,
-      velocityX: ball.body.velocity.x,
-      velocityY: ball.body.velocity.y
-    });
 
     renderBrickBurst(_brick);
     _brick.kill();
