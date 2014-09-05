@@ -201,6 +201,10 @@ function onBrickKillFromClient(data) {
     return;
   }
 
+  if (bricks.indexOf("0") === -1) {
+    io.sockets.emit('first brick hit');
+  }
+
   bricks = bricks.slice(0, data.brickIndex) + "0" + bricks.slice(data.brickIndex + 1);
 
   if (bricks.indexOf("1") === -1) {
@@ -209,6 +213,7 @@ function onBrickKillFromClient(data) {
   } else {
     players[this.id].score += 100;
   }
+
   util.log(this.id + " new score = " + players[this.id].score);
 
   util.log('"brick kill to other clients" message broadcast to other clients');
