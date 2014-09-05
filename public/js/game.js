@@ -755,8 +755,42 @@
 
       ballBlueGlowEmitter.start(false, 120, 30);
       setTimeout(turnOffBlueGlow, 5000);
-    } else {
-      console.log('paddle caught something else. _item.type = ' + _item.type);
+    } else if (_item.type === 'gowMarcusIllTakeThis') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      gowMarcusIllTakeThisSound.play();
+    } else if (_item.type === 'gowMarcusNiceThrow') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      gowMarcusNiceThrowSound.play();
+    } else if (_item.type === 'mk64Luigi') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      mk64LuigiSound.play();
+    } else if (_item.type === 'kenHadouken') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      kenHadoukenSound.play();
+    } else if (_item.type === 'ryuShoruken') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      ryuShorukenSound.play();
+    } else if (_item.type === 'sm64PowerStar') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      sm64PowerStarSound.play();
+    } else if (_item.type === 'starcraftZeolot') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      starcraftZeolotSound.play();
+    } else if (_item.type === 'zeldaItem') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      zeldaItemSound.play();
+    } else if (_item.type === 'zeldaRupee') {
+      plus500Points();
+      renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
+      zeldaRupeeSound.play();
     }
   }
 
@@ -777,6 +811,10 @@
     indicator.body.velocity.y = -100;
     indicator.lifespan = 2000;
     game.add.tween(indicator).delay(500).to({alpha: 0}, 1500).start();
+  }
+
+  function plus500Points() {
+    socket.emit('plus 500 points');
   }
 
   function increaseBallSpeed() {
@@ -813,7 +851,6 @@
       ball.animations.play('spin');
       infoText.visible = false;
 
-      // Tell other clients of the release of ball
       socket.emit('paddle release ball', {
         velocityX: ball.body.velocity.x,
         velocityY: ball.body.velocity.y,
