@@ -261,7 +261,7 @@
 
   function createBallBlueGlowEmitter() {
     ballBlueGlowEmitter = game.add.emitter(ball.body.x, ball.body.y, 200);
-    ballBlueGlowEmitter.makeParticles('blueGlow');
+    ballBlueGlowEmitter.makeParticles('blue_glow.png');
     ballBlueGlowEmitter.gravity = 200;
     ballBlueGlowEmitter.autoAlpha = true;
     ballBlueGlowEmitter.maxParticleAlpha = 0.31;
@@ -270,7 +270,7 @@
 
   function createBallGreenGlowEmitter() {
     ballGreenGlowEmitter = game.add.emitter(ball.body.x, ball.body.y, 200);
-    ballGreenGlowEmitter.makeParticles('greenGlow');
+    ballGreenGlowEmitter.makeParticles('green_glow.png');
     ballGreenGlowEmitter.gravity = -200;
     ballGreenGlowEmitter.autoAlpha = true;
     ballGreenGlowEmitter.maxParticleAlpha = 0.31;

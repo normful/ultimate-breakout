@@ -80,7 +80,7 @@
 	"sourceSize": {"w":16,"h":16}
 },
 {
-  "filename": "blue.png",
+  "filename": "blue_glow.png",
 	"frame": {"x":0,"y":128,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
@@ -144,7 +144,7 @@
 	"sourceSize": {"w":16,"h":16}
 },
 {
-  "filename": "green.png",
+  "filename": "green_glow.png",
 	"frame": {"x":0,"y":0,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
