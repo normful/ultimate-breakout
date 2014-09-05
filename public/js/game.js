@@ -191,15 +191,12 @@
       return;
     }
 
-    remotePlayers[player].paddle = remotePaddles.create(
+    remotePaddle = remotePaddles.create(
       game.world.centerX,
       PADDLE_Y,
       'breakout',
       'paddle_big.png'
     );
-
-    remotePaddle = remotePlayers[player].paddle;
-
     remotePaddle.anchor.setTo(0.5, 0.5);
     game.physics.enable(remotePaddle, Phaser.Physics.ARCADE);
     remotePaddle.body.collideWorldBounds = true;
@@ -207,6 +204,9 @@
     remotePaddle.body.immovable = true;
     remotePaddle.name = player;
     remotePaddle.tint = data.color;
+    remotePaddle.blendMode = PIXI.blendModes.ADD;
+
+    remotePlayers[player].paddle = remotePaddle;
   }
 
   function createLocalBall() {
@@ -272,9 +272,10 @@
     remoteBall.body.velocity.x = data.velocityX;
     remoteBall.body.velocity.y = data.velocityY;
 
-    remotePlayers[data.remotePlayerID].remotePlayerBall = remoteBall;
+    remoteBall.tint = remotePlayers[data.remotePlayerID].color;
+    remoteBall.blendMode = PIXI.blendModes.ADD;
 
-    remotePlayers[data.remotePlayerID].remotePlayerBall.tint = remotePlayers[data.remotePlayerID].color;
+    remotePlayers[data.remotePlayerID].remotePlayerBall = remoteBall;
   }
 
   function createText() {
