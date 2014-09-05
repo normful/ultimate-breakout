@@ -69,7 +69,7 @@
   function preload() {
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
-    game.load.image('blackStarField', '/assets/black_starfield.png');
+    game.load.image('blackStarfield', '/assets/black_starfield.png');
     game.load.audio('sfx', 'assets/audio/breakout.mp3');
 
   }
