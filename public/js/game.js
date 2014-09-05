@@ -403,6 +403,7 @@
     socket.on('render plus 500', onRenderPlus500);
     socket.on('render plus 1000', onRenderPlus1000);
     socket.on('play monster kill sound', onPlayMonsterKillSound);
+    socket.on('play last brick sound', onPlayLastBrickSound);
     socket.on('high scores', onHighScores);
   }
 
@@ -887,6 +888,10 @@
   function onPlayMonsterKillSound() {
     console.log('onPlayMonsterKillSound invoked');
     monsterKillSound.play();
+  }
+
+  function onPlayLastBrickSound(data) {
+    console.log('randSoundNum = ' + data.randSoundNum);
   }
 
   function ballHitPaddle(_ball, _paddle) {

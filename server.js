@@ -215,6 +215,9 @@ function onBrickKillFromClient(data) {
       x: data.brickX,
       y: data.brickY
     });
+    io.sockets.emit('play last brick sound', {
+      randSoundNum: Math.random()
+    });
   } else {
     players[client.id].score += 100;
   }
