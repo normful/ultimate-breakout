@@ -203,6 +203,12 @@ function onBrickKillFromClient(data) {
 
   if (bricks.indexOf("0") === -1) {
     io.sockets.emit('first brick hit');
+
+    players[this.id].score += 500;
+    this.emit('render plus 500', {
+      x: data.brickX,
+      y: data.brickY
+    });
   }
 
   bricks = bricks.slice(0, data.brickIndex) + "0" + bricks.slice(data.brickIndex + 1);

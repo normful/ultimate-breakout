@@ -400,6 +400,7 @@
     socket.on('remote player game over', onRemotePlayerGameOver);
     socket.on('play brick hit sound', onPlayBrickHitSound);
     socket.on('first brick hit', onFirstBrickHit);
+    socket.on('render plus 500', onRenderPlus500);
     socket.on('high scores', onHighScores);
   }
 
@@ -418,6 +419,11 @@
   function onFirstBrickHit() {
     console.log('onFirstBrickHit invoked');
     firstBloodSound.play();
+  }
+
+  function onRenderPlus500(data) {
+    console.log('onRenderPlus500 invoked');
+    renderBonusIndicator(data.x, data.y, 'breakout', 'plus_500.png');
   }
 
   function onKillRemoteBall(data) {
@@ -693,10 +699,10 @@
     }
     lives++;
     livesText.text = 'lives: ' + lives;
-    drawBonusIndicator(paddle.body.x, PADDLE_Y, 'breakout', 'extra_life_indicator.png');
+    renderBonusIndicator(paddle.body.x, PADDLE_Y, 'breakout', 'extra_life_indicator.png');
   }
 
-  function drawBonusIndicator(x, y, key, frame) {
+  function renderBonusIndicator(x, y, key, frame) {
     var indicator = game.add.sprite(x, y, key, frame);
     indicator.enableBody = true;
     game.physics.enable(indicator, Phaser.Physics.ARCADE);
@@ -798,6 +804,8 @@
 
     socket.emit('brick kill from client', {
       brickIndex: _brick.brickIndex,
+      brickX: _brick.x,
+      brickY: _brick.y,
       velocityX: ball.body.velocity.x,
       velocityY: ball.body.velocity.y
     });
