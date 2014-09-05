@@ -175,7 +175,6 @@
     paddle.body.immovable = true;
   }
 
-  // create group for remote paddles
   function createRemotePaddles() {
     console.log('createRemotePaddles invoked');
     remotePaddles = game.add.group();
@@ -183,7 +182,6 @@
     remotePaddles.physicsBodyType = Phaser.Physics.ARCADE;
   }
 
-  // add sprite for remote paddle and associate it with the player
   function createRemotePaddle(data){
     console.log('createRemotePaddle invoked');
     var player = data.id;
