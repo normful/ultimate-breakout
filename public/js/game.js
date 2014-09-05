@@ -19,6 +19,8 @@
   var firstBloodSound;
   var monsterKillSound;
 
+  var lastBrickSounds = [];
+
   var bricks;
   var brickBurstEmitter;
   var BRICK_ROWS = 4;
@@ -89,6 +91,13 @@
     game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
     game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
     game.load.audio('monsterKill', 'assets/audio/monsterKill.mp3');
+
+    // Last brick sounds
+    game.load.audio('counterTerroristsWin', 'assets/audio/Counter_Strike_Counter-Terrorists_Win.mp3');
+    game.load.audio('terroristsWin', 'assets/audio/Counter_Strike_Terrorists_Win.mp3');
+    game.load.audio('slammin', 'assets/audio/StarCraft_Firebat_Slammin.mp3');
+    game.load.audio('outstanding', 'assets/audio/StarCraft_Marine_Outstanding.mp3');
+
   }
 
   function create() {
@@ -308,6 +317,10 @@
     gameOverSound = game.add.audio('gameOver');
     firstBloodSound = game.add.audio('firstBlood');
     monsterKillSound = game.add.audio('monsterKill');
+    lastBrickSounds.push(game.add.audio('counterTerroristsWin'));
+    lastBrickSounds.push(game.add.audio('terroristsWin'));
+    lastBrickSounds.push(game.add.audio('slammin'));
+    lastBrickSounds.push(game.add.audio('outstanding'));
   }
 
   function createGameOverDialog() {
@@ -891,7 +904,9 @@
   }
 
   function onPlayLastBrickSound(data) {
-    console.log('randSoundNum = ' + data.randSoundNum);
+    var randomSoundIndex = Math.floor(data.randSoundNum * lastBrickSounds.length);
+    console.log(lastBrickSounds[randomSoundIndex]);
+    lastBrickSounds[randomSoundIndex].play();
   }
 
   function ballHitPaddle(_ball, _paddle) {
