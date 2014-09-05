@@ -401,6 +401,7 @@
     socket.on('play brick hit sound', onPlayBrickHitSound);
     socket.on('first brick hit', onFirstBrickHit);
     socket.on('render plus 500', onRenderPlus500);
+    socket.on('play monster kill sound', onPlayMonsterKillSound);
     socket.on('high scores', onHighScores);
   }
 
@@ -869,12 +870,17 @@
     }
     var lastFiveHitsTimeDifference = brickHitDates[length - 1] - brickHitDates[length - 6];
     if (lastFiveHitsTimeDifference < 550 && (new Date() - lastMonsterKillPlayDate > 10000)) {
+      console.log('monsterKill awarded to this client');
       monsterKillSound.play();
       lastMonsterKillPlayDate = new Date();
-      console.log('MMMMONSTER KILL');
       renderBonusIndicator(ball.body.x, ball.body.y, 'breakout', 'plus_1000.png');
       socket.emit('monster kill');
     }
+  }
+
+  function onPlayMonsterKillSound() {
+    console.log('onPlayMonsterKillSound invoked');
+    monsterKillSound.play();
   }
 
   function ballHitPaddle(_ball, _paddle) {

@@ -264,10 +264,11 @@ function onUpdatePaddlePosition(data) {
   });
 }
 
-function onMonsterKill(data) {
+function onMonsterKill() {
   var client = this;
   players[client.id].score += 1000;
   broadcastUpdatedScore(client);
+  client.broadcast.emit('play monster kill sound');
 }
 
 function onPlayerGameOver() {
