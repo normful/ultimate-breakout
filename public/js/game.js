@@ -14,6 +14,8 @@
   var gNote;
   var cHighNote;
   var gLowNote;
+
+  var oneUpSound;
   var powerUpSound;
   var gameOverSound;
   var firstBloodSound;
@@ -114,6 +116,7 @@
     game.load.audio('cHigh', 'assets/audio/cHigh.mp3');
     game.load.audio('gLow', 'assets/audio/gLow.mp3');
 
+    game.load.audio('oneUp', 'assets/audio/oneUp.mp3');
     game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
     game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
     game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
@@ -349,6 +352,7 @@
     cHighNote = game.add.audio('cHigh');
     gLowNote = game.add.audio('gLow');
 
+    oneUpSound = game.add.audio('oneUp');
     powerUpSound = game.add.audio('powerUp');
     gameOverSound = game.add.audio('gameOver');
     firstBloodSound = game.add.audio('firstBlood');
@@ -737,24 +741,28 @@
   }
 
   function paddleCaughtItem(_paddle, _item) {
-    powerUpSound.play();
-
     _item.kill();
 
     if (_item.type === 'extraLife') {
       addExtraLife();
-    } else if (_item.type === 'increaseSpeed') {
+      oneUpSound.play();
+
+   } else if (_item.type === 'increaseSpeed') {
       increaseBallSpeed();
       setTimeout(decreaseBallSpeed, 5000);
 
       ballGreenGlowEmitter.start(false, 100, 15);
       setTimeout(turnOffGreenGlow, 5000);
+
+      powerUpSound.play();
     } else if (_item.type === 'decreaseSpeed') {
       decreaseBallSpeed();
       setTimeout(increaseBallSpeed, 5000);
 
       ballBlueGlowEmitter.start(false, 120, 30);
       setTimeout(turnOffBlueGlow, 5000);
+
+      powerUpSound.play();
     } else if (_item.type === 'gowMarcusIllTakeThis') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
