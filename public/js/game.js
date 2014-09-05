@@ -21,6 +21,16 @@
 
   var lastBrickSounds = [];
 
+  var gowMarcusIllTakeThisSound;
+  var gowMarcusNiceThrowSound;
+  var mk64LuigiSound;
+  var kenHadoukenSound;
+  var ryuShorukenSound;
+  var sm64PowerStarSound;
+  var starcraftZeolotSound;
+  var zeldaItemSound;
+  var zeldaRupeeSound;
+
   var bricks;
   var brickBurstEmitter;
   var BRICK_ROWS = 4;
@@ -79,25 +89,46 @@
   function preload() {
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
+
     game.load.image('starfield', '/assets/starfield.png');
     game.load.image('blueGlow', 'assets/blue.png');
     game.load.image('greenGlow', 'assets/green.png');
+
+    game.load.image('Gears_Of_War_Marcus_Ill_Take_This_Image', 'assets/Gears_Of_War_Marcus_Ill_Take_This.png');
+    game.load.image('Gears_Of_War_Marcus_Nice_Throw_Image', 'assets/Gears_Of_War_Marcus_Nice_Throw.png');
+    game.load.image('Mario_Kart_64_Luigi_Mamma_Mia_Image', 'assets/Mario_Kart_64_Luigi_Mamma_Mia.png');
+    game.load.image('SFIV_Ken_Hadouken_Image', 'assets/SFIV_Ken_Hadouken.png');
+    game.load.image('SFIV_Ryu_Shoryuken_Image', 'assets/SFIV_Ryu_Shoryuken.png');
+    game.load.image('SM64_Power_Star_Appears_Image', 'assets/SM64_Power_Star_Appears.png');
+    game.load.image('StarCraft_Fenix_Zealot_For_Aiur_Image', 'assets/StarCraft_Fenix_Zealot_For_Aiur.png');
+    game.load.image('The_Legend_of_Zelda_Get_Item_Image', 'assets/The_Legend_of_Zelda_Get_Item.png');
+    game.load.image('The_Legend_of_Zelda_Get_Rupee_Image', 'assets/The_Legend_of_Zelda_Get_Rupee.png');
+
     game.load.audio('c', 'assets/audio/c.mp3');
     game.load.audio('e', 'assets/audio/e.mp3');
     game.load.audio('g', 'assets/audio/g.mp3');
     game.load.audio('cHigh', 'assets/audio/cHigh.mp3');
     game.load.audio('gLow', 'assets/audio/gLow.mp3');
+
     game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
     game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
     game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
     game.load.audio('monsterKill', 'assets/audio/monsterKill.mp3');
 
-    // Last brick sounds
     game.load.audio('counterTerroristsWin', 'assets/audio/Counter_Strike_Counter-Terrorists_Win.mp3');
     game.load.audio('terroristsWin', 'assets/audio/Counter_Strike_Terrorists_Win.mp3');
     game.load.audio('slammin', 'assets/audio/StarCraft_Firebat_Slammin.mp3');
     game.load.audio('outstanding', 'assets/audio/StarCraft_Marine_Outstanding.mp3');
 
+    game.load.audio('Gears_Of_War_Marcus_Ill_Take_This_Sound', 'assets/audio/Gears_Of_War_Marcus_Ill_Take_This.mp3');
+    game.load.audio('Gears_Of_War_Marcus_Nice_Throw_Sound', 'assets/audio/Gears_Of_War_Marcus_Nice_Throw.mp3');
+    game.load.audio('Mario_Kart_64_Luigi_Mamma_Mia_Sound', 'assets/audio/Mario_Kart_64_Luigi_Mamma_Mia.mp3');
+    game.load.audio('SFIV_Ken_Hadouken_Sound', 'assets/audio/SFIV_Ken_Hadouken.mp3');
+    game.load.audio('SFIV_Ryu_Shoryuken_Sound', 'assets/audio/SFIV_Ryu_Shoryuken.mp3');
+    game.load.audio('SM64_Power_Star_Appears_Sound', 'assets/audio/SM64_Power_Star_Appears.mp3');
+    game.load.audio('StarCraft_Fenix_Zealot_For_Aiur_Sound', 'assets/audio/StarCraft_Fenix_Zealot_For_Aiur.mp3');
+    game.load.audio('The_Legend_of_Zelda_Get_Item_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Item.mp3');
+    game.load.audio('The_Legend_of_Zelda_Get_Rupee_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Rupee.mp3');
   }
 
   function create() {
@@ -313,14 +344,26 @@
     gNote = game.add.audio('g');
     cHighNote = game.add.audio('cHigh');
     gLowNote = game.add.audio('gLow');
+
     powerUpSound = game.add.audio('powerUp');
     gameOverSound = game.add.audio('gameOver');
     firstBloodSound = game.add.audio('firstBlood');
     monsterKillSound = game.add.audio('monsterKill');
+
     lastBrickSounds.push(game.add.audio('counterTerroristsWin'));
     lastBrickSounds.push(game.add.audio('terroristsWin'));
     lastBrickSounds.push(game.add.audio('slammin'));
     lastBrickSounds.push(game.add.audio('outstanding'));
+
+    gowMarcusIllTakeThisSound = game.add.audio('Gears_Of_War_Marcus_Ill_Take_This_Sound');
+    gowMarcusNiceThrowSound = game.add.audio('Gears_Of_War_Marcus_Nice_Throw_Sound');
+    mk64LuigiSound = game.add.audio('Mario_Kart_64_Luigi_Mamma_Mia_Sound');
+    kenHadoukenSound = game.add.audio('SFIV_Ken_Hadouken_Sound');
+    ryuShorukenSound = game.add.audio('SFIV_Ryu_Shoryuken_Sound');
+    sm64PowerStarSound = game.add.audio('SM64_Power_Star_Appears_Sound');
+    starcraftZeolotSound = game.add.audio('StarCraft_Fenix_Zealot_For_Aiur_Sound');
+    zeldaItemSound = game.add.audio('The_Legend_of_Zelda_Get_Item_Sound');
+    zeldaRupeeSound = game.add.audio('The_Legend_of_Zelda_Get_Rupee_Sound');
   }
 
   function createGameOverDialog() {
