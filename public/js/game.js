@@ -90,6 +90,30 @@
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
 
+//     star 1 3
+// powerup 4 2
+// gameover 6 2
+// c 8 2
+// chigh 10 2
+// e 12 2
+// g 14 2
+// glow 16 2
+// monster 18 2
+// counter 21 1.5
+// mia 23 1
+// first 24 1
+// terr 25 1
+// outstand 26 1
+// nicethrow 27 1
+// slam 28 1
+// fire 29 1
+// levelup 30 1
+// take this 31 1
+// t 32 1
+// hadu 33 1
+// shoyru 34 1
+// t 35 1
+
     game.load.audio('sfx', 'assets/audio/breakout.mp3');
 
     game.load.audio('c', 'assets/audio/c.mp3', false);
