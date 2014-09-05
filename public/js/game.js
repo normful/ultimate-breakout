@@ -859,6 +859,7 @@
     if (lastFiveHitsTimeDifference < 550 && (new Date() - lastMonsterKillPlayDate > 10000)) {
       monsterKillSound.play();
       lastMonsterKillPlayDate = new Date();
+      console.log('MMMMONSTER KILL');
     }
   }
 
