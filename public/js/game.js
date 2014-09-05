@@ -874,15 +874,15 @@
       velocityY: ball.body.velocity.y
     });
 
-    var randNum = Math.floor(Math.random() * 100);
+    var randNum = Math.random();
 
-    if (randNum >= 0 && randNum <= 1) {
+    if (randNum > 0 && randNum < 0.02) {
       // 2% chance
       createItem('extraLife', 'extra_life.png', _brick.x, _brick.y);
-    } else if (randNum >= 10 && randNum <= 14) {
+    } else if (randNum > 0.1 && randNum < 0.15) {
       // 5% chance
       createItem('increaseSpeed', 'increase_speed.png', _brick.x, _brick.y);
-    } else if (randNum >= 20 && randNum <= 24) {
+    } else if (randNum > 0.15 && randNum < 0.2) {
       // 5% chance
       createItem('decreaseSpeed', 'decrease_speed.png', _brick.x, _brick.y);
     }
