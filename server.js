@@ -194,18 +194,20 @@ function onClientDisconnect() {
 }
 
 function onBrickKillFromClient(data) {
-  util.log(this.id + ' sent "brick kill from client" message. brickIndex = ' + data.brickIndex);
+  var client = this;
+
+  util.log(client.id + ' sent "brick kill from client" message. brickIndex = ' + data.brickIndex);
 
   if (bricks.charAt(data.brickIndex) === "0") {
-    util.log('brick ' + data.brickIndex + ' already dead. Brick kill message not broadcasted to other clients and no points rewarded to ' +  this.id);
+    util.log('brick ' + data.brickIndex + ' already dead. Brick kill message not broadcasted to other clients and no points rewarded to ' +  client.id);
     return;
   }
 
   if (bricks.indexOf("0") === -1) {
     io.sockets.emit('first brick hit');
 
-    players[this.id].score += 500;
-    this.emit('render plus 500', {
+    players[client.id].score += 500;
+    client.emit('render plus 500', {
       x: data.brickX,
       y: data.brickY
     });
@@ -215,31 +217,34 @@ function onBrickKillFromClient(data) {
 
   if (bricks.indexOf("1") === -1) {
     resetBricks();
-    players[this.id].score += 1000;
+    players[client.id].score += 1000;
   } else {
-    players[this.id].score += 100;
+    players[client.id].score += 100;
   }
 
-  util.log(this.id + " new score = " + players[this.id].score);
+  util.log(client.id + " new score = " + players[client.id].score);
 
   util.log('"brick kill to other clients" message broadcast to other clients');
-  this.broadcast.emit('brick kill to other clients', {
+  client.broadcast.emit('brick kill to other clients', {
     brickIndex: data.brickIndex,
     velocityX: data.velocityX,
     velocityY: data.velocityY,
-    remotePlayerID: this.id
+    remotePlayerID: client.id
   });
 
-  this.emit('update local score', {
-    id: this.id,
-    score: players[this.id].score
+  broadcastUpdatedScore(client);
+}
+
+function broadcastUpdatedScore(client) {
+  client.emit('update local score', {
+    id: client.id,
+    score: players[client.id].score
   });
 
-  this.broadcast.emit('update remote score', {
-    id: this.id,
-    score: players[this.id].score
+  client.broadcast.emit('update remote score', {
+    id: client.id,
+    score: players[client.id].score
   });
-
 }
 
 function resetBricks() {
