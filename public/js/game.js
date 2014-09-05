@@ -349,7 +349,7 @@
   }
 
   function reloadPage() {
-    location.reload(true);
+    location.reload();
   }
 
   function initializeMixItUp() {
