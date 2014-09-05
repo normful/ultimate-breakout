@@ -197,8 +197,24 @@
 	"frame": {"x":6,"y":0,"w":32,"h":12},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":12},
-	"sourceSize": {"w":32,"h":12}
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":11},
+	"sourceSize": {"w":32,"h":11}
+},
+{
+	"filename": "plus_500.png",
+	"frame": {"x":39,"y":13,"w":48,"h":11},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":11},
+	"sourceSize": {"w":48,"h":11}
+},
+{
+	"filename": "plus_1000.png",
+	"frame": {"x":39,"y":0,"w":53,"h":11},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":53,"h":11},
+	"sourceSize": {"w":53,"h":11}
 },
 {
 	"filename": "brick_4_1.png",
