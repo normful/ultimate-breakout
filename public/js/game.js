@@ -121,6 +121,9 @@
         x: game.input.x - 0.5 * PADDLE_WIDTH
       });
     });
+
+    window.addEventListener('focus', reloadPage, false);
+    window.addEventListener('blur', disconnectSocket, false);
   }
 
   function createBricks() {
@@ -345,6 +348,10 @@
 
   function reloadPage() {
     location.reload();
+  }
+
+  function disconnectSocket() {
+    socket.io.disconnect();
   }
 
   function initializeMixItUp() {
