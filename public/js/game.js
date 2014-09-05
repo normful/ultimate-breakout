@@ -9,28 +9,6 @@
 
   var sounds;
 
-  var cNote;
-  var eNote;
-  var gNote;
-  var cHighNote;
-  var gLowNote;
-
-  var oneUpSound;
-  var powerUpSound;
-  var gameOverSound;
-  var firstBloodSound;
-  var monsterKillSound;
-
-  var gowMarcusIllTakeThisSound;
-  var gowMarcusNiceThrowSound;
-  var mk64LuigiSound;
-  var kenHadoukenSound;
-  var ryuShorukenSound;
-  var sm64PowerStarSound;
-  var starcraftZeolotSound;
-  var zeldaItemSound;
-  var zeldaRupeeSound;
-
   var bricks;
   var brickBurstEmitter;
   var BRICK_ROWS = 4;
@@ -297,7 +275,7 @@
   function createAudio() {
     sounds = game.add.audio('sfx');
 
-    sounds.addMarker('SM64_Power_Star_Appears_Sound', 0, 5);
+    sounds.addMarker('SM64_Power_Star_Appears', 0, 5);
     sounds.addMarker('powerUp', 5, 3);
     sounds.addMarker('gameOver', 8, 4);
     sounds.addMarker('c', 12, 3);
@@ -307,19 +285,19 @@
     sounds.addMarker('gLow', 24, 3);
     sounds.addMarker('monsterKill', 27, 4.5);
     sounds.addMarker('counterTerroristsWin', 32, 2.5);
-    sounds.addMarker('Mario_Kart_64_Luigi_Mamma_Mia_Sound', 35, 2);
+    sounds.addMarker('Mario_Kart_64_Luigi_Mamma_Mia', 35, 2);
     sounds.addMarker('firstBlood', 37.5, 2);
     sounds.addMarker('terroristsWin', 40, 2);
     sounds.addMarker('outstanding', 42, 2);
-    sounds.addMarker('Gears_Of_War_Marcus_Nice_Throw_Sound', 44, 2);
+    sounds.addMarker('Gears_Of_War_Marcus_Nice_Throw', 44, 2);
     sounds.addMarker('slammin', 46, 2);
-    sounds.addMarker('StarCraft_Fenix_Zealot_For_Aiur_Sound', 48, 2);
+    sounds.addMarker('StarCraft_Fenix_Zealot_For_Aiur', 48, 2);
     sounds.addMarker('oneUp', 50, 1);
-    sounds.addMarker('Gears_Of_War_Marcus_Ill_Take_This_Sound', 52, 2);
-    sounds.addMarker('The_Legend_of_Zelda_Get_Item_Sound', 54, 1);
-    sounds.addMarker('SFIV_Ken_Hadouken_Sound', 56, 1);
-    sounds.addMarker('SFIV_Ryu_Shoryuken_Sound', 58, 1);
-    sounds.addMarker('The_Legend_of_Zelda_Get_Rupee_Sound', 60, 1);
+    sounds.addMarker('Gears_Of_War_Marcus_Ill_Take_This', 52, 2);
+    sounds.addMarker('The_Legend_of_Zelda_Get_Item', 54, 1);
+    sounds.addMarker('SFIV_Ken_Hadouken', 56, 1);
+    sounds.addMarker('SFIV_Ryu_Shoryuken', 58, 1);
+    sounds.addMarker('The_Legend_of_Zelda_Get_Rupee', 60, 1);
   }
 
   function createGameOverDialog() {
@@ -718,39 +696,39 @@
     } else if (_item.type === 'gowMarcusIllTakeThis') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('Gears_Of_War_Marcus_Ill_Take_This_Sound');
+      sounds.play('Gears_Of_War_Marcus_Ill_Take_This');
     } else if (_item.type === 'gowMarcusNiceThrow') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('Gears_Of_War_Marcus_Nice_Throw_Sound');
+      sounds.play('Gears_Of_War_Marcus_Nice_Throw');
     } else if (_item.type === 'mk64Luigi') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('Mario_Kart_64_Luigi_Mamma_Mia_Sound');
+      sounds.play('Mario_Kart_64_Luigi_Mamma_Mia');
     } else if (_item.type === 'kenHadouken') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('SFIV_Ken_Hadouken_Sound');
+      sounds.play('SFIV_Ken_Hadouken');
     } else if (_item.type === 'ryuShoruken') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('SFIV_Ryu_Shoryuken_Sound');
+      sounds.play('SFIV_Ryu_Shoryuken');
     } else if (_item.type === 'sm64PowerStar') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('SM64_Power_Star_Appears_Sound');
+      sounds.play('SM64_Power_Star_Appears');
     } else if (_item.type === 'starcraftZeolot') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('StarCraft_Fenix_Zealot_For_Aiur_Sound');
+      sounds.play('StarCraft_Fenix_Zealot_For_Aiur');
     } else if (_item.type === 'zeldaItem') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('The_Legend_of_Zelda_Get_Item_Sound');
+      sounds.play('The_Legend_of_Zelda_Get_Item');
     } else if (_item.type === 'zeldaRupee') {
       plus500Points();
       renderBonusIndicator(_paddle.x, PADDLE_Y, 'breakout', 'plus_500.png');
-      sounds.play('The_Legend_of_Zelda_Get_Rupee_Sound');
+      sounds.play('The_Legend_of_Zelda_Get_Rupee');
     }
   }
 
