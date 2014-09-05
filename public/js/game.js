@@ -187,24 +187,28 @@
   function createRemotePaddle(data){
     console.log('createRemotePaddle invoked');
     var player = data.id;
+    var remotePaddle;
 
-    if (typeof remotePlayers[player].paddle !== "object"){
-
-      remotePlayers[player].paddle = remotePaddles.create(
-            game.world.centerX,
-            PADDLE_Y,
-            'breakout',
-            'paddle_big.png'
-          );
-
-      remotePlayers[player].paddle.anchor.setTo(0.5, 0.5);
-      game.physics.enable(remotePlayers[player].paddle, Phaser.Physics.ARCADE);
-      remotePlayers[player].paddle.body.collideWorldBounds = true;
-      remotePlayers[player].paddle.body.bounce.set(1);
-      remotePlayers[player].paddle.body.immovable = true;
-      remotePlayers[player].paddle.name = player;
-      remotePlayers[player].paddle.tint = data.color;
+    if (typeof remotePlayers[player].paddle === 'object') {
+      return;
     }
+
+    remotePlayers[player].paddle = remotePaddles.create(
+      game.world.centerX,
+      PADDLE_Y,
+      'breakout',
+      'paddle_big.png'
+    );
+
+    remotePaddle = remotePlayers[player].paddle;
+
+    remotePaddle.anchor.setTo(0.5, 0.5);
+    game.physics.enable(remotePaddle, Phaser.Physics.ARCADE);
+    remotePaddle.body.collideWorldBounds = true;
+    remotePaddle.body.bounce.set(1);
+    remotePaddle.body.immovable = true;
+    remotePaddle.name = player;
+    remotePaddle.tint = data.color;
   }
 
   function createLocalBall() {
