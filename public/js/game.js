@@ -743,6 +743,10 @@
   function paddleCaughtItem(_paddle, _item) {
     _item.kill();
 
+    if ($gameOverDialog.dialog('isOpen')) {
+      return;
+    }
+
     if (_item.type === 'extraLife') {
       addExtraLife();
       oneUpSound.play();
