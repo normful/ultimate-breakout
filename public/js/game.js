@@ -243,9 +243,11 @@
   function createRemoteBall(data) {
     console.log('createRemoteBall invoked');
 
-    if (remotePlayers[data.remotePlayerID].gameOver === true) {
-      console.log("createRemoteBall exiting early because remote player's game is over");
-      return;
+    if (typeof remotePlayers[data.remotePlayerID] !== "undefined") {
+      if (remotePlayers[data.remotePlayerID].gameOver === true) {
+        console.log("createRemoteBall exiting early because remote player's game is over");
+        return;
+      }
     }
 
     var remoteBall = game.add.sprite(data.posX, data.posY, 'breakout', 'ball.png');
