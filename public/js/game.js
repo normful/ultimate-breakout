@@ -17,6 +17,7 @@
   var powerUpSound;
   var gameOverSound;
   var firstBloodSound;
+  var monsterKillSound;
 
   var bricks;
   var brickBurstEmitter;
@@ -26,6 +27,9 @@
   var BRICK_START_Y = 100;
   var BRICK_SPACING_X = 36;
   var BRICK_SPACING_Y = 52;
+
+  var brickHitDates = [];
+  var lastMonsterKillPlayDate = new Date();
 
   var items;
 
@@ -84,6 +88,7 @@
     game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
     game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
     game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
+    game.load.audio('monsterKill', 'assets/audio/monsterKill.mp3');
   }
 
   function create() {
@@ -302,6 +307,7 @@
     powerUpSound = game.add.audio('powerUp');
     gameOverSound = game.add.audio('gameOver');
     firstBloodSound = game.add.audio('firstBlood');
+    monsterKillSound = game.add.audio('monsterKill');
   }
 
   function createGameOverDialog() {
@@ -807,6 +813,9 @@
 
     renderBrickBurst(_brick);
     _brick.kill();
+
+    brickHitDates.push(new Date());
+    checkForMonsterKill();
   }
 
   function playBrickHitSound(y) {
@@ -839,6 +848,18 @@
     item.outOfBoundsKill = true;
     game.physics.enable(item, Phaser.Physics.ARCADE);
     item.body.velocity.y = 100;
+  }
+
+  function checkForMonsterKill() {
+    var length = brickHitDates.length;
+    if (length < 6) {
+      return;
+    }
+    var lastFiveHitsTimeDifference = brickHitDates[length - 1] - brickHitDates[length - 6];
+    if (lastFiveHitsTimeDifference < 550 && (new Date() - lastMonsterKillPlayDate > 10000)) {
+      monsterKillSound.play();
+      lastMonsterKillPlayDate = new Date();
+    }
   }
 
   function ballHitPaddle(_ball, _paddle) {
