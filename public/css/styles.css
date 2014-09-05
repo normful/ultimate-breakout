@@ -9,7 +9,7 @@
 }
 
 body {
-  background-color: #191919;
+  background-color: #111111;
   font-family: 'VT323';
   color: #fff;
 }
@@ -17,7 +17,7 @@ body {
 #header {
   text-align: center;
   padding: 10px 0;
-  background: #111;
+  background: #111111;
 }
 
 .container {
@@ -30,9 +30,10 @@ body {
   height: 35px;
   overflow: hidden;
   width: 100%;
-  margin-top: 15px;
-  padding: 5px;
-  background: #111;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  background: #111111;
   font-size: 1.5em;
   white-space: nowrap;
 }
@@ -40,14 +41,15 @@ body {
 #breakout {
   border: 2px solid black;
   width: 800px;
-  margin: 15px;
-  margin-left: 0px;
+  margin-top: 0;
+  margin-right: 15px;
+  margin-bottom: 0;
+  margin-left: 0;
   float: left;
   cursor: pointer;
 }
 
 #leaderboard {
-  margin-top: 15px;
 }
 
 table {
@@ -55,7 +57,7 @@ table {
   table-layout: fixed;
   width: 400px;
   font-size: 1em;
-  background: #111;
+  background: #111111;
 }
 
 tr {
