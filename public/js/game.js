@@ -872,6 +872,8 @@
       monsterKillSound.play();
       lastMonsterKillPlayDate = new Date();
       console.log('MMMMONSTER KILL');
+      renderBonusIndicator(ball.body.x, ball.body.y, 'breakout', 'plus_1000.png');
+      socket.emit('monster kill');
     }
   }
 

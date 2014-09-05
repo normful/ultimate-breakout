@@ -60,6 +60,7 @@ function onSocketConnection(client) {
   client.on('player game over', onPlayerGameOver);
   client.on('player final score', onPlayerFinalScore);
   client.on('play brick hit sound', onPlayBrickHitSound);
+  client.on('monster kill', onMonsterKill);
 }
 
 function onPlayBrickHitSound(data) {
@@ -261,6 +262,12 @@ function onUpdatePaddlePosition(data) {
     id: this.id,
     x: data.x
   });
+}
+
+function onMonsterKill(data) {
+  var client = this;
+  players[client.id].score += 1000;
+  broadcastUpdatedScore(client);
 }
 
 function onPlayerGameOver() {
