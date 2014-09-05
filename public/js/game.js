@@ -110,38 +110,33 @@
     game.load.image('The_Legend_of_Zelda_Get_Item_Image', 'assets/The_Legend_of_Zelda_Get_Item.png');
     game.load.image('The_Legend_of_Zelda_Get_Rupee_Image', 'assets/The_Legend_of_Zelda_Get_Rupee.png');
 
-    game.load.audio('c', 'assets/audio/c.mp3');
-    game.load.audio('e', 'assets/audio/e.mp3');
-    game.load.audio('g', 'assets/audio/g.mp3');
-    game.load.audio('cHigh', 'assets/audio/cHigh.mp3');
-    game.load.audio('gLow', 'assets/audio/gLow.mp3');
+    game.load.audio('c', 'assets/audio/c.mp3', false);
+    game.load.audio('e', 'assets/audio/e.mp3', false);
+    game.load.audio('g', 'assets/audio/g.mp3', false);
+    game.load.audio('cHigh', 'assets/audio/cHigh.mp3', false);
+    game.load.audio('gLow', 'assets/audio/gLow.mp3', false);
 
-    game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
+    game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3', false);
 
-    setTimeout(loadSecondaryAudio, 10000);
-  }
+    game.load.audio('oneUp', 'assets/audio/oneUp.mp3', false);
+    game.load.audio('powerUp', 'assets/audio/powerUp.mp3', false);
+    game.load.audio('gameOver', 'assets/audio/gameOver.mp3', false);
+    game.load.audio('monsterKill', 'assets/audio/monsterKill.mp3', false);
 
-  function loadSecondaryAudio() {
-    console.log('loadSecondaryAudio invoked');
-    game.load.audio('oneUp', 'assets/audio/oneUp.mp3');
-    game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
-    game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
-    game.load.audio('monsterKill', 'assets/audio/monsterKill.mp3');
+    game.load.audio('counterTerroristsWin', 'assets/audio/Counter_Strike_Counter-Terrorists_Win.mp3', false);
+    game.load.audio('terroristsWin', 'assets/audio/Counter_Strike_Terrorists_Win.mp3', false);
+    game.load.audio('slammin', 'assets/audio/StarCraft_Firebat_Slammin.mp3', false);
+    game.load.audio('outstanding', 'assets/audio/StarCraft_Marine_Outstanding.mp3', false);
 
-    game.load.audio('counterTerroristsWin', 'assets/audio/Counter_Strike_Counter-Terrorists_Win.mp3');
-    game.load.audio('terroristsWin', 'assets/audio/Counter_Strike_Terrorists_Win.mp3');
-    game.load.audio('slammin', 'assets/audio/StarCraft_Firebat_Slammin.mp3');
-    game.load.audio('outstanding', 'assets/audio/StarCraft_Marine_Outstanding.mp3');
-
-    game.load.audio('Gears_Of_War_Marcus_Ill_Take_This_Sound', 'assets/audio/Gears_Of_War_Marcus_Ill_Take_This.mp3');
-    game.load.audio('Gears_Of_War_Marcus_Nice_Throw_Sound', 'assets/audio/Gears_Of_War_Marcus_Nice_Throw.mp3');
-    game.load.audio('Mario_Kart_64_Luigi_Mamma_Mia_Sound', 'assets/audio/Mario_Kart_64_Luigi_Mamma_Mia.mp3');
-    game.load.audio('SFIV_Ken_Hadouken_Sound', 'assets/audio/SFIV_Ken_Hadouken.mp3');
-    game.load.audio('SFIV_Ryu_Shoryuken_Sound', 'assets/audio/SFIV_Ryu_Shoryuken.mp3');
-    game.load.audio('SM64_Power_Star_Appears_Sound', 'assets/audio/SM64_Power_Star_Appears.mp3');
-    game.load.audio('StarCraft_Fenix_Zealot_For_Aiur_Sound', 'assets/audio/StarCraft_Fenix_Zealot_For_Aiur.mp3');
-    game.load.audio('The_Legend_of_Zelda_Get_Item_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Item.mp3');
-    game.load.audio('The_Legend_of_Zelda_Get_Rupee_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Rupee.mp3');
+    game.load.audio('Gears_Of_War_Marcus_Ill_Take_This_Sound', 'assets/audio/Gears_Of_War_Marcus_Ill_Take_This.mp3', false);
+    game.load.audio('Gears_Of_War_Marcus_Nice_Throw_Sound', 'assets/audio/Gears_Of_War_Marcus_Nice_Throw.mp3', false);
+    game.load.audio('Mario_Kart_64_Luigi_Mamma_Mia_Sound', 'assets/audio/Mario_Kart_64_Luigi_Mamma_Mia.mp3', false);
+    game.load.audio('SFIV_Ken_Hadouken_Sound', 'assets/audio/SFIV_Ken_Hadouken.mp3', false);
+    game.load.audio('SFIV_Ryu_Shoryuken_Sound', 'assets/audio/SFIV_Ryu_Shoryuken.mp3', false);
+    game.load.audio('SM64_Power_Star_Appears_Sound', 'assets/audio/SM64_Power_Star_Appears.mp3', false);
+    game.load.audio('StarCraft_Fenix_Zealot_For_Aiur_Sound', 'assets/audio/StarCraft_Fenix_Zealot_For_Aiur.mp3', false);
+    game.load.audio('The_Legend_of_Zelda_Get_Item_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Item.mp3', false);
+    game.load.audio('The_Legend_of_Zelda_Get_Rupee_Sound', 'assets/audio/The_Legend_of_Zelda_Get_Rupee.mp3', false);
   }
 
   function create() {
