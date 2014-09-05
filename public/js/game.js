@@ -90,6 +90,8 @@
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
 
+    game.load.audio('sfx', 'assets/audio/breakout.mp3');
+
     game.load.audio('c', 'assets/audio/c.mp3', false);
     game.load.audio('e', 'assets/audio/e.mp3', false);
     game.load.audio('g', 'assets/audio/g.mp3', false);
