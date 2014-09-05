@@ -94,6 +94,10 @@
     game.load.image('blueGlow', 'assets/blue.png');
     game.load.image('greenGlow', 'assets/green.png');
 
+    game.load.image('Decrease_Speed_Image', 'assets/decrease_speed.png');
+    game.load.image('Increase_Speed_Image', 'assets/increase_speed.png');
+    game.load.image('Extra_Life_Image', 'assets/extra_life.png');
+
     game.load.image('Gears_Of_War_Marcus_Ill_Take_This_Image', 'assets/Gears_Of_War_Marcus_Ill_Take_This.png');
     game.load.image('Gears_Of_War_Marcus_Nice_Throw_Image', 'assets/Gears_Of_War_Marcus_Nice_Throw.png');
     game.load.image('Mario_Kart_64_Luigi_Mamma_Mia_Image', 'assets/Mario_Kart_64_Luigi_Mamma_Mia.png');
@@ -763,7 +767,7 @@
     }
     lives++;
     livesText.text = 'lives: ' + lives;
-    renderBonusIndicator(paddle.body.x, PADDLE_Y, 'breakout', 'extra_life_indicator.png');
+    renderBonusIndicator(paddle.body.x, PADDLE_Y, 'breakout', 'one_up.png');
   }
 
   function renderBonusIndicator(x, y, key, frame) {
@@ -917,7 +921,7 @@
   }
 
   function createItem(itemType, itemImage, x, y) {
-    var item = items.create(x, y, 'breakout', itemImage);
+    var item = items.create(x, y, itemImage);
     item.type = itemType;
     item.anchor.setTo(0.5, 0.5);
     item.checkWorldBounds = true;
