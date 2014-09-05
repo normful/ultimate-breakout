@@ -7,8 +7,6 @@
 
   var updateLoopRunning = false;
 
-  var background;
-
   var cNote;
   var eNote;
   var gNote;
@@ -128,8 +126,6 @@
     game.stage.disableVisibilityChange = true;
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
-
-    background = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
     // Check bounds collisions on all walls except bottom
     game.physics.arcade.checkCollision.down = false;
