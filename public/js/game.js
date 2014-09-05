@@ -82,7 +82,7 @@
     game.load.audio('cHigh', 'assets/audio/cHigh.mp3');
     game.load.audio('gLow', 'assets/audio/gLow.mp3');
     game.load.audio('powerUp', 'assets/audio/powerUp.mp3');
-    game.load.audio('gameOver', 'assets/audio/gameOver.wav');
+    game.load.audio('gameOver', 'assets/audio/gameOver.mp3');
     game.load.audio('firstBlood', 'assets/audio/firstBlood.mp3');
   }
 
