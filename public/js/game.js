@@ -59,6 +59,15 @@
 
   var $leaderboard = $("#leaderboard-table-body");
 
+  var $highScoresMarquee = $("#high-scores");
+
+  var $gameOverDialog= $(".game-over-dialog");
+  var $finalScoreSpan;
+  var $nameLabel;
+  var $nameText;
+  var $saveScoreButton;
+  var $playAgainButton;
+
   function preload() {
     console.log('preload invoked');
     game.load.atlas('breakout', '/assets/breakout.png', '/assets/breakout.json');
@@ -97,6 +106,7 @@
     createBallGreenGlowEmitter();
     createText();
     createAudio();
+    createGameOverDialog();
 
     game.input.onDown.add(releaseBall, gameState);
 
@@ -270,9 +280,9 @@
 
   function createText() {
     console.log('createText invoked');
-    scoreText = game.add.text(32, TEXT_Y, 'score: 0',
+    scoreText = game.add.text(32, TEXT_Y, 'score: ' + score,
       { font: '20px VT323', fill: '#ffffff', align: 'left' });
-    livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: 3',
+    livesText = game.add.text(GAME_WIDTH - 120, TEXT_Y, 'lives: ' + lives,
       { font: '20px VT323', fill: '#ffffff', align: 'left' });
     infoText = game.add.text(game.world.centerX, GAME_HEIGHT * (2 / 3), 'Click to Start',
       { font: '40px VT323', fill: '#ffffff', align: 'center' });
@@ -287,6 +297,59 @@
     gLowNote = game.add.audio('gLow');
     powerUpSound = game.add.audio('powerUp');
     gameOverSound = game.add.audio('gameOver');
+  }
+
+  function createGameOverDialog() {
+    $gameOverDialog.dialog({
+      dialogClass: 'no-close',
+      draggable: false,
+      autoOpen: false,
+      show: {
+        effect: 'fade',
+        duration: 1000
+      },
+      position: {
+        of: '#breakout'
+      }
+    });
+
+    $finalScoreSpan = $gameOverDialog.find('span.final-score');
+
+    $nameLabel = $gameOverDialog.find('h2.name');
+
+    $nameText = $gameOverDialog.find('input.name');
+    $nameText.bind('enterKey', function() {
+      submitFinalScore();
+    });
+    $nameText.keyup(function(event) {
+      if (event.keyCode === 13) {
+        $nameText.trigger('enterKey');
+      }
+    });
+
+    $saveScoreButton = $gameOverDialog.find('input.save-score');
+    $saveScoreButton.on('click', submitFinalScore);
+
+    $playAgainButton = $gameOverDialog.find('input.play-again');
+    $playAgainButton.on('click', reloadPage);
+  }
+
+  function submitFinalScore() {
+    socket.emit('player final score', {
+      name: $nameText.val(),
+      score: score
+    });
+    showSuccessfulScoreSubmission();
+  }
+
+  function showSuccessfulScoreSubmission() {
+    $nameLabel.text('SCORE SAVED');
+    $nameText.remove();
+    $saveScoreButton.remove();
+  }
+
+  function reloadPage() {
+    location.reload(true);
   }
 
   function initializeMixItUp() {
@@ -321,6 +384,7 @@
     socket.on('update remote score', onUpdateRemoteScore);
     socket.on('remote player game over', onRemotePlayerGameOver);
     socket.on('play brick hit sound', onPlayBrickHitSound);
+    socket.on('high scores', onHighScores);
   }
 
   function onPlayBrickHitSound(data) {
@@ -590,6 +654,9 @@
 
   function addExtraLife() {
     console.log('addExtraLife invoked');
+    if ($gameOverDialog.dialog('isOpen')) {
+      return;
+    }
     lives++;
     livesText.text = 'lives: ' + lives;
     var extraLifeIndicator = game.add.sprite(paddle.body.x, PADDLE_Y, 'breakout', 'extra_life_indicator.png');
@@ -677,15 +744,18 @@
     gameOverSound.play();
 
     ball.body.velocity.setTo(0, 0);
-
-    infoText.text = 'Game Over!';
-    infoText.visible = true;
-
     socket.emit('player game over');
+    showGameOverDialog();
+  }
+
+  function showGameOverDialog() {
+    $gameOverDialog.dialog('open');
+    $nameText.val(localPlayerName);
+    $nameText.select();
+    $finalScoreSpan.text(score);
   }
 
   function ballHitBrick(_ball, _brick) {
-
     playBrickHitSound(_brick.y)
 
     var randNum = Math.floor(Math.random() * 100);
@@ -798,6 +868,20 @@
     if (typeof remotePlayers[data.id] !== 'undefined') {
       remotePlayers[data.id].gameOver = true;
     }
+  }
+
+  function onHighScores(data) {
+    console.log('onHighScores invoked. data = ' + JSON.stringify(data));
+
+    $highScoresMarquee.empty();
+    $highScoresMarquee.append('HIGH SCORES: ');
+
+    $.each(data.scores, function(index, val) {
+      var score = val.score.toString();
+      var rank = (index + 1).toString();
+      var playerScoreSpan = $('<span></span>').addClass('top-score').text(rank + '. ' + val.name + ' (' + score + ') ');
+      $highScoresMarquee.append(playerScoreSpan);
+    });
   }
 
   function padHex(n, width) {
