@@ -59,6 +59,11 @@ function onSocketConnection(client) {
   client.on('update ball', onUpdateBall);
   client.on('player game over', onPlayerGameOver);
   client.on('player final score', onPlayerFinalScore);
+  client.on('play brick hit sound', onPlayBrickHitSound);
+}
+
+function onPlayBrickHitSound(data) {
+  this.broadcast.emit('play brick hit sound', data);
 }
 
 function onUpdateBall(data) {

@@ -7,6 +7,14 @@
 
   var background;
 
+  var cNote;
+  var eNote;
+  var gNote;
+  var cHighNote;
+  var gLowNote;
+  var powerUpSound;
+  var gameOverSound;
+
   var bricks;
   var brickBurstEmitter;
   var BRICK_ROWS = 4;
@@ -66,6 +74,13 @@
     game.load.image('starfield', '/assets/starfield.png');
     game.load.image('blueGlow', 'assets/blue.png');
     game.load.image('greenGlow', 'assets/green.png');
+    game.load.audio('c', 'assets/audio/c.wav');
+    game.load.audio('e', 'assets/audio/e.wav');
+    game.load.audio('g', 'assets/audio/g.wav');
+    game.load.audio('cHigh', 'assets/audio/cHigh.wav');
+    game.load.audio('gLow', 'assets/audio/gLow.wav');
+    game.load.audio('powerUp', 'assets/audio/powerUp.wav');
+    game.load.audio('gameOver', 'assets/audio/gameOver.wav');
   }
 
   function create() {
@@ -90,6 +105,7 @@
     createBallBlueGlowEmitter();
     createBallGreenGlowEmitter();
     createText();
+    createAudio();
     createGameOverDialog();
 
     game.input.onDown.add(releaseBall, gameState);
@@ -273,6 +289,16 @@
     infoText.anchor.setTo(0.5, 0.5);
   }
 
+  function createAudio() {
+    cNote = game.add.audio('c');
+    eNote = game.add.audio('e');
+    gNote = game.add.audio('g');
+    cHighNote = game.add.audio('cHigh');
+    gLowNote = game.add.audio('gLow');
+    powerUpSound = game.add.audio('powerUp');
+    gameOverSound = game.add.audio('gameOver');
+  }
+
   function createGameOverDialog() {
     $gameOverDialog.dialog({
       dialogClass: 'no-close',
@@ -357,7 +383,20 @@
     socket.on('update local score', onUpdateLocalScore);
     socket.on('update remote score', onUpdateRemoteScore);
     socket.on('remote player game over', onRemotePlayerGameOver);
+    socket.on('play brick hit sound', onPlayBrickHitSound);
     socket.on('high scores', onHighScores);
+  }
+
+  function onPlayBrickHitSound(data) {
+    if (data.sound === 0) {
+      cNote.play();
+    } else if (data.sound === 1) {
+      eNote.play();
+    } else if (data.sound === 2) {
+      gNote.play();
+    } else {
+      cHighNote.play();
+    }
   }
 
   function onKillRemoteBall(data) {
@@ -590,6 +629,8 @@
   }
 
   function paddleCaughtItem(_paddle, _item) {
+    powerUpSound.play();
+
     _item.kill();
 
     if (_item.type === 'extraLife') {
@@ -700,6 +741,8 @@
   }
 
   function gameOver() {
+    gameOverSound.play();
+
     ball.body.velocity.setTo(0, 0);
     socket.emit('player game over');
     showGameOverDialog();
@@ -713,6 +756,8 @@
   }
 
   function ballHitBrick(_ball, _brick) {
+    playBrickHitSound(_brick.y)
+
     var randNum = Math.floor(Math.random() * 100);
 
     if (randNum >= 0 && randNum <= 1) {
@@ -736,6 +781,22 @@
     _brick.kill();
   }
 
+  function playBrickHitSound(y) {
+    if (y === 100) {
+      cHighNote.play();
+      socket.emit('play brick hit sound', {sound: 3});
+    } else if (y === 152) {
+      gNote.play();
+      socket.emit('play brick hit sound', {sound: 2});
+    } else if (y === 204) {
+      eNote.play();
+      socket.emit('play brick hit sound', {sound: 1});
+    } else {
+      cNote.play();
+      socket.emit('play brick hit sound', {sound: 0});
+    }
+  }
+
   function renderBrickBurst(_brick) {
     brickBurstEmitter.x = _brick.x;
     brickBurstEmitter.y = _brick.y;
@@ -753,6 +814,8 @@
   }
 
   function ballHitPaddle(_ball, _paddle) {
+    gLowNote.play();
+
     var ballCenter = _ball.body.x + BALL_WIDTH / 2;
     var paddleCenter = _paddle.body.x + PADDLE_WIDTH / 2;
     var diff;
