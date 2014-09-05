@@ -56,7 +56,6 @@
   var localPlayerID;
   var localPlayerColor;
   var remotePlayers = {};
-  var SET_INTERVAL_DELAY = 50;
 
   var $leaderboard = $("#leaderboard-table-body");
 
@@ -122,13 +121,6 @@
         x: game.input.x - 0.5 * PADDLE_WIDTH
       });
     });
-
-    setInterval(function() {
-      socket.emit('update ball', {
-        x: ball.body.x,
-        y: ball.body.y
-      });
-    }, SET_INTERVAL_DELAY);
   }
 
   function createBricks() {
@@ -607,6 +599,12 @@
   }
 
   function update() {
+
+    socket.emit('update ball', {
+      x: ball.body.x,
+      y: ball.body.y
+    });
+
     paddle.body.x = game.input.x - 0.5 * PADDLE_WIDTH;
 
     if (paddle.body.x < 0) {
