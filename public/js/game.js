@@ -113,6 +113,8 @@
         x: game.input.x - 0.5 * PADDLE_WIDTH
       });
     });
+
+    window.addEventListener('blur', disconnectSocket, false);
   }
 
   function createBricks() {
