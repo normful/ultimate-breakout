@@ -13,6 +13,6 @@ Think you know breakout? Guess again. Play with your friends in real-time and co
 
 ## Contributors
 
-- Amy Soetopo @astopo
-- Kenn Wang @koonwah
-- Norman Sue @nsue
+- [Amy Soetopo](https://github.com/astopo)
+- [Kenn Wang](https://github.com/koonwah)
+- [Norman Sue](https://github.com/nsue)
