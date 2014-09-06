@@ -114,6 +114,7 @@
       });
     });
 
+    window.addEventListener('focus', reloadPage, false);
     window.addEventListener('blur', disconnectSocket, false);
   }
 
