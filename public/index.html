@@ -5,14 +5,24 @@
 <!--[if gt IE 8]><!--> <html> <!--<![endif]-->
 <head>
   <title>Ultimate Breakout</title>
+  <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
   <link href="css/breakout.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <div id="header"><h1>ULTIMATE BREAKOUT!</h1></div>
+  <div class="lhl-header">
+    <div class="lhl-header-container">
+      <div class="lhl-logo">
+        <a href="https://www.lighthouselabs.ca" target="_blank"><img src="assets/lhl-logo.png"/></a>
+      </div>
+      <p>This game was built as a final project by Lighthouse Labs students during their 8 week bootcamp.</p>
+      <p>If you'd like to learn more about what you can do in 8 weeks, <a href="https://www.lighthouselabs.ca" target="_blank">click here!</a></p>
+    </div>
+  </div>
+  <div id="header" class="ub-header"><h1>ULTIMATE BREAKOUT!</h1></div>
   <div class="container">
     <marquee id="high-scores" class="marquee">HIGH SCORES: </marquee>
     <div id="breakout"></div>
-    <table id="leaderboard">
+    <table id="leaderboard" class="leaderboard">
       <thead>
         <tr>
           <th>SCORE</th>
